@@ -1,5 +1,6 @@
 from pathlib import Path
 import sys
+import time
 
 import streamlit as st
 import torch
@@ -440,13 +441,35 @@ else:
     with right:
         st.markdown('<div class="section-title">3. AI analysis</div>', unsafe_allow_html=True)
 
-        with st.spinner("Analyzing the leaf with MobileNetV3..."):
-            model, classes, device = get_model()
-            x = transform(image).unsqueeze(0).to(device)
+        # Visible analysis animation. This runs again whenever a new image is uploaded.
+        progress = st.progress(0)
+        status_text = st.empty()
 
-            with torch.inference_mode():
-                probs = torch.softmax(model(x), dim=1)[0]
-                values, indices = torch.topk(probs, k=min(5, len(classes)))
+        status_text.markdown("🔍 **Checking the uploaded image...**")
+        progress.progress(15)
+        time.sleep(0.35)
+
+        status_text.markdown("🧹 **Preprocessing the leaf image...**")
+        progress.progress(35)
+        time.sleep(0.35)
+
+        model, classes, device = get_model()
+        x = transform(image).unsqueeze(0).to(device)
+        progress.progress(55)
+
+        status_text.markdown("🧠 **Analyzing disease patterns with MobileNetV3...**")
+        progress.progress(70)
+
+        with torch.inference_mode():
+            probs = torch.softmax(model(x), dim=1)[0]
+            values, indices = torch.topk(probs, k=min(5, len(classes)))
+
+        progress.progress(90)
+        status_text.markdown("📊 **Preparing prediction results...**")
+        time.sleep(0.35)
+
+        progress.progress(100)
+        status_text.success("✅ **Analysis complete**")
 
         top_idx = int(indices[0])
         prediction = classes[top_idx]
