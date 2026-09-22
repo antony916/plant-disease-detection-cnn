@@ -1,5 +1,5 @@
-DATASET_NAME="mohanty/PlantVillage"
-DATASET_CONFIG=None
+DATASET_NAME="geraldmc/plantvillage-full"
+DATASET_REVISION="v0.1.0"
 IMAGE_SIZE=224
 BATCH_SIZE=32
 EPOCHS=10
