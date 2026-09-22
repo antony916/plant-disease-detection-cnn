@@ -1,0 +1,11 @@
+DATASET_NAME="mohanty/PlantVillage"
+DATASET_CONFIG="color"
+IMAGE_SIZE=224
+BATCH_SIZE=32
+EPOCHS=10
+LEARNING_RATE=3e-4
+MAX_IMAGES_PER_CLASS=300
+NUM_WORKERS=0
+ARTIFACT_DIR="artifacts"
+MODEL_PATH="artifacts/plant_disease_mobilenetv3.pth"
+CLASS_NAMES_PATH="artifacts/class_names.txt"
