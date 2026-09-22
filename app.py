@@ -189,6 +189,108 @@ st.markdown(
             color: #ffffff !important;
             border-color: #198754 !important;
         }
+        
+        /* Dark-mode support */
+        @media (prefers-color-scheme: dark) {
+            .stApp {
+                background: #0e1712;
+            }
+
+            [data-testid="stHeader"] {
+                background: rgba(14, 23, 18, 0.92);
+            }
+
+            .section-title {
+                color: #e7f4ec !important;
+            }
+
+            .upload-card,
+            .result-card,
+            div[data-testid="stMetric"] {
+                background: #17231c !important;
+                border-color: #30463a !important;
+                color: #e7f4ec !important;
+            }
+
+            .result-label {
+                color: #a9beb1 !important;
+            }
+
+            .result-name {
+                color: #dff5e7 !important;
+            }
+
+            .confidence {
+                color: #62d394 !important;
+            }
+
+            .info-card {
+                background: #173426 !important;
+                border-color: #2c6247 !important;
+                color: #d9f0e1 !important;
+            }
+
+            .warning-card {
+                background: #3a3018 !important;
+                border-color: #665622 !important;
+                color: #f4e8b5 !important;
+            }
+
+            [data-testid="stSidebar"] {
+                background: #111c16 !important;
+                border-right: 1px solid #2b3e33;
+            }
+
+            [data-testid="stSidebar"] * {
+                color: #e6f3eb !important;
+            }
+
+            [data-testid="stSidebar"] [data-testid="stMarkdownContainer"] p,
+            [data-testid="stSidebar"] small {
+                color: #b7cbbf !important;
+            }
+
+            [data-testid="stSidebar"] hr {
+                border-color: #2d4437 !important;
+            }
+
+            div[data-testid="stFileUploader"] {
+                background: #17231c !important;
+                border-color: #4d8065 !important;
+            }
+
+            [data-testid="stFileUploader"] section,
+            [data-testid="stFileUploader"] section > div {
+                background: #17231c !important;
+                color: #e7f4ec !important;
+            }
+
+            [data-testid="stFileUploader"] label,
+            [data-testid="stFileUploader"] small {
+                color: #c6d8ce !important;
+            }
+
+            [data-testid="stFileUploader"] button {
+                background: #198754 !important;
+                color: #ffffff !important;
+                border-color: #198754 !important;
+            }
+
+            [data-testid="stFileUploader"] button:hover {
+                background: #2aa96b !important;
+                border-color: #2aa96b !important;
+            }
+
+            .footer {
+                color: #8fa79a !important;
+            }
+
+            [data-testid="stMetric"] label,
+            [data-testid="stMetric"] [data-testid="stMetricValue"] {
+                color: #e7f4ec !important;
+            }
+        }
+
     </style>
     """,
     unsafe_allow_html=True,
