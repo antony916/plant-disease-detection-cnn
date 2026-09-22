@@ -18,8 +18,11 @@ def run_epoch(model, loader, loss_fn, opt, device, training):
 
 def main():
     os.makedirs(ARTIFACT_DIR,exist_ok=True)
-    train_ds=load_dataset(DATASET_NAME,revision=DATASET_REVISION,split="train")
-    test_ds=load_dataset(DATASET_NAME,revision=DATASET_REVISION,split="test")
+    # The curated PlantVillage release has one HF "train" split.
+    # Its train/test assignment is stored in the "split" metadata column.
+    dataset=load_dataset(DATASET_NAME,revision=DATASET_REVISION,split="train")
+    train_ds=dataset.filter(lambda x: x["split"]=="train")
+    test_ds=dataset.filter(lambda x: x["split"]=="test")
     label_map,names=make_label_map(train_ds)
     open(CLASS_NAMES_PATH,"w",encoding="utf-8").write("\n".join(names))
     rows=rows_from_dataset(train_ds,label_map,MAX_IMAGES_PER_CLASS)
