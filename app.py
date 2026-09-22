@@ -95,10 +95,11 @@ st.markdown(
 
         .result-name {
             color: #123b29;
-            font-size: 1.55rem;
+            font-size: 1.38rem;
             font-weight: 750;
             margin-top: 0.25rem;
-            line-height: 1.25;
+            line-height: 1.3;
+            overflow-wrap: anywhere;
         }
 
         .confidence {
@@ -218,6 +219,8 @@ st.markdown(
 
             .result-name {
                 color: #dff5e7 !important;
+                font-size: 1.38rem;
+                overflow-wrap: anywhere;
             }
 
             .confidence {
@@ -318,6 +321,11 @@ def get_model():
     return model, classes, device
 
 
+def display_class_name(name):
+    """Convert dataset class labels into a presentation-friendly name."""
+    return name.replace("___", " — ").replace("_", " ")
+
+
 transform = transforms.Compose(
     [
         transforms.Resize((IMAGE_SIZE, IMAGE_SIZE)),
@@ -396,7 +404,7 @@ if not uploaded:
 else:
     image = Image.open(uploaded).convert("RGB")
 
-    left, right = st.columns([1.05, 1], gap="large")
+    left, right = st.columns([1, 1], gap="large")
 
     with left:
         st.markdown('<div class="section-title">2. Uploaded image</div>', unsafe_allow_html=True)
@@ -415,13 +423,14 @@ else:
 
         top_idx = int(indices[0])
         prediction = classes[top_idx]
+        prediction_display = display_class_name(prediction)
         confidence = float(values[0]) * 100
 
         st.markdown(
             f"""
             <div class="result-card">
                 <div class="result-label">Predicted class</div>
-                <div class="result-name">{prediction}</div>
+                <div class="result-name">{prediction_display}</div>
                 <div class="result-label" style="margin-top:0.9rem;">Confidence</div>
                 <div class="confidence">{confidence:.2f}%</div>
             </div>
@@ -445,7 +454,7 @@ else:
         col1, col2 = st.columns([4, 1])
 
         with col1:
-            st.write(f"**{rank}. {classes[idx]}**")
+            st.write(f"**{rank}. {display_class_name(classes[idx])}**")
             st.progress(float(score))
 
         with col2:
