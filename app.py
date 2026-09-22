@@ -146,7 +146,48 @@ st.markdown(
         }
 
         [data-testid="stSidebar"] {
-            background: #f0f6f2;
+            background: #edf5f0;
+        }
+
+        [data-testid="stSidebar"] * {
+            color: #173b2b !important;
+        }
+
+        [data-testid="stSidebar"] [data-testid="stMarkdownContainer"] p {
+            color: #315343 !important;
+        }
+
+        [data-testid="stSidebar"] hr {
+            border-color: #cfe0d6;
+        }
+
+        [data-testid="stFileUploader"] section {
+            background: #ffffff !important;
+            border: 0 !important;
+        }
+
+        [data-testid="stFileUploader"] section > div {
+            background: #ffffff !important;
+        }
+
+        [data-testid="stFileUploader"] small {
+            color: #61736a !important;
+        }
+
+        [data-testid="stFileUploader"] label {
+            color: #294c3b !important;
+        }
+
+        [data-testid="stFileUploader"] button {
+            background: #0f5132 !important;
+            color: #ffffff !important;
+            border: 1px solid #0f5132 !important;
+        }
+
+        [data-testid="stFileUploader"] button:hover {
+            background: #198754 !important;
+            color: #ffffff !important;
+            border-color: #198754 !important;
         }
     </style>
     """,
