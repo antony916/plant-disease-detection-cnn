@@ -125,6 +125,33 @@ st.markdown(
             color: #66501f;
         }
 
+        .confidence-note {
+            border-radius: 14px;
+            padding: 0.8rem 1rem;
+            margin-top: 0.8rem;
+            font-size: 0.92rem;
+            line-height: 1.45;
+            font-weight: 600;
+        }
+
+        .confidence-high {
+            background: #123b29;
+            border: 1px solid #2f8057;
+            color: #bdeecf;
+        }
+
+        .confidence-medium {
+            background: #173426;
+            border: 1px solid #3c7455;
+            color: #bfe8ce;
+        }
+
+        .confidence-low {
+            background: #3a3018;
+            border: 1px solid #665622;
+            color: #f4e8b5;
+        }
+
         .footer {
             text-align: center;
             color: #718078;
@@ -439,11 +466,19 @@ else:
         )
 
         if confidence >= 80:
-            st.success("High-confidence model prediction.")
+            confidence_message = "High-confidence model prediction."
+            confidence_class = "confidence-high"
         elif confidence >= 60:
-            st.info("Moderate-confidence prediction. Review the image and result carefully.")
+            confidence_message = "Moderate-confidence prediction. Review the image and result carefully."
+            confidence_class = "confidence-medium"
         else:
-            st.warning("Low-confidence prediction. A clearer image or expert verification is recommended.")
+            confidence_message = "Low-confidence prediction. A clearer image or expert verification is recommended."
+            confidence_class = "confidence-low"
+
+        st.markdown(
+            f'<div class="confidence-note {confidence_class}">{confidence_message}</div>',
+            unsafe_allow_html=True,
+        )
 
     # -----------------------------
     # Top predictions
