@@ -1,17 +1,61 @@
-import os,torch,streamlit as st
+from pathlib import Path
+import sys
+import torch
+import streamlit as st
 from PIL import Image
 from torchvision import transforms
+
+ROOT = Path(__file__).resolve().parent
+sys.path.insert(0, str(ROOT))
+
+from config import IMAGE_SIZE, MODEL_PATH, CLASS_NAMES_PATH
 from src.model import build_model
-st.set_page_config(page_title="Plant Disease Detection",page_icon="🌿"); st.title("🌿 Plant Disease Detection Using CNN")
-MODEL="artifacts/plant_disease_mobilenetv3.pth"; CLASSES="artifacts/class_names.txt"
-if not os.path.exists(MODEL): st.warning("Train first: python src/train.py"); st.stop()
-names=open(CLASSES,encoding="utf-8").read().splitlines(); dev="cuda" if torch.cuda.is_available() else "cpu"
-model=build_model(len(names)); model.load_state_dict(torch.load(MODEL,map_location=dev)); model.to(dev); model.eval()
-tf=transforms.Compose([transforms.Resize((224,224)),transforms.ToTensor(),transforms.Normalize([.485,.456,.406],[.229,.224,.225])])
-f=st.file_uploader("Upload a leaf image",type=["jpg","jpeg","png"])
-if f:
-    im=Image.open(f).convert("RGB"); st.image(im,caption="Uploaded leaf",use_container_width=True)
-    with torch.no_grad(): p=torch.softmax(model(tf(im).unsqueeze(0).to(dev)),1)[0]
-    v,i=torch.topk(p,3); st.success(f"{names[i[0].item()]} — {v[0].item()*100:.2f}%")
-    for score,idx in zip(v,i): st.write(f"{names[idx.item()]}: {score.item()*100:.2f}%")
-    st.caption("AI screening aid; confirm important diagnoses with an agricultural expert.")
+
+st.set_page_config(page_title="Plant Disease Detection", page_icon="🌿", layout="centered")
+
+@st.cache_resource
+def get_model():
+    classes = [x.strip() for x in (ROOT / CLASS_NAMES_PATH).read_text(encoding="utf-8").splitlines() if x.strip()]
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    model = build_model(len(classes)).to(device)
+    model.load_state_dict(torch.load(ROOT / MODEL_PATH, map_location=device))
+    model.eval()
+    return model, classes, device
+
+transform = transforms.Compose([
+    transforms.Resize((IMAGE_SIZE, IMAGE_SIZE)),
+    transforms.ToTensor(),
+    transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225]),
+])
+
+st.title("🌿 Plant Disease Detection")
+st.caption("MobileNetV3-Large • CNN-based image classification")
+
+uploaded = st.file_uploader("Upload a clear plant leaf image", type=["jpg", "jpeg", "png"])
+
+if uploaded:
+    image = Image.open(uploaded).convert("RGB")
+    st.image(image, caption="Uploaded leaf", use_container_width=True)
+
+    with st.spinner("Analyzing leaf..."):
+        model, classes, device = get_model()
+        x = transform(image).unsqueeze(0).to(device)
+        with torch.inference_mode():
+            probs = torch.softmax(model(x), dim=1)[0]
+            values, indices = torch.topk(probs, k=min(5, len(classes)))
+
+    top_idx = int(indices[0])
+    st.success(f"Prediction: {classes[top_idx]}")
+    st.metric("Confidence", f"{float(values[0]) * 100:.2f}%")
+
+    st.subheader("Top predictions")
+    for score, idx in zip(values.tolist(), indices.tolist()):
+        st.write(f"**{classes[idx]}** — {score * 100:.2f}%")
+        st.progress(float(score))
+
+    st.info(
+        "Educational prototype: the prediction is an AI screening result and "
+        "should not replace professional agricultural diagnosis."
+    )
+else:
+    st.write("Upload a leaf image to begin.")
