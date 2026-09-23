@@ -397,6 +397,69 @@ DISEASE_GUIDANCE = {
     },
 }
 
+DISEASE_GUIDANCE.update({
+    "Apple___healthy": {
+        "summary": "No disease pattern was identified by the model for this class.",
+        "management": ["Continue routine monitoring.", "Maintain good airflow and plant hygiene.", "If symptoms appear later, capture a clear image and reassess."],
+        "search": "apple healthy plant care extension",
+    },
+    "Tomato___healthy": {
+        "summary": "No disease pattern was identified by the model for this class.",
+        "management": ["Continue routine monitoring.", "Maintain good airflow and avoid prolonged leaf wetness.", "Reassess if new spots, wilting, or discoloration appear."],
+        "search": "tomato healthy plant care extension",
+    },
+    "Potato___healthy": {
+        "summary": "No disease pattern was identified by the model for this class.",
+        "management": ["Continue routine monitoring.", "Maintain good crop hygiene and airflow.", "Reassess if visible disease symptoms develop."],
+        "search": "potato healthy plant care extension",
+    },
+    "Corn_(maize)___healthy": {
+        "summary": "No disease pattern was identified by the model for this class.",
+        "management": ["Continue routine monitoring.", "Maintain appropriate crop nutrition and field hygiene.", "Reassess if visible symptoms develop."],
+        "search": "corn healthy crop care extension",
+    },
+    "Grape___Black_rot": {
+        "summary": "A fungal disease that can affect grape leaves and fruit.",
+        "management": ["Remove infected fruit and plant debris where practical.", "Improve canopy airflow.", "Avoid prolonged leaf wetness.", "Use only locally approved products according to label and agricultural guidance."],
+        "search": "grape black rot management extension",
+    },
+    "Grape___Esca_(Black_Measles)": {
+        "summary": "A grapevine disease complex associated with leaf and fruit symptoms.",
+        "management": ["Remove severely affected plant material where appropriate.", "Maintain vineyard sanitation and monitor affected vines.", "Consult local viticulture extension guidance for management options."],
+        "search": "grape esca black measles management extension",
+    },
+    "Grape___Leaf_blight_(Isariopsis_Leaf_Spot)": {
+        "summary": "A fungal leaf disease that can cause spotting and premature leaf loss.",
+        "management": ["Remove affected debris where practical.", "Improve canopy airflow.", "Avoid unnecessary leaf wetting.", "Follow local extension guidance for approved control products."],
+        "search": "grape leaf blight Isariopsis management extension",
+    },
+    "Tomato___Bacterial_spot": {
+        "summary": "A bacterial disease that can cause dark spots on leaves and fruit.",
+        "management": ["Avoid working with plants when foliage is wet.", "Remove severely affected material where practical.", "Use clean seed and plant material when available.", "Follow local extension guidance for management products."],
+        "search": "tomato bacterial spot management extension",
+    },
+    "Tomato___Septoria_leaf_spot": {
+        "summary": "A fungal leaf-spot disease that can cause numerous small lesions and leaf drop.",
+        "management": ["Remove affected lower leaves where practical.", "Avoid overhead irrigation.", "Improve airflow and remove plant debris.", "Follow local extension guidance for approved control products."],
+        "search": "tomato Septoria leaf spot management extension",
+    },
+    "Tomato___Leaf_Mold": {
+        "summary": "A fungal disease favored by high humidity and poor air circulation.",
+        "management": ["Increase ventilation and canopy airflow.", "Avoid prolonged leaf wetness.", "Remove severely affected leaves where practical.", "Follow local extension guidance for approved control products."],
+        "search": "tomato leaf mold management extension",
+    },
+    "Pepper,_bell___Bacterial_spot": {
+        "summary": "A bacterial disease that can affect pepper leaves and fruit.",
+        "management": ["Avoid handling plants while wet.", "Remove severely affected material where practical.", "Use clean planting material and maintain field sanitation.", "Follow local extension guidance for management."],
+        "search": "pepper bacterial spot management extension",
+    },
+    "Peach___Bacterial_spot": {
+        "summary": "A bacterial disease that can affect peach leaves and fruit.",
+        "management": ["Remove affected material where practical.", "Maintain good canopy airflow.", "Avoid prolonged wetness.", "Follow local extension guidance for approved management options."],
+        "search": "peach bacterial spot management extension",
+    },
+})
+
 def get_guidance(prediction):
     """Return general management guidance for a predicted disease."""
     if prediction in DISEASE_GUIDANCE:
