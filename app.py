@@ -1,6 +1,9 @@
 from pathlib import Path
 import sys
 import time
+import json
+import urllib.parse
+import urllib.request
 
 import streamlit as st
 import torch
@@ -475,6 +478,143 @@ def get_guidance(prediction):
     }
 
 
+
+
+def fetch_nearby_places(location, query):
+    """Fetch nearby place results using OpenStreetMap's public search service."""
+    params = urllib.parse.urlencode({
+        "q": f"{query}, {location}",
+        "format": "jsonv2",
+        "limit": 8,
+        "addressdetails": 1,
+    })
+    url = "https://nominatim.openstreetmap.org/search?" + params
+    request = urllib.request.Request(
+        url,
+        headers={"User-Agent": "PlantDiseaseDetection/1.0 educational project"},
+    )
+    with urllib.request.urlopen(request, timeout=10) as response:
+        return json.loads(response.read().decode("utf-8"))
+
+
+def render_resource_cards():
+    st.markdown('<div class="section-title">Trusted agricultural resources</div>', unsafe_allow_html=True)
+    resources = [
+        ("🇮🇳 Kisan Call Centre", "Agricultural support in local languages", "1800-180-1551"),
+        ("🌱 Tamil Nadu Horticulture", "Official state horticulture department contacts", "Government resource"),
+        ("👨‍🌾 Agricultural extension", "Connect with qualified agricultural professionals", "Expert support"),
+    ]
+    for title, description, detail in resources:
+        st.markdown(
+            f"""
+            <div class="result-card" style="margin-bottom:0.8rem;">
+                <div class="result-name">{title}</div>
+                <div style="margin-top:0.35rem;">{description}</div>
+                <div class="result-label" style="margin-top:0.6rem;">{detail}</div>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+
+def render_internal_page(page):
+    if page == "🩺 Disease Details":
+        st.markdown('<div class="hero"><h1>🩺 Disease Details</h1><p>Understand the AI result and recommended next steps.</p></div>', unsafe_allow_html=True)
+        prediction = st.session_state.get("prediction")
+        confidence = st.session_state.get("confidence")
+        if not prediction:
+            st.info("Upload a leaf image in Detection first to view disease-specific details.")
+            return
+        guidance = get_guidance(prediction)
+        st.markdown(f"### {display_class_name(prediction)}")
+        if confidence is not None:
+            st.metric("AI confidence", f"{confidence:.2f}%")
+        st.markdown(f'<div class="info-card"><b>Overview:</b> {guidance["summary"]}</div>', unsafe_allow_html=True)
+        st.markdown("### Management")
+        for item in guidance["management"]:
+            st.markdown(f"- {item}")
+        st.warning("AI screening is not a confirmed diagnosis. Verify important treatment decisions with a qualified agricultural professional.")
+
+    elif page == "💊 Treatment & Products":
+        st.markdown('<div class="hero"><h1>💊 Treatment & Products</h1><p>General management information and safer product guidance.</p></div>', unsafe_allow_html=True)
+        prediction = st.session_state.get("prediction")
+        if prediction:
+            guidance = get_guidance(prediction)
+            st.markdown(f"### For: {display_class_name(prediction)}")
+            for item in guidance["management"]:
+                st.markdown(f"- {item}")
+        st.info("We do not provide AI-generated pesticide dosages. Use only products legally approved for the crop and disease in your area, and follow the product label and agricultural extension advice.")
+        st.markdown("### What to check before buying a product")
+        for item in [
+            "Crop and disease listed on the product label",
+            "Registration/approval applicable in your area",
+            "Label directions, precautions and application instructions",
+            "Advice from a qualified agricultural professional when symptoms are severe",
+        ]:
+            st.markdown(f"- {item}")
+        st.markdown("### Product information")
+        st.write("Enter a crop, disease or product name to research it:")
+        term = st.text_input("Search term", placeholder="Example: tomato early blight")
+        if term.strip():
+            query = urllib.parse.quote_plus(term + " agriculture disease management")
+            st.markdown(f"🔎 [Open agricultural information search](https://www.google.com/search?q={query})")
+
+    elif page == "📍 Nearby Agri Shops":
+        st.markdown('<div class="hero"><h1>📍 Nearby Agri Shops</h1><p>Find agriculture-related businesses around a location.</p></div>', unsafe_allow_html=True)
+        location = st.text_input("Enter town, district or PIN code", placeholder="Example: Chennai, Tamil Nadu")
+        shop_type = st.selectbox("What are you looking for?", ["Agricultural shop", "Nursery", "Seed store", "Fertilizer store"])
+        if st.button("🔎 Find nearby", type="primary") and location.strip():
+            try:
+                results = fetch_nearby_places(location.strip(), shop_type)
+                if not results:
+                    st.warning("No matching places were returned for this location.")
+                for place in results:
+                    name = place.get("display_name", "Unnamed place").split(",")[0]
+                    address = place.get("display_name", "Address unavailable")
+                    lat, lon = place.get("lat"), place.get("lon")
+                    st.markdown(
+                        f"""
+                        <div class="result-card" style="margin-bottom:0.8rem;">
+                            <div class="result-name">{name}</div>
+                            <div style="margin-top:0.4rem;">{address}</div>
+                            <div style="margin-top:0.6rem;">
+                                <a href="https://www.google.com/maps/search/?api=1&query={lat},{lon}" target="_blank">📍 Open location in Maps</a>
+                            </div>
+                        </div>
+                        """,
+                        unsafe_allow_html=True,
+                    )
+            except Exception as exc:
+                st.error(f"Could not fetch nearby places right now: {exc}")
+
+    elif page == "👨‍🌾 Agricultural Experts":
+        st.markdown('<div class="hero"><h1>👨‍🌾 Agricultural Experts</h1><p>Verified agricultural support and official contacts.</p></div>', unsafe_allow_html=True)
+        st.markdown("### 🇮🇳 Kisan Call Centre")
+        st.markdown('<div class="info-card"><b>1800-180-1551</b><br>Government agricultural support available in local languages.</div>', unsafe_allow_html=True)
+        st.markdown("### 🌱 Tamil Nadu Horticulture")
+        st.write("Official district horticulture contacts can be used to reach the appropriate agricultural office.")
+        st.link_button("Open Tamil Nadu Horticulture contacts", "https://www.tnhorticulture.tn.gov.in/administration-details")
+        st.markdown("### When to seek expert help")
+        for item in ["Symptoms are spreading quickly", "The AI confidence is low", "The crop has significant damage", "You are considering a chemical treatment"]:
+            st.markdown(f"- {item}")
+
+    elif page == "📚 Resources":
+        st.markdown('<div class="hero"><h1>📚 Agriculture Resources</h1><p>Useful official and educational resources.</p></div>', unsafe_allow_html=True)
+        render_resource_cards()
+        st.link_button("🇮🇳 Kisan Call Centre information", "https://www.dackkms.gov.in/Account/aboutus.aspx")
+        st.link_button("🌱 Tamil Nadu Horticulture Department", "https://www.tnhorticulture.tn.gov.in/administration-details")
+
+    elif page == "💬 Expert Help":
+        st.markdown('<div class="hero"><h1>💬 Expert Help</h1><p>Get human verification when the AI result is uncertain.</p></div>', unsafe_allow_html=True)
+        st.markdown("### Kisan Call Centre")
+        st.markdown("**1800-180-1551**")
+        st.write("Government agricultural support is available through the Kisan Call Centre.")
+        st.link_button("Open official Kisan Call Centre", "https://www.dackkms.gov.in/Account/aboutus.aspx")
+        st.markdown("### Tamil Nadu")
+        st.write("For Tamil Nadu users, the state Horticulture Department publishes district contacts.")
+        st.link_button("Find district horticulture contacts", "https://www.tnhorticulture.tn.gov.in/administration-details")
+
+
 transform = transforms.Compose(
     [
         transforms.Resize((IMAGE_SIZE, IMAGE_SIZE)),
@@ -486,6 +626,12 @@ transform = transforms.Compose(
     ]
 )
 
+
+# Internal pages render inside the same Streamlit application.
+if selected_page != "🌿 Detection":
+    render_internal_page(selected_page)
+    st.markdown('<div class="footer">Plant Disease Detection • AI Agriculture Assistance</div>', unsafe_allow_html=True)
+    st.stop()
 
 # -----------------------------
 # Header
@@ -507,6 +653,22 @@ st.markdown(
 with st.sidebar:
     st.markdown("## 🌱 Plant AI")
     st.caption("CNN-based plant disease screening")
+
+    st.markdown("---")
+    st.markdown("### Navigate")
+    selected_page = st.radio(
+        "Open page",
+        [
+            "🌿 Detection",
+            "🩺 Disease Details",
+            "💊 Treatment & Products",
+            "📍 Nearby Agri Shops",
+            "👨‍🌾 Agricultural Experts",
+            "📚 Resources",
+            "💬 Expert Help",
+        ],
+        label_visibility="collapsed",
+    )
 
     st.markdown("---")
     st.markdown("### Model")
@@ -596,6 +758,8 @@ else:
         prediction = classes[top_idx]
         prediction_display = display_class_name(prediction)
         confidence = float(values[0]) * 100
+        st.session_state["prediction"] = prediction
+        st.session_state["confidence"] = confidence
 
         st.markdown(
             f"""
