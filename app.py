@@ -354,6 +354,64 @@ def display_class_name(name):
     return name.replace("___", " — ").replace("_", " ")
 
 
+DISEASE_GUIDANCE = {
+    "Apple___Apple_scab": {
+        "summary": "A fungal disease commonly associated with dark olive-to-brown lesions on leaves and fruit.",
+        "management": ["Remove badly affected fallen leaves and fruit where practical.", "Improve airflow by pruning and avoid prolonged leaf wetness.", "Use locally approved fungicide products only according to the product label and agricultural guidance."],
+        "search": "Apple scab management extension",
+    },
+    "Apple___Black_rot": {
+        "summary": "A fungal disease that can affect leaves, fruit, and woody tissue.",
+        "management": ["Remove and dispose of visibly infected plant material.", "Prune affected dead wood with clean tools.", "Maintain good orchard sanitation and airflow.", "Use only locally approved products according to label directions."],
+        "search": "Apple black rot management extension",
+    },
+    "Apple___Cedar_apple_rust": {
+        "summary": "A fungal disease that can produce yellow-orange leaf symptoms and fruit infection.",
+        "management": ["Remove heavily affected plant material where practical.", "Maintain good airflow around the canopy.", "Follow local agricultural extension guidance for approved fungicide programs."],
+        "search": "Cedar apple rust management extension",
+    },
+    "Tomato___Late_blight": {
+        "summary": "A serious disease that can spread rapidly under cool, wet conditions.",
+        "management": ["Remove severely affected leaves and fruit where practical.", "Avoid overhead irrigation and reduce prolonged leaf wetness.", "Separate affected plants from healthy plants when feasible.", "Use only locally approved products following the label and expert guidance."],
+        "search": "tomato late blight management extension",
+    },
+    "Tomato___Early_blight": {
+        "summary": "A fungal disease that commonly causes dark concentric leaf spots and progressive leaf loss.",
+        "management": ["Remove severely affected lower leaves.", "Water at soil level and avoid wetting foliage.", "Improve airflow and remove plant debris.", "Follow local extension guidance for approved disease-control products."],
+        "search": "tomato early blight management extension",
+    },
+    "Potato___Early_blight": {
+        "summary": "A fungal disease that commonly produces dark target-like lesions on potato foliage.",
+        "management": ["Remove infected debris after harvest.", "Maintain balanced plant nutrition and avoid prolonged leaf wetness.", "Use crop rotation where practical.", "Use approved products only according to local label guidance."],
+        "search": "potato early blight management extension",
+    },
+    "Potato___Late_blight": {
+        "summary": "A destructive disease favored by cool, wet conditions.",
+        "management": ["Remove severely affected foliage and tubers where practical.", "Avoid overhead irrigation and prolonged leaf wetness.", "Separate affected material from healthy crops.", "Follow local agricultural extension recommendations for control products."],
+        "search": "potato late blight management extension",
+    },
+    "Corn_(maize)___Common_rust_": {
+        "summary": "A fungal rust disease that produces reddish-brown pustules on leaves.",
+        "management": ["Monitor new growth for expanding rust symptoms.", "Choose locally recommended resistant varieties when available.", "Maintain good crop management and follow local extension advice for severe outbreaks."],
+        "search": "corn common rust management extension",
+    },
+}
+
+def get_guidance(prediction):
+    """Return general management guidance for a predicted disease."""
+    if prediction in DISEASE_GUIDANCE:
+        return DISEASE_GUIDANCE[prediction]
+    return {
+        "summary": "The model identified a disease class, but a class-specific management note is not included in this prototype yet.",
+        "management": [
+            "Take a clear second image and compare the result with the plant's visible symptoms.",
+            "Remove severely affected material only when appropriate for the crop.",
+            "Consult a qualified agricultural professional before treatment decisions.",
+        ],
+        "search": f"{display_class_name(prediction)} plant disease management extension",
+    }
+
+
 transform = transforms.Compose(
     [
         transforms.Resize((IMAGE_SIZE, IMAGE_SIZE)),
@@ -533,6 +591,55 @@ else:
         </div>
         """,
         unsafe_allow_html=True,
+    )
+
+    guidance = get_guidance(prediction)
+
+    st.markdown('<div class="section-title">Disease management</div>', unsafe_allow_html=True)
+    st.markdown(
+        f'<div class="info-card"><b>What it means:</b> {guidance["summary"]}</div>',
+        unsafe_allow_html=True,
+    )
+
+    for item in guidance["management"]:
+        st.markdown(f"- {item}")
+
+    st.markdown('<div class="section-title">Treatment & product information</div>', unsafe_allow_html=True)
+    st.info(
+        "For treatment products, use only products legally approved for your crop and disease in your area. "
+        "Check the product label and local agricultural extension advice rather than relying on an AI dosage recommendation."
+    )
+
+    search_query = guidance["search"].replace(" ", "+")
+    st.markdown(
+        f'🔎 [Find trusted management guidance online](https://www.google.com/search?q={search_query})'
+    )
+
+    st.markdown('<div class="section-title">Find nearby agricultural help</div>', unsafe_allow_html=True)
+    help_area = st.text_input(
+        "Enter your town / district to find nearby agricultural shops or consultants",
+        placeholder="Example: Chennai, Tamil Nadu",
+        key="help_area",
+    )
+    if help_area.strip():
+        maps_query = help_area.strip().replace(" ", "+")
+        st.markdown(
+            f'📍 [Agricultural shops near {help_area}](https://www.google.com/maps/search/agricultural+shop+{maps_query})'
+        )
+        st.markdown(
+            f'👨‍🌾 [Agricultural consultants / plant clinics near {help_area}](https://www.google.com/maps/search/agricultural+consultant+{maps_query})'
+        )
+        st.markdown(
+            f'🛒 [Search agricultural products near {help_area}](https://www.google.com/search?q=agricultural+products+{maps_query})'
+        )
+
+    st.markdown('<div class="section-title">Consult an expert</div>', unsafe_allow_html=True)
+    st.markdown(
+        "If symptoms are severe, spreading quickly, or the confidence is low, "
+        "share the plant image and model result with a qualified agricultural professional."
+    )
+    st.markdown(
+        "💬 [Find an agricultural professional / plant clinic](https://www.google.com/search?q=agricultural+extension+plant+clinic)"
     )
 
     st.markdown(
