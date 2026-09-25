@@ -85,6 +85,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
             onPressed: () => Navigator.pushNamed(context, AppRouter.notificationSettings),
             icon: const Icon(Icons.account_circle_outlined),
           ),
+          IconButton(
+            tooltip: 'Family sharing',
+            onPressed: () => Navigator.pushNamed(context, AppRouter.familySharing),
+            icon: const Icon(Icons.groups_outlined),
+          ),
         ],
       ),
       body: RefreshIndicator(
