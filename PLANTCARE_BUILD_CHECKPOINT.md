@@ -272,10 +272,19 @@ Already implemented locally/demo:
 - deterministic watering notification IDs.
 - notification coordinator syncing garden tasks.
 
-NOT yet cloud-persistent:
-- notification preferences in Supabase.
-- notification center records in Supabase.
-- device token persistence/real push integration.
+Cloud persistence status after 2026-09-25 build:
+- notification preferences: Supabase persistence implemented.
+- notification center records: Supabase persistence implemented.
+- device-token persistence: Supabase registration service implemented.
+- actual OS push delivery / FCM/APNs scheduling: NOT yet live.
+- the notification coordinator now works through the runtime-selected notification-center service.
+
+Cloud implementation files:
+- backend/supabase/002_notification_persistence.sql
+- mobile/lib/core/services/supabase_notification_center_service.dart
+- mobile/lib/core/services/supabase_notification_service.dart
+
+The Demo notification center/service remains the fallback when Supabase is not configured.
 
 ## 9. WEATHER / LOCATION
 
@@ -431,18 +440,25 @@ Preferences:
 ## 17. NEXT TASK — CONTINUE HERE
 
 NEXT TASK:
-Build cloud notification persistence.
+Complete production notification delivery, then move to family sharing and account/profile hardening.
 
-Work in this order:
-1. Add Supabase notification preference persistence.
-2. Add Supabase notification-center persistence.
-3. Persist/register device tokens in the cloud repository layer.
-4. Switch AppServices notification services between Demo and Supabase.
-5. Keep Demo mode fully functional when Supabase is absent.
-6. Then build family-sharing foundation and role-aware RLS.
-7. Then account/profile UI and logout/session handling.
-8. Then security/testing audit.
-9. Only then activate and live-test a real Supabase project.
+Completed in this build session:
+1. Supabase notification preference persistence.
+2. Supabase notification-center persistence.
+3. Device-token persistence service.
+4. Runtime Demo/Supabase notification service switching.
+5. Demo fallback preserved.
+
+Remaining sequence:
+1. Connect an actual mobile push provider (FCM/APNs) and OS scheduling/permission handling.
+2. Build family-sharing foundation and role-aware RLS.
+3. Build account/profile UI, session restoration and logout UX.
+4. Add secure image storage and production image-upload path.
+5. Connect the evaluated PlantVillage model through a production inference service while preserving the current 38-class baseline and confidence safeguards.
+6. Add real camera/gallery capture.
+7. Security/testing audit.
+8. Only then activate and live-test a real Supabase project.
+9. Continue expanded datasets/models, community, experts, shops and admin panel according to PRODUCT_BLUEPRINT.md.
 
 Do not ask Renio to create the Supabase project yet unless the code is actually ready for activation.
 
@@ -453,3 +469,44 @@ In the new conversation, send exactly:
 Resume PlantCare AI from PLANTCARE_BUILD_CHECKPOINT.md in the GitHub repo antony916/plant-disease-detection-cnn. Read and verify the checkpoint against the current repo. Do not restart, do not make me repeat the project history, and do not switch to Project 2. Continue from NEXT TASK — cloud notification persistence. Before any code/file change, tell me exactly what you will change and why.
 
 Then continue building.
+
+
+## 19. CHAT-CONTINUITY CONTRACT
+
+The user wants the same project to continue across chats without restarting. The conversation transcript is NOT the source of truth. GitHub is.
+
+When a new chat begins:
+- Read PLANTCARE_NEW_CHAT_RESUME.md first.
+- Read PLANTCARE_BUILD_CHECKPOINT.md second.
+- Verify the stated status against actual repository files/commits before changing anything.
+- Read PRODUCT_BLUEPRINT.md for product direction.
+- Do not switch to Project 2.
+- Do not ask the user to repeat project history that is already documented.
+- Do not replace the approved Figma design.
+- Use connected GitHub/Figma/Notion/research resources when available and useful.
+- Before every code/file change, tell Renio exactly what will change and why.
+- Continue building rather than merely explaining what could be built.
+- If a resource/connector is unavailable in the new chat, continue from GitHub without pretending it was accessed.
+- Never claim cloud/live/push/build/test functionality is live unless it has actually been configured and verified.
+
+## 20. APPROVED CONVERSATIONAL STYLE
+
+Use the established casual style: direct, practical, concise, friendly, and naturally using "machi". Keep continuity with the existing PlantCare terminology. Avoid making Renio repeat commands unnecessarily. The assistant should act as the builder/technical lead, using available tools to make the changes rather than handing the user long manual setup instructions.
+
+## 21. KEY RESOURCES
+
+GitHub repo:
+https://github.com/antony916/plant-disease-detection-cnn
+
+Figma:
+https://www.figma.com/design/7BCd5SwUETIzVWPYtpzjTo
+Name: PlantCare AI — Product Blueprint
+
+Notion/project documentation:
+Use the connected Notion workspace and existing PlantCare/project pages when available. The waste-project Notion page is not the PlantCare source of truth.
+
+Reference research:
+- Plantix: https://plantix.net/en/
+- Agrio: https://agrio.app/
+
+The Figma and reference products are inputs to the product design; PlantCare's own design system remains the source of truth for implementation.
