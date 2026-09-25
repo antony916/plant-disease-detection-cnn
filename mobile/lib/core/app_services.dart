@@ -10,6 +10,7 @@ import 'services/notification_center_service.dart';
 import 'services/notification_coordinator.dart';
 import 'services/notification_service.dart';
 import 'services/supabase_auth_service.dart';
+import 'services/supabase_garden_repository.dart';
 import 'services/weather_service.dart';
 
 class AppServices {
@@ -22,7 +23,9 @@ class AppServices {
   static AuthService _auth = DemoAuthService();
   static AuthService get auth => _auth;
 
-  static final GardenRepository garden = DemoGardenRepository();
+  static GardenRepository _garden = DemoGardenRepository();
+  static GardenRepository get garden => _garden;
+
   static final DiagnosisRepository diagnosis =
       DemoDiagnosisRepository(DemoDiagnosisService());
   static final NotificationService notifications = DemoNotificationService();
@@ -40,6 +43,10 @@ class AppServices {
 
     if (cloud.isCloudEnabled && cloud.client != null) {
       _auth = SupabaseAuthService(cloud.client!);
+      _garden = SupabaseGardenRepository(client: cloud.client!);
+    } else {
+      _auth = DemoAuthService();
+      _garden = DemoGardenRepository();
     }
 
     await notifications.initialize();
