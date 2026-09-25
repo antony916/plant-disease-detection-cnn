@@ -477,7 +477,7 @@ Cloud Garden Persistence is now explicitly wired and documented:
 Cloud Garden Persistence does not require a live Supabase project yet. Live activation still waits for real project credentials and schema application.
 
 NEXT TASK:
-Complete production notification delivery, then continue family sharing and account/profile hardening.
+Continue with production image storage/upload and real camera/gallery capture; then connect the evaluated PlantVillage model through a production inference service.
 
 Completed in this build session:
 1. Supabase notification preference persistence.
@@ -489,7 +489,7 @@ Completed in this build session:
 Remaining sequence:
 1. Connect an actual mobile push provider (FCM/APNs) and OS scheduling/permission handling.
 2. Build family-sharing UI: invite/accept, member list, role management and leave/remove flows.
-3. Build account/profile UI and logout UX on top of the session foundation already implemented.
+3. Build account/profile UI and logout UX on top of the session foundation already implemented. [COMPLETED 2026-09-25: Profile screen, account display, Family Sharing/Notification Settings entry points, and sign-out flow.]
 4. Add secure image storage and production image-upload path.
 5. Connect the evaluated PlantVillage model through a production inference service while preserving the current 38-class baseline and confidence safeguards.
 6. Add real camera/gallery capture.
