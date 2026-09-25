@@ -8,6 +8,8 @@ import '../../features/garden/add_plant_screen.dart';
 import '../../features/garden/dashboard_screen.dart';
 import '../../features/garden/plant_detail_screen.dart';
 import '../../features/library/library_screen.dart';
+import '../../features/notifications/notification_center_screen.dart';
+import '../../features/notifications/notification_settings_screen.dart';
 import '../../features/scanner/scanner_screen.dart';
 
 abstract final class AppRouter {
@@ -19,6 +21,8 @@ abstract final class AppRouter {
   static const assistant = '/assistant';
   static const library = '/library';
   static const addPlant = '/add-plant';
+  static const notifications = '/notifications';
+  static const notificationSettings = '/notification-settings';
 
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -50,6 +54,10 @@ abstract final class AppRouter {
         return MaterialPageRoute(builder: (_) => const LibraryScreen());
       case addPlant:
         return MaterialPageRoute(builder: (_) => const AddPlantScreen());
+      case notifications:
+        return MaterialPageRoute(builder: (_) => const NotificationCenterScreen());
+      case notificationSettings:
+        return MaterialPageRoute(builder: (_) => const NotificationSettingsScreen());
       default:
         return MaterialPageRoute(builder: (_) => const LoginScreen());
     }
