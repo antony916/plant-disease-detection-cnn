@@ -437,6 +437,31 @@ Preferences:
 - Keep Demo mode functional while cloud integration is being prepared.
 - Continue from the checkpoint rather than asking Renio to repeat old history.
 
+## Auth/session bootstrap status
+
+Completed in this build:
+- unified application/cloud auth contracts;
+- session-aware AuthGate at application startup;
+- Supabase session restoration when a persisted session exists;
+- Demo mode remains available when Supabase is not configured;
+- existing email login UI now invokes the runtime auth service;
+- Google login remains behind the mobile OAuth redirect configuration boundary and is not claimed live.
+
+## Family-sharing foundation status
+
+Completed in this build:
+- family member role model: owner/editor/viewer;
+- membership states: pending/active/removed;
+- invite email/inviter metadata;
+- role-aware RLS helper functions;
+- member read access to shared garden data;
+- owner/editor write access for plants and tasks;
+- owner-only family membership management;
+- pending invite records do not grant garden access;
+- Supabase family-sharing service boundary;
+- shared-garden lookup support for active family members;
+- plant writes preserve the garden owner's ownership.
+
 ## 17. NEXT TASK — CONTINUE HERE
 
 NEXT TASK:
@@ -451,8 +476,8 @@ Completed in this build session:
 
 Remaining sequence:
 1. Connect an actual mobile push provider (FCM/APNs) and OS scheduling/permission handling.
-2. Build family-sharing foundation and role-aware RLS.
-3. Build account/profile UI, session restoration and logout UX.
+2. Build family-sharing UI: invite/accept, member list, role management and leave/remove flows.
+3. Build account/profile UI and logout UX on top of the session foundation already implemented.
 4. Add secure image storage and production image-upload path.
 5. Connect the evaluated PlantVillage model through a production inference service while preserving the current 38-class baseline and confidence safeguards.
 6. Add real camera/gallery capture.
