@@ -1,24 +1,27 @@
-abstract interface class CloudBackend {
-  Future<bool> isConfigured();
-  Future<void> initialize();
-}
+import 'package:supabase_flutter/supabase_flutter.dart';
 
-/// Placeholder until Supabase credentials are supplied through secure
-/// runtime configuration. Credentials must never be committed to Git.
-class SupabaseBackend implements CloudBackend {
-  final String? url;
-  final String? anonKey;
+import 'supabase_runtime_config.dart';
 
-  const SupabaseBackend({this.url, this.anonKey});
+enum BackendMode { demo, supabase }
 
-  @override
-  Future<bool> isConfigured() async =>
-      url != null && url!.isNotEmpty && anonKey != null && anonKey!.isNotEmpty;
+class BackendRuntime {
+  final SupabaseRuntimeConfig config;
+  BackendMode mode = BackendMode.demo;
+  SupabaseClient? client;
 
-  @override
+  BackendRuntime(this.config);
+
   Future<void> initialize() async {
-    if (!await isConfigured()) return;
-    // Supabase client initialization will be enabled when runtime
-    // configuration is connected.
+    if (!config.isConfigured) return;
+
+    await Supabase.initialize(
+      url: config.url,
+      anonKey: config.publishableKey,
+    );
+
+    client = Supabase.instance.client;
+    mode = BackendMode.supabase;
   }
+
+  bool get isCloudEnabled => mode == BackendMode.supabase;
 }
