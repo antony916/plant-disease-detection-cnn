@@ -40,7 +40,7 @@ class _PlantDetailScreenState extends State<PlantDetailScreen> {
     return null;
   }
 
-  Future<void> _markWatered(Plant plant) async {
+  Future<void> _confirmDelete(Plant plant) async {\n    final confirmed = await showDialog<bool>(\n      context: context,\n      builder: (context) => AlertDialog(\n        title: const Text('Delete plant?'),\n        content: Text(\n          'Remove \${plant.name} from your garden? This cannot be undone.',\n        ),\n        actions: [\n          TextButton(\n            onPressed: () => Navigator.pop(context, false),\n            child: const Text('Cancel'),\n          ),\n          FilledButton(\n            onPressed: () => Navigator.pop(context, true),\n            child: const Text('Delete'),\n          ),\n        ],\n      ),\n    );\n\n    if (confirmed != true) return;\n\n    await AppServices.garden.deletePlant(plant.id);\n    if (!mounted) return;\n\n    ScaffoldMessenger.of(context).showSnackBar(\n      SnackBar(content: Text('\${plant.name} removed from your garden.')),\n    );\n    Navigator.pushReplacementNamed(context, AppRouter.dashboard);\n  }\n\n  Future<void> _markWatered(Plant plant) async {
     final now = DateTime.now();
     final updated = plant.copyWith(
       lastWateredAt: now,
@@ -69,6 +69,20 @@ class _PlantDetailScreenState extends State<PlantDetailScreen> {
           widget.plantName,
           style: const TextStyle(fontWeight: FontWeight.w800),
         ),
+        actions: [
+          FutureBuilder<Plant?>(
+            future: _plantFuture,
+            builder: (context, snapshot) {
+              final plant = snapshot.data;
+              if (plant == null) return const SizedBox.shrink();
+              return IconButton(
+                tooltip: 'Delete plant',
+                icon: const Icon(Icons.delete_outline),
+                onPressed: () => _confirmDelete(plant),
+              );
+            },
+          ),
+        ],
       ),
       body: FutureBuilder<Plant?>(
         future: _plantFuture,
