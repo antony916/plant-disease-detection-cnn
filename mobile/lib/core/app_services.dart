@@ -1,3 +1,4 @@
+import 'services/care_service.dart';
 import 'services/demo_services.dart';
 import 'services/diagnosis_service.dart';
 
@@ -8,4 +9,5 @@ class AppServices {
   static final garden = DemoGardenRepository();
   static final diagnosis = DemoDiagnosisRepository(DemoDiagnosisService());
   static final notifications = DemoNotificationService();
+  static final care = RuleBasedCareService();
 }
