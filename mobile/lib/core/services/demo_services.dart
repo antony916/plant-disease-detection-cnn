@@ -174,6 +174,7 @@ class DemoDiagnosisRepository implements DiagnosisRepository {
     required String imagePath,
     String? plantId,
     String? plantHint,
+    String? imageReference,
   }) async {
     final result = await _service.diagnose(
       imagePath: imagePath,
@@ -187,6 +188,7 @@ class DemoDiagnosisRepository implements DiagnosisRepository {
           id: 'diagnosis-${DateTime.now().microsecondsSinceEpoch}',
           plantId: resolvedPlantId,
           imagePath: imagePath,
+          imageReference: imageReference,
           result: result,
           createdAt: DateTime.now(),
         ),
