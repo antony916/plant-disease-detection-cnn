@@ -21,6 +21,8 @@ import 'services/supabase_notification_center_service.dart';
 import 'services/supabase_notification_service.dart';
 import 'services/weather_service.dart';
 import 'services/inference_runtime_config.dart';
+import 'services/push_runtime_config.dart';
+import 'services/firebase_push_notification_service.dart';
 import 'services/remote_diagnosis_service.dart';
 
 class AppServices {
@@ -35,6 +37,9 @@ class AppServices {
 
   static GardenRepository _garden = DemoGardenRepository();
   static GardenRepository get garden => _garden;
+
+  static final PushRuntimeConfig pushRuntime =
+      PushRuntimeConfig.fromEnvironment();
 
   static final InferenceRuntimeConfig inference =
       InferenceRuntimeConfig.fromEnvironment();
@@ -89,7 +94,9 @@ class AppServices {
         service: _diagnosisService,
         garden: _garden,
       );
-      _push = DemoPushNotificationService();
+      _push = pushRuntime.enabled
+          ? FirebasePushNotificationService()
+          : DemoPushNotificationService();
       _notifications = SupabaseNotificationService(
         client,
         push: _push,
