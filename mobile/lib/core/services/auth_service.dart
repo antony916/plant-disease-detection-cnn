@@ -10,12 +10,17 @@ class AppUser {
   });
 }
 
-abstract interface class AuthService {
+abstract class AuthService {
   Future<AppUser?> currentUser();
-  Future<AppUser> signInWithGoogle();
+
+  Future<AppUser> signInWithGoogle() => throw UnsupportedError(
+        'Google OAuth requires the mobile redirect configuration.',
+      );
+
   Future<AppUser> signInWithEmail({
     required String email,
     required String password,
   });
+
   Future<void> signOut();
 }
