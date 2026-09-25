@@ -132,3 +132,18 @@ The current service implementations are deliberately development-only. They do n
 8. Add expert/community/shop modules.
 9. Release Android/iOS builds and establish versioned update workflow.
 
+
+
+## Mobile implementation progress — 2026-09-25
+
+The production mobile foundation now includes:
+- typed app routing for login, dashboard, scanner, diagnosis, plant detail, library, AI assistant, and add-plant;
+- repository-backed garden plant loading;
+- functional Add Plant flow using the repository abstraction;
+- scanner loading/error state and diagnosis-service integration;
+- typed DiagnosisResult routing;
+- confidence-aware diagnosis result UI with an expert/AI escalation path;
+- PlantCare bottom navigation labels/icons: Garden, Scan, Library, Profile;
+- provider-independent demo services remain the development implementation.
+
+The mobile UI is not yet production-connected to cloud authentication, cloud persistence, push notifications, or live mobile inference. Those integrations remain behind the service interfaces.
