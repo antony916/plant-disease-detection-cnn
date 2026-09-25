@@ -1,6 +1,9 @@
+import '../models/diagnosis_record.dart';
 import '../models/garden_task.dart';
 import '../models/plant.dart';
 import 'auth_service.dart';
+import 'diagnosis_repository.dart';
+import 'diagnosis_service.dart';
 import 'garden_repository.dart';
 import 'notification_service.dart';
 
@@ -82,7 +85,8 @@ class DemoGardenRepository implements GardenRepository {
             plantId: plant.id,
             type: GardenTaskType.watering,
             title: 'Water ${plant.name}',
-            subtitle: '${plant.location} • Every ${plant.wateringIntervalDays} days',
+            subtitle:
+                '${plant.location} • Every ${plant.wateringIntervalDays} days',
             dueAt: next,
           ),
         );
@@ -91,8 +95,7 @@ class DemoGardenRepository implements GardenRepository {
 
     final existing = {for (final task in _tasks) task.id: task};
     return [
-      for (final task in generated)
-        existing[task.id] ?? task,
+      for (final task in generated) existing[task.id] ?? task,
       ..._tasks.where((task) => !generated.any((item) => item.id == task.id)),
     ];
   }
@@ -126,6 +129,7 @@ class DemoGardenRepository implements GardenRepository {
     final tasks = _buildTodayTasks();
     final index = tasks.indexWhere((task) => task.id == taskId);
     if (index < 0) return;
+
     final task = tasks[index];
     final completed = task.copyWith(
       completed: true,
@@ -141,10 +145,71 @@ class DemoGardenRepository implements GardenRepository {
         final now = DateTime.now();
         _plants[plantIndex] = plant.copyWith(
           lastWateredAt: now,
-          nextWatering: now.add(Duration(days: plant.wateringIntervalDays)),
+          nextWatering:
+              now.add(Duration(days: plant.wateringIntervalDays)),
         );
       }
     }
+  }
+}
+
+class DemoDiagnosisRepository implements DiagnosisRepository {
+  final DiagnosisService _service;
+  final List<DiagnosisRecord> _history = [];
+
+  DemoDiagnosisRepository(this._service);
+
+  @override
+  Future<DiagnosisResult> diagnose({
+    required String imagePath,
+    String? plantId,
+    String? plantHint,
+  }) async {
+    final result = await _service.diagnose(
+      imagePath: imagePath,
+      plantHint: plantHint,
+    );
+
+    final resolvedPlantId = plantId ?? _plantIdForName(result.plantName);
+    if (resolvedPlantId != null) {
+      await saveDiagnosis(
+        DiagnosisRecord(
+          id: 'diagnosis-${DateTime.now().microsecondsSinceEpoch}',
+          plantId: resolvedPlantId,
+          imagePath: imagePath,
+          result: result,
+          createdAt: DateTime.now(),
+        ),
+      );
+    }
+
+    return result;
+  }
+
+  @override
+  Future<void> saveDiagnosis(DiagnosisRecord record) async {
+    _history.insert(0, record);
+  }
+
+  @override
+  Future<List<DiagnosisRecord>> history({String? plantId}) async {
+    if (plantId == null) return List.unmodifiable(_history);
+    return List.unmodifiable(
+      _history.where((record) => record.plantId == plantId),
+    );
+  }
+
+  String? _plantIdForName(String plantName) {
+    final normalized = plantName.trim().toLowerCase();
+    for (final plant in const [
+      'tomato',
+      'mint',
+    ]) {
+      if (plant == normalized) {
+        return '${plant}-1';
+      }
+    }
+    return null;
   }
 }
 
