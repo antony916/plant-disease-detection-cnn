@@ -1,5 +1,6 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../models/garden.dart';
 import '../models/garden_task.dart';
 import '../models/plant.dart';
 import 'cloud_garden_repository.dart';
@@ -14,8 +15,12 @@ class SupabaseGardenRepository implements CloudGardenRepository {
     SupabaseGardenService? gardenService,
   }) : gardenService = gardenService ?? SupabaseGardenService(client);
 
-  Future<String> _gardenId() async =>
-      (await gardenService.getOrCreateDefaultGarden()).id;
+  Future<Garden> _garden() => gardenService.getOrCreateDefaultGarden();
+
+  Future<String> _gardenId() async => (await _garden()).id;
+
+  @override
+  Future<Garden> getGarden() => _garden();
 
   @override
   Future<List<Plant>> getPlants() async {
@@ -31,7 +36,7 @@ class SupabaseGardenRepository implements CloudGardenRepository {
   Future<Plant> addPlant(Plant plant) async {
     final user = client.auth.currentUser;
     if (user == null) throw const AuthException('Sign in required.');
-    final garden = await gardenService.getOrCreateDefaultGarden();
+    final garden = await _garden();
 
     final row = await client
         .from('plants')
@@ -72,12 +77,16 @@ class SupabaseGardenRepository implements CloudGardenRepository {
       'last_watered_at': plant.lastWateredAt?.toIso8601String(),
       'next_watering_at': plant.nextWatering?.toIso8601String(),
       'updated_at': DateTime.now().toIso8601String(),
-    }).eq('id', plant.id);
+    }).eq('id', plant.id).eq('garden_id', await _gardenId());
   }
 
   @override
   Future<void> deletePlant(String plantId) async {
-    await client.from('plants').delete().eq('id', plantId);
+    await client
+        .from('plants')
+        .delete()
+        .eq('id', plantId)
+        .eq('garden_id', await _gardenId());
   }
 
   @override
