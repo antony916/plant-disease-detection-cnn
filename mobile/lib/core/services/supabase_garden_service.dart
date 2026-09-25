@@ -13,15 +13,32 @@ class SupabaseGardenService {
       throw const AuthException('Sign in required.');
     }
 
-    final existing = await client
+    final owned = await client
         .from('gardens')
         .select()
         .eq('owner_id', user.id)
         .order('created_at')
         .limit(1);
 
-    if (existing.isNotEmpty) {
-      return _fromRow(existing.first);
+    if (owned.isNotEmpty) {
+      return _fromRow(owned.first);
+    }
+
+    final memberships = await client
+        .from('family_members')
+        .select('garden_id')
+        .eq('user_id', user.id)
+        .eq('status', 'active')
+        .order('created_at')
+        .limit(1);
+
+    if (memberships.isNotEmpty) {
+      final garden = await client
+          .from('gardens')
+          .select()
+          .eq('id', memberships.first['garden_id'].toString())
+          .single();
+      return _fromRow(garden);
     }
 
     final created = await client
