@@ -1,4 +1,5 @@
 import '../models/diagnosis_record.dart';
+import '../models/garden.dart';
 import '../models/garden_task.dart';
 import '../models/plant.dart';
 import 'auth_service.dart';
@@ -39,6 +40,15 @@ class DemoAuthService implements AuthService {
 }
 
 class DemoGardenRepository implements GardenRepository {
+  final Garden _garden = const Garden(
+    id: 'demo-garden',
+    ownerId: 'demo-user',
+    name: 'My Garden',
+  );
+
+  @override
+  Future<Garden> getGarden() async => _garden;
+
   final List<Plant> _plants = [
     Plant(
       id: 'tomato-1',
