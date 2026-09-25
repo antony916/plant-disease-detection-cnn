@@ -43,6 +43,7 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
         name: name,
         species: species.isEmpty ? 'Unknown species' : species,
         health: 'Not assessed',
+        createdAt: DateTime.now(),
       ),
     );
 
