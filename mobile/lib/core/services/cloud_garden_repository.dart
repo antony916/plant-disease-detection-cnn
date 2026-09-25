@@ -1,7 +1,9 @@
+import '../models/garden.dart';
 import '../models/garden_task.dart';
 import '../models/plant.dart';
 
 abstract interface class CloudGardenRepository {
+  Future<Garden> getGarden();
   Future<List<Plant>> getPlants();
   Future<Plant> addPlant(Plant plant);
   Future<void> updatePlant(Plant plant);
