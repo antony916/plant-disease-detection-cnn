@@ -31,12 +31,13 @@ class SupabaseGardenRepository implements CloudGardenRepository {
   Future<Plant> addPlant(Plant plant) async {
     final user = client.auth.currentUser;
     if (user == null) throw const AuthException('Sign in required.');
+    final garden = await gardenService.getOrCreateDefaultGarden();
 
     final row = await client
         .from('plants')
         .insert({
-          'garden_id': await _gardenId(),
-          'owner_id': user.id,
+          'garden_id': garden.id,
+          'owner_id': garden.ownerId,
           'name': plant.name,
           'species': plant.species,
           'health_status': plant.health,
