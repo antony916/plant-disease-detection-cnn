@@ -6,7 +6,7 @@ import 'core/app_services.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await AppServices.cloud.initialize();
+  await AppServices.initialize();
 
   runApp(const PlantCareApp());
 }
