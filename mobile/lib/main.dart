@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 
 import 'app.dart';
+import 'core/app_services.dart';
 
-void main() {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  await AppServices.cloud.initialize();
+
   runApp(const PlantCareApp());
 }
