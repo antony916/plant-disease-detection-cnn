@@ -72,11 +72,11 @@ class AppServices {
         service: _diagnosisService,
         garden: _garden,
       );
+      _push = DemoPushNotificationService();
       _notifications = SupabaseNotificationService(
         client,
         push: _push,
       );
-      _push = DemoPushNotificationService();
       _notificationCenter = SupabaseNotificationCenterService(client);
     } else {
       _auth = DemoAuthService();
