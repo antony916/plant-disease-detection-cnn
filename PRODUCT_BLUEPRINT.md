@@ -104,3 +104,31 @@ The design is intentionally a product blueprint rather than a giant static proto
 
 ## Versioning
 GitHub is the source of truth. Future feature changes should be delivered as versioned changes (for example v1.1, v1.2). User-facing mobile releases go through the Android/iOS stores; knowledge-base and content changes should be designed to be updateable without retraining the model when possible.
+
+## Implementation progress — mobile foundation
+
+The production client foundation now lives under `mobile/`.
+
+Implemented:
+- reusable PlantCare theme tokens matching the Figma design system;
+- six core screen routes;
+- authentication, garden, diagnosis and notification service boundaries;
+- localization boundary with English/Tamil/Hindi starter resources;
+- cloud-ready Postgres/Supabase schema under `backend/supabase/`;
+- RLS ownership policies for the initial personal-garden data model;
+- demo service implementations that keep the UI runnable before cloud credentials are connected.
+
+The current service implementations are deliberately development-only. They do not represent production authentication, push notifications, or cloud persistence.
+
+### Next implementation sequence
+
+1. Connect the authenticated cloud backend.
+2. Add secure image storage and diagnosis history.
+3. Connect the evaluated PlantVillage model through a production inference service.
+4. Add real camera/gallery capture.
+5. Add push notification registration and smart watering scheduling.
+6. Add family sharing and role-aware RLS.
+7. Expand the validated AI coverage with additional real-world datasets.
+8. Add expert/community/shop modules.
+9. Release Android/iOS builds and establish versioned update workflow.
+
