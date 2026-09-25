@@ -21,6 +21,7 @@ class SupabaseDiagnosisRepository implements DiagnosisRepository {
     required String imagePath,
     String? plantId,
     String? plantHint,
+    String? imageReference,
   }) async {
     final result = await service.diagnose(
       imagePath: imagePath,
@@ -36,6 +37,7 @@ class SupabaseDiagnosisRepository implements DiagnosisRepository {
           id: 'local-diagnosis-\${DateTime.now().microsecondsSinceEpoch}',
           plantId: resolvedPlantId,
           imagePath: imagePath,
+          imageReference: imageReference,
           result: result,
           createdAt: DateTime.now(),
         ),
@@ -55,7 +57,7 @@ class SupabaseDiagnosisRepository implements DiagnosisRepository {
     await client.from('diagnoses').insert({
       'plant_id': record.plantId,
       'owner_id': user.id,
-      'image_url': record.imagePath.isEmpty ? null : record.imagePath,
+      'image_url': record.imageReference ?? (record.imagePath.isEmpty ? null : record.imagePath),
       'plant_name': record.result.plantName,
       'condition': record.result.condition,
       'confidence': record.result.confidence,
