@@ -22,6 +22,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     super.initState();
     _plantsFuture = AppServices.garden.getPlants();
     _tasksFuture = AppServices.garden.getTodayTasks();
+    _syncNotifications();
   }
 
   void _refresh() {
@@ -29,6 +30,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
       _plantsFuture = AppServices.garden.getPlants();
       _tasksFuture = AppServices.garden.getTodayTasks();
     });
+    _syncNotifications();
+  }
+
+  Future<void> _syncNotifications() async {
+    final plants = await AppServices.garden.getPlants();
+    final tasks = await AppServices.garden.getTodayTasks();
+    await AppServices.notificationCoordinator.syncGardenTasks(
+      plants: plants,
+      tasks: tasks,
+    );
   }
 
   @override
