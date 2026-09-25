@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import 'core/auth_gate.dart';
 import 'core/localization/app_localizations.dart';
 import 'core/navigation/app_router.dart';
 import 'core/theme/app_theme.dart';
@@ -24,7 +25,7 @@ class PlantCareApp extends StatelessWidget {
       ],
       supportedLocales: AppLocalizations.supportedLocales,
       onGenerateRoute: AppRouter.onGenerateRoute,
-      initialRoute: AppRouter.login,
+      home: const AuthGate(),
     );
   }
 }
