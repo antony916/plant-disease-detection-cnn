@@ -54,10 +54,10 @@ Admins can manage:
 
 Backend authorization must enforce admin access; hiding a UI button is not considered security.
 
-## Design
-Figma blueprint: https://www.figma.com/design/7BCd5SwUETIzVWPYtpzjTo
+## Design system
+Figma file: https://www.figma.com/design/7BCd5SwUETIzVWPYtpzjTo
 
-Core screens:
+Core screens now include:
 1. Welcome/Login
 2. Garden Dashboard
 3. AI Plant Scanner
@@ -65,10 +65,24 @@ Core screens:
 5. Plant Detail
 6. AI Assistant
 
-The design system should be extended before large-scale UI implementation so components remain reusable across Android and iPhone.
+The Figma foundation now defines:
+- PlantCare semantic color tokens with light/dark modes
+- Primitive color tokens
+- reusable typography styles
+- elevation styles
+- consistent 24px screen padding
+- 8pt spacing rhythm
+- 16px standard card radius and 20px featured-card radius
+- 44px minimum interactive controls
+- consistent bottom navigation for authenticated primary screens
+- loading, empty, error and offline state patterns
+- low-confidence AI escalation pattern
+- localization-safe copy/layout rules
+
+The design is intentionally a product blueprint rather than a giant static prototype. Reusable components and states are being established before the full production implementation.
 
 ## Delivery phases
-1. Product/design foundation
+1. Product/design foundation — in progress
 2. Production mobile shell and authentication
 3. Garden/cloud data
 4. AI scanner and current 38-class model integration
@@ -80,6 +94,13 @@ The design system should be extended before large-scale UI implementation so com
 10. Admin panel
 11. Expanded datasets/models and real-world evaluation
 12. Store release, monitoring and iterative updates
+
+## Current implementation boundary
+- Streamlit remains the current model/demo interface.
+- Production consumer UI is planned as Flutter for Android and iPhone.
+- Backend services are designed around authenticated cloud data, storage, notifications and role-based access.
+- The current 38-class model can be integrated first while broader plant/pest/nutrient coverage is developed separately.
+- Content/knowledge and treatment rules should be server-managed so they can be updated without requiring a model retrain whenever possible.
 
 ## Versioning
 GitHub is the source of truth. Future feature changes should be delivered as versioned changes (for example v1.1, v1.2). User-facing mobile releases go through the Android/iOS stores; knowledge-base and content changes should be designed to be updateable without retraining the model when possible.
