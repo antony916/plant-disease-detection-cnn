@@ -1,3 +1,4 @@
+import '../models/diagnosis_record.dart';
 import 'diagnosis_service.dart';
 
 abstract interface class DiagnosisRepository {
@@ -7,5 +8,7 @@ abstract interface class DiagnosisRepository {
     String? plantHint,
   });
 
-  Future<List<DiagnosisResult>> history({String? plantId});
+  Future<void> saveDiagnosis(DiagnosisRecord record);
+
+  Future<List<DiagnosisRecord>> history({String? plantId});
 }
