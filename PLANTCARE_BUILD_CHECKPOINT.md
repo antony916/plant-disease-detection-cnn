@@ -64,6 +64,16 @@ Runtime behavior:
 - credentials are not stored in GitHub
 
 ## Latest completed step
+Cloud garden persistence + cloud diagnosis history:
+- AppServices now selects DemoGardenRepository or SupabaseGardenRepository based on runtime backend configuration
+- Auth and Garden use the same runtime backend selection
+- Supabase default garden creation/loading is implemented
+- Supabase plant CRUD is implemented and scoped by owner/garden through RLS
+- Add Plant, Dashboard, Plant Detail, watering/update, and delete paths use the selected repository
+- SupabaseDiagnosisRepository persists diagnosis results and loads per-plant history
+- Diagnosis repository now switches with runtime backend mode
+
+## Previous completed step
 Runtime account/auth foundation:
 - AppServices.initialize()
 - Demo auth by default
@@ -71,17 +81,13 @@ Runtime account/auth foundation:
 - startup initializes AppServices before runApp
 
 ## NEXT TASK — RESUME HERE
-Build cloud garden persistence:
-1. Create/get each authenticated user's default garden.
-2. Connect plants to that garden.
-3. Improve Supabase Plant mapping to preserve the current Plant model fields.
-4. Connect Add Plant to cloud when Supabase mode is active.
-5. Load cloud plants into Dashboard / Plant Detail.
-6. Update/delete cloud plants.
-7. Keep Demo mode working when Supabase is not configured.
+Build cloud notification persistence:
+1. Persist notification preferences and device-token state in Supabase.
+2. Connect notification settings to the selected backend.
+3. Keep Demo mode working without Supabase.
 
 Then:
-- cloud diagnosis history
+- family sharing foundation
 - notification data/preferences persistence
 - family sharing foundation
 - account/profile UI
