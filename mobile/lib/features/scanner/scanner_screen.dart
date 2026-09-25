@@ -105,7 +105,8 @@ class _ScannerScreenState extends State<ScannerScreen> {
       );
 
       final DiagnosisResult result = await AppServices.diagnosis.diagnose(
-        imagePath: storedImage,
+        imagePath: imagePath,
+        imageReference: storedImage,
         plantId: plant.id,
         plantHint: plant.name,
       );
