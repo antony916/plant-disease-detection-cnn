@@ -1,3 +1,17 @@
+# 🌱 PlantCare AI — START HERE
+
+> **This repository is an active long-running build. Do NOT treat the README as the whole project.**
+>
+> Before continuing the project, read:
+> 1. PLANTCARE_NEW_CHAT_RESUME.md
+> 2. PLANTCARE_BUILD_CHECKPOINT.md
+> 3. PRODUCT_BLUEPRINT.md
+>
+> Resume instruction:
+> **Resume PlantCare AI from PLANTCARE_BUILD_CHECKPOINT.md in the GitHub repo antony916/plant-disease-detection-cnn. Read and verify the checkpoint against the current repo. Do not restart, do not make me repeat the project history, and do not switch to Project 2. Continue from NEXT TASK. Before any code/file change, tell me exactly what you will change and why.**
+>
+> GitHub is the implementation source of truth. The checkpoint files contain the durable project memory needed to continue after a chat reaches its message limit.
+
 # Plant Disease Detection Using CNN
 
 An end-to-end AI mini-project that classifies plant leaf images into disease categories using **PyTorch + MobileNetV3-Large transfer learning** and exposes the trained model through a **Streamlit** application.
