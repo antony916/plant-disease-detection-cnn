@@ -116,7 +116,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   child: _QuickAction(
                     icon: Icons.add_circle_outline,
                     title: 'Add plant',
-                    onTap: () {},
+                    onTap: () => Navigator.pushNamed(context, AppRouter.addPlant),
                   ),
                 ),
               ],
