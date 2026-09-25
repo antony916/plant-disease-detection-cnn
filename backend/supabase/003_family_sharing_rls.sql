@@ -172,12 +172,16 @@ with check (
                   where p.id = plant_id)
 );
 
-create policy "members can view family membership"
+create policy "members can view active family membership"
 on public.family_members for select
 using (
   public.is_garden_member(garden_id)
   and status = 'active'
 );
+
+create policy "owners can view family membership"
+on public.family_members for select
+using (public.can_manage_family(garden_id));
 
 create policy "owners manage family membership"
 on public.family_members for insert
