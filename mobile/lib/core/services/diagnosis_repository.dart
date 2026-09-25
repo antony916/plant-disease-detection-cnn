@@ -6,6 +6,7 @@ abstract interface class DiagnosisRepository {
     required String imagePath,
     String? plantId,
     String? plantHint,
+    String? imageReference,
   });
 
   Future<void> saveDiagnosis(DiagnosisRecord record);
