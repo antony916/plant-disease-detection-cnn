@@ -8,6 +8,7 @@ import '../../features/garden/add_plant_screen.dart';
 import '../../features/garden/dashboard_screen.dart';
 import '../../features/garden/plant_detail_screen.dart';
 import '../../features/library/library_screen.dart';
+import '../../features/profile/profile_screen.dart';
 import '../../features/notifications/notification_center_screen.dart';
 import '../../features/notifications/notification_settings_screen.dart';
 import '../../features/family/family_sharing_screen.dart';
@@ -25,6 +26,7 @@ abstract final class AppRouter {
   static const notifications = '/notifications';
   static const notificationSettings = '/notification-settings';
   static const familySharing = '/family-sharing';
+  static const profile = '/profile';
 
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -62,6 +64,8 @@ abstract final class AppRouter {
         return MaterialPageRoute(builder: (_) => const NotificationSettingsScreen());
       case familySharing:
         return MaterialPageRoute(builder: (_) => const FamilySharingScreen());
+      case profile:
+        return MaterialPageRoute(builder: (_) => const ProfileScreen());
       default:
         return MaterialPageRoute(builder: (_) => const LoginScreen());
     }
@@ -80,7 +84,7 @@ class AppBottomNav extends StatelessWidget {
       AppRouter.dashboard,
       AppRouter.scanner,
       AppRouter.library,
-      AppRouter.assistant,
+      AppRouter.profile,
     ];
 
     Navigator.pushReplacementNamed(context, routes[index]);
