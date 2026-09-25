@@ -3,24 +3,27 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../models/garden_task.dart';
 import '../models/plant.dart';
 import 'cloud_garden_repository.dart';
+import 'supabase_garden_service.dart';
 
 class SupabaseGardenRepository implements CloudGardenRepository {
   final SupabaseClient client;
-  final String gardenId;
+  final SupabaseGardenService gardenService;
 
-  const SupabaseGardenRepository({
+  SupabaseGardenRepository({
     required this.client,
-    required this.gardenId,
-  });
+    SupabaseGardenService? gardenService,
+  }) : gardenService = gardenService ?? SupabaseGardenService(client);
+
+  Future<String> _gardenId() async =>
+      (await gardenService.getOrCreateDefaultGarden()).id;
 
   @override
   Future<List<Plant>> getPlants() async {
     final rows = await client
         .from('plants')
         .select()
-        .eq('garden_id', gardenId)
+        .eq('garden_id', await _gardenId())
         .order('created_at');
-
     return rows.map(_plantFromRow).toList();
   }
 
@@ -32,12 +35,13 @@ class SupabaseGardenRepository implements CloudGardenRepository {
     final row = await client
         .from('plants')
         .insert({
-          'garden_id': gardenId,
+          'garden_id': await _gardenId(),
           'owner_id': user.id,
           'name': plant.name,
           'species': plant.species,
           'health_status': plant.health,
           'image_url': plant.imageUrl,
+          'sunlight_hours': _sunlightHours(plant.sunlight),
           'soil_type': plant.soilType,
           'last_watered_at': plant.lastWateredAt?.toIso8601String(),
           'next_watering_at': plant.nextWatering?.toIso8601String(),
@@ -56,6 +60,7 @@ class SupabaseGardenRepository implements CloudGardenRepository {
       'species': plant.species,
       'health_status': plant.health,
       'image_url': plant.imageUrl,
+      'sunlight_hours': _sunlightHours(plant.sunlight),
       'soil_type': plant.soilType,
       'last_watered_at': plant.lastWateredAt?.toIso8601String(),
       'next_watering_at': plant.nextWatering?.toIso8601String(),
@@ -70,6 +75,9 @@ class SupabaseGardenRepository implements CloudGardenRepository {
 
   @override
   Future<List<GardenTask>> getTodayTasks() async {
+    final user = client.auth.currentUser;
+    if (user == null) throw const AuthException('Sign in required.');
+
     final now = DateTime.now();
     final start = DateTime(now.year, now.month, now.day);
     final end = start.add(const Duration(days: 1));
@@ -77,26 +85,23 @@ class SupabaseGardenRepository implements CloudGardenRepository {
     final rows = await client
         .from('garden_tasks')
         .select()
-        .eq('owner_id', client.auth.currentUser!.id)
+        .eq('owner_id', user.id)
         .gte('due_at', start.toIso8601String())
         .lt('due_at', end.toIso8601String())
         .order('due_at');
 
-    return rows.map((row) {
-      final type = _taskType(row['task_type'] as String?);
-      return GardenTask(
-        id: row['id'].toString(),
-        plantId: row['plant_id'].toString(),
-        type: type,
-        title: row['title'] as String,
-        subtitle: row['subtitle'] as String? ?? '',
-        dueAt: DateTime.parse(row['due_at'] as String),
-        completed: row['completed_at'] != null,
-        completedAt: row['completed_at'] == null
-            ? null
-            : DateTime.parse(row['completed_at'] as String),
-      );
-    }).toList();
+    return rows.map((row) => GardenTask(
+      id: row['id'].toString(),
+      plantId: row['plant_id'].toString(),
+      type: _taskType(row['task_type'] as String?),
+      title: row['title'] as String,
+      subtitle: row['subtitle'] as String? ?? '',
+      dueAt: DateTime.parse(row['due_at'] as String),
+      completed: row['completed_at'] != null,
+      completedAt: row['completed_at'] == null
+          ? null
+          : DateTime.parse(row['completed_at'] as String),
+    )).toList();
   }
 
   @override
@@ -113,6 +118,7 @@ class SupabaseGardenRepository implements CloudGardenRepository {
       species: row['species'] as String? ?? 'Unknown species',
       health: row['health_status'] as String? ?? 'Not assessed',
       imageUrl: row['image_url'] as String?,
+      sunlight: _sunlightLabel(row['sunlight_hours']),
       soilType: row['soil_type'] as String? ?? 'General potting mix',
       lastWateredAt: _date(row['last_watered_at']),
       nextWatering: _date(row['next_watering_at']),
@@ -120,19 +126,29 @@ class SupabaseGardenRepository implements CloudGardenRepository {
     );
   }
 
+  double? _sunlightHours(String value) {
+    final match = RegExp(r'(\d+(?:\.\d+)?)').firstMatch(value);
+    return match == null ? null : double.tryParse(match.group(1)!);
+  }
+
+  String _sunlightLabel(dynamic value) {
+    final hours = (value as num?)?.toDouble();
+    if (hours == null) return 'Not specified';
+    if (hours >= 8) return '8+ hours';
+    if (hours >= 6) return '6–8 hours';
+    if (hours >= 4) return 'Partial sun';
+    return 'Low light';
+  }
+
   DateTime? _date(dynamic value) =>
       value == null ? null : DateTime.tryParse(value.toString());
 
   GardenTaskType _taskType(String? value) {
     switch (value) {
-      case 'sunlight':
-        return GardenTaskType.sunlight;
-      case 'care':
-        return GardenTaskType.care;
-      case 'diagnosis':
-        return GardenTaskType.diagnosis;
-      default:
-        return GardenTaskType.watering;
+      case 'sunlight': return GardenTaskType.sunlight;
+      case 'care': return GardenTaskType.care;
+      case 'diagnosis': return GardenTaskType.diagnosis;
+      default: return GardenTaskType.watering;
     }
   }
 }
