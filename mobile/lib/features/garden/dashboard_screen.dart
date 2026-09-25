@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../core/app_services.dart';
 import '../../core/models/plant.dart';
+import '../../core/models/garden.dart';
 import '../../core/models/garden_task.dart';
 import '../../core/navigation/app_router.dart';
 import '../../core/theme/app_theme.dart';
@@ -14,12 +15,14 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
+  late Future<Garden> _gardenFuture;
   late Future<List<Plant>> _plantsFuture;
   late Future<List<GardenTask>> _tasksFuture;
 
   @override
   void initState() {
     super.initState();
+    _gardenFuture = AppServices.garden.getGarden();
     _plantsFuture = AppServices.garden.getPlants();
     _tasksFuture = AppServices.garden.getTodayTasks();
     _syncNotifications();
@@ -27,6 +30,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   void _refresh() {
     setState(() {
+      _gardenFuture = AppServices.garden.getGarden();
       _plantsFuture = AppServices.garden.getPlants();
       _tasksFuture = AppServices.garden.getTodayTasks();
     });
@@ -56,12 +60,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 color: PlantCareColors.muted,
               ),
             ),
-            Text(
-              'My Garden',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.w800,
-              ),
+            FutureBuilder<Garden>(
+              future: _gardenFuture,
+              builder: (context, snapshot) {
+                return Text(
+                  snapshot.data?.name ?? 'My Garden',
+                  style: const TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.w800,
+                  ),
+                );
+              },
             ),
           ],
         ),
