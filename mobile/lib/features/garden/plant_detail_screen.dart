@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../core/app_services.dart';
+import '../../core/models/diagnosis_record.dart';
 import '../../core/models/plant.dart';
 import '../../core/theme/app_theme.dart';
 
@@ -86,7 +87,8 @@ class _PlantDetailScreenState extends State<PlantDetailScreen> {
                 height: 220,
                 decoration: BoxDecoration(
                   color: PlantCareColors.surface,
-                  borderRadius: BorderRadius.circular(PlantCareRadius.featured),
+                  borderRadius:
+                      BorderRadius.circular(PlantCareRadius.featured),
                 ),
                 child: Center(
                   child: Text(
@@ -100,16 +102,25 @@ class _PlantDetailScreenState extends State<PlantDetailScreen> {
                 children: [
                   _Metric(title: 'Health', value: plant.health),
                   _Metric(title: 'Sunlight', value: plant.sunlight),
-                  _Metric(title: 'Water', value: _wateringLabel(plant.nextWatering)),
+                  _Metric(
+                    title: 'Water',
+                    value: _wateringLabel(plant.nextWatering),
+                  ),
                 ],
               ),
               const SizedBox(height: PlantCareSpacing.lg),
               Text(
                 plant.species,
-                style: const TextStyle(color: PlantCareColors.muted, fontSize: 13),
+                style: const TextStyle(
+                  color: PlantCareColors.muted,
+                  fontSize: 13,
+                ),
               ),
               const SizedBox(height: 4),
-              Text(plant.location, style: const TextStyle(fontWeight: FontWeight.w700)),
+              Text(
+                plant.location,
+                style: const TextStyle(fontWeight: FontWeight.w700),
+              ),
               const SizedBox(height: PlantCareSpacing.lg),
               const Text(
                 'Care plan',
@@ -118,7 +129,10 @@ class _PlantDetailScreenState extends State<PlantDetailScreen> {
               const SizedBox(height: PlantCareSpacing.sm),
               Card(
                 child: ListTile(
-                  leading: const Icon(Icons.water_drop_outlined, color: PlantCareColors.primary),
+                  leading: const Icon(
+                    Icons.water_drop_outlined,
+                    color: PlantCareColors.primary,
+                  ),
                   title: Text(_wateringTitle(plant.nextWatering)),
                   subtitle: Text(
                     'Every ${plant.wateringIntervalDays} days • ${plant.soilType}',
@@ -132,7 +146,10 @@ class _PlantDetailScreenState extends State<PlantDetailScreen> {
               const SizedBox(height: PlantCareSpacing.sm),
               Card(
                 child: ListTile(
-                  leading: const Icon(Icons.wb_sunny_outlined, color: PlantCareColors.primary),
+                  leading: const Icon(
+                    Icons.wb_sunny_outlined,
+                    color: PlantCareColors.primary,
+                  ),
                   title: const Text('Sunlight'),
                   subtitle: Text(plant.sunlight),
                 ),
@@ -154,12 +171,65 @@ class _PlantDetailScreenState extends State<PlantDetailScreen> {
                 const SizedBox(height: PlantCareSpacing.sm),
                 Card(
                   child: ListTile(
-                    leading: const Icon(Icons.water_drop, color: PlantCareColors.primary),
+                    leading: const Icon(
+                      Icons.water_drop,
+                      color: PlantCareColors.primary,
+                    ),
                     title: const Text('Last watered'),
                     subtitle: Text(_formatDate(plant.lastWateredAt!)),
                   ),
                 ),
               ],
+              const SizedBox(height: PlantCareSpacing.sm),
+              FutureBuilder<List<DiagnosisRecord>>(
+                future: AppServices.diagnosis.history(plantId: plant.id),
+                builder: (context, historySnapshot) {
+                  if (historySnapshot.connectionState ==
+                      ConnectionState.waiting) {
+                    return const Card(
+                      child: Padding(
+                        padding: EdgeInsets.all(PlantCareSpacing.md),
+                        child: Center(child: CircularProgressIndicator()),
+                      ),
+                    );
+                  }
+
+                  if (historySnapshot.hasError) {
+                    return const Card(
+                      child: ListTile(
+                        leading: Icon(Icons.info_outline),
+                        title: Text('Diagnosis history unavailable'),
+                        subtitle: Text(
+                          'We could not load previous AI scan results.',
+                        ),
+                      ),
+                    );
+                  }
+
+                  final history = historySnapshot.data ?? const [];
+                  if (history.isEmpty) {
+                    return const Card(
+                      child: ListTile(
+                        leading: Icon(Icons.health_and_safety_outlined),
+                        title: Text('No AI diagnoses yet'),
+                        subtitle: Text(
+                          'Your future plant scans will appear here.',
+                        ),
+                      ),
+                    );
+                  }
+
+                  return Column(
+                    children: [
+                      for (final record in history) ...[
+                        _DiagnosisTimelineCard(record: record),
+                        if (record != history.last)
+                          const SizedBox(height: PlantCareSpacing.sm),
+                      ],
+                    ],
+                  );
+                },
+              ),
             ],
           );
         },
@@ -194,6 +264,46 @@ class _PlantDetailScreenState extends State<PlantDetailScreen> {
   }
 }
 
+class _DiagnosisTimelineCard extends StatelessWidget {
+  final DiagnosisRecord record;
+
+  const _DiagnosisTimelineCard({required this.record});
+
+  @override
+  Widget build(BuildContext context) {
+    final percent = (record.result.confidence * 100).round();
+    final lowConfidence =
+        record.result.needsExpertReview || record.result.confidence < 0.70;
+
+    return Card(
+      child: ListTile(
+        leading: Icon(
+          lowConfidence
+              ? Icons.warning_amber_rounded
+              : Icons.biotech_outlined,
+          color: lowConfidence
+              ? PlantCareColors.warning
+              : PlantCareColors.primary,
+        ),
+        title: Text(
+          record.result.condition,
+          style: const TextStyle(fontWeight: FontWeight.w700),
+        ),
+        subtitle: Text(
+          '${percent}% confidence • ${_formatDate(record.createdAt)}'
+          '${lowConfidence ? ' • Expert review recommended' : ''}',
+        ),
+      ),
+    );
+  }
+
+  String _formatDate(DateTime value) {
+    final local = value.toLocal();
+    return '${local.day.toString().padLeft(2, '0')}/'
+        '${local.month.toString().padLeft(2, '0')}/${local.year}';
+  }
+}
+
 class _Metric extends StatelessWidget {
   final String title;
   final String value;
@@ -210,7 +320,10 @@ class _Metric extends StatelessWidget {
           children: [
             Text(
               title,
-              style: const TextStyle(color: PlantCareColors.muted, fontSize: 12),
+              style: const TextStyle(
+                color: PlantCareColors.muted,
+                fontSize: 12,
+              ),
             ),
             const SizedBox(height: 3),
             Text(
