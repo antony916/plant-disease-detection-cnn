@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../core/app_services.dart';
 import '../../core/models/plant.dart';
+import '../../core/models/garden_task.dart';
 import '../../core/navigation/app_router.dart';
 import '../../core/theme/app_theme.dart';
 
@@ -14,16 +15,19 @@ class DashboardScreen extends StatefulWidget {
 
 class _DashboardScreenState extends State<DashboardScreen> {
   late Future<List<Plant>> _plantsFuture;
+  late Future<List<GardenTask>> _tasksFuture;
 
   @override
   void initState() {
     super.initState();
     _plantsFuture = AppServices.garden.getPlants();
+    _tasksFuture = AppServices.garden.getTodayTasks();
   }
 
   void _refresh() {
     setState(() {
       _plantsFuture = AppServices.garden.getPlants();
+      _tasksFuture = AppServices.garden.getTodayTasks();
     });
   }
 
@@ -123,6 +127,53 @@ class _DashboardScreenState extends State<DashboardScreen> {
             ),
             const SizedBox(height: PlantCareSpacing.lg),
             Text(
+              'Today',
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                    fontWeight: FontWeight.w800,
+                  ),
+            ),
+            const SizedBox(height: PlantCareSpacing.sm),
+            FutureBuilder<List<GardenTask>>(
+              future: _tasksFuture,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Padding(
+                    padding: EdgeInsets.all(PlantCareSpacing.md),
+                    child: Center(child: CircularProgressIndicator()),
+                  );
+                }
+                final tasks = snapshot.data ?? const <GardenTask>[];
+                if (tasks.isEmpty) {
+                  return const Card(
+                    child: Padding(
+                      padding: EdgeInsets.all(PlantCareSpacing.md),
+                      child: Text(
+                        'No care tasks due today.',
+                        style: TextStyle(color: PlantCareColors.muted),
+                      ),
+                    ),
+                  );
+                }
+                return Column(
+                  children: [
+                    for (int i = 0; i < tasks.length; i++) ...[
+                      if (i > 0) const SizedBox(height: PlantCareSpacing.sm),
+                      _TaskCard(
+                        task: tasks[i],
+                        onComplete: tasks[i].completed
+                            ? null
+                            : () async {
+                                await AppServices.garden.completeTask(tasks[i].id);
+                                _refresh();
+                              },
+                      ),
+                    ],
+                  ],
+                );
+              },
+            ),
+            const SizedBox(height: PlantCareSpacing.lg),
+            Text(
               'My plants',
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
                     fontWeight: FontWeight.w800,
@@ -176,6 +227,48 @@ class _DashboardScreenState extends State<DashboardScreen> {
         ),
       ),
       bottomNavigationBar: const AppBottomNav(selectedIndex: 0),
+    );
+  }
+}
+
+class _TaskCard extends StatelessWidget {
+  final GardenTask task;
+  final VoidCallback? onComplete;
+
+  const _TaskCard({required this.task, required this.onComplete});
+
+  @override
+  Widget build(BuildContext context) {
+    final icon = switch (task.type) {
+      GardenTaskType.watering => Icons.water_drop_outlined,
+      GardenTaskType.sunlight => Icons.wb_sunny_outlined,
+      GardenTaskType.care => Icons.eco_outlined,
+      GardenTaskType.diagnosis => Icons.health_and_safety_outlined,
+    };
+
+    return Card(
+      child: ListTile(
+        leading: CircleAvatar(
+          backgroundColor: PlantCareColors.surface,
+          child: Icon(icon, color: PlantCareColors.primary),
+        ),
+        title: Text(
+          task.title,
+          style: TextStyle(
+            fontWeight: FontWeight.w700,
+            decoration: task.completed ? TextDecoration.lineThrough : null,
+          ),
+        ),
+        subtitle: Text(task.subtitle),
+        trailing: task.completed
+            ? const Icon(Icons.check_circle, color: PlantCareColors.success)
+            : TextButton(
+                onPressed: onComplete,
+                child: Text(
+                  task.type == GardenTaskType.watering ? 'Watered' : 'Done',
+                ),
+              ),
+      ),
     );
   }
 }
