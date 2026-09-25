@@ -6,6 +6,6 @@ class AppServices {
 
   static final auth = DemoAuthService();
   static final garden = DemoGardenRepository();
-  static final diagnosis = DemoDiagnosisService();
+  static final diagnosis = DemoDiagnosisRepository(DemoDiagnosisService());
   static final notifications = DemoNotificationService();
 }
