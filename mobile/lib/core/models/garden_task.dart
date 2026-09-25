@@ -8,6 +8,7 @@ class GardenTask {
   final String subtitle;
   final DateTime dueAt;
   final bool completed;
+  final DateTime? completedAt;
 
   const GardenTask({
     required this.id,
@@ -17,5 +18,22 @@ class GardenTask {
     required this.subtitle,
     required this.dueAt,
     this.completed = false,
+    this.completedAt,
   });
+
+  GardenTask copyWith({
+    bool? completed,
+    DateTime? completedAt,
+  }) {
+    return GardenTask(
+      id: id,
+      plantId: plantId,
+      type: type,
+      title: title,
+      subtitle: subtitle,
+      dueAt: dueAt,
+      completed: completed ?? this.completed,
+      completedAt: completedAt ?? this.completedAt,
+    );
+  }
 }
