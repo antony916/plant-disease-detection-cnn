@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../../core/app_services.dart';
 import '../../core/models/plant.dart';
@@ -18,6 +19,8 @@ class _ScannerScreenState extends State<ScannerScreen> {
   String? _selectedPlantId;
   bool _isAnalyzing = false;
   String? _error;
+  final ImagePicker _picker = ImagePicker();
+  String? _selectedImagePath;
 
   @override
   void initState() {
@@ -45,8 +48,35 @@ class _ScannerScreenState extends State<ScannerScreen> {
     return null;
   }
 
+  Future<void> _pickAndAnalyze(ImageSource source) async {
+    if (_isAnalyzing) return;
+
+    final picked = await _picker.pickImage(
+      source: source,
+      imageQuality: 90,
+      maxWidth: 2048,
+      maxHeight: 2048,
+    );
+    if (picked == null) return;
+
+    setState(() {
+      _selectedImagePath = picked.path;
+      _error = null;
+    });
+
+    await _analyze();
+  }
+
   Future<void> _analyze() async {
     if (_isAnalyzing) return;
+
+    final imagePath = _selectedImagePath;
+    if (imagePath == null || imagePath.isEmpty) {
+      setState(() {
+        _error = 'Choose or capture a plant photo first.';
+      });
+      return;
+    }
 
     final plants = await _plantsFuture;
     final plant = _selectedPlant(plants);
@@ -64,8 +94,18 @@ class _ScannerScreenState extends State<ScannerScreen> {
     });
 
     try {
+      final user = await AppServices.auth.currentUser();
+      if (user == null) {
+        throw StateError('Sign in required.');
+      }
+
+      final storedImage = await AppServices.imageStorage.uploadPlantImage(
+        filePath: imagePath,
+        userId: user.id,
+      );
+
       final DiagnosisResult result = await AppServices.diagnosis.diagnose(
-        imagePath: 'demo://scanner-capture',
+        imagePath: storedImage,
         plantId: plant.id,
         plantHint: plant.name,
       );
@@ -234,7 +274,7 @@ class _ScannerScreenState extends State<ScannerScreen> {
                   children: [
                     Expanded(
                       child: OutlinedButton.icon(
-                        onPressed: _isAnalyzing ? null : _analyze,
+                        onPressed: _isAnalyzing ? null : () => _pickAndAnalyze(ImageSource.gallery),
                         icon: const Icon(Icons.photo_library_outlined),
                         label: const Text('Upload photo'),
                       ),
@@ -242,7 +282,7 @@ class _ScannerScreenState extends State<ScannerScreen> {
                     const SizedBox(width: PlantCareSpacing.sm),
                     Expanded(
                       child: FilledButton.icon(
-                        onPressed: _isAnalyzing ? null : _analyze,
+                        onPressed: _isAnalyzing ? null : () => _pickAndAnalyze(ImageSource.camera),
                         icon: const Icon(Icons.camera_alt_outlined),
                         label: const Text('Take photo'),
                       ),
