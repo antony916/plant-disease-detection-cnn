@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../services/diagnosis_service.dart';
 import '../../features/auth/login_screen.dart';
 import '../../features/assistant/assistant_screen.dart';
 import '../../features/diagnosis/diagnosis_screen.dart';
@@ -26,15 +27,19 @@ abstract final class AppRouter {
       case scanner:
         return MaterialPageRoute(builder: (_) => const ScannerScreen());
       case diagnosis:
-        return MaterialPageRoute(
-          builder: (_) => DiagnosisScreen(
-            plantName: settings.arguments is String ? settings.arguments as String : 'Plant',
-          ),
-        );
+        final result = settings.arguments;
+        if (result is DiagnosisResult) {
+          return MaterialPageRoute(
+            builder: (_) => DiagnosisScreen(result: result),
+          );
+        }
+        return MaterialPageRoute(builder: (_) => const ScannerScreen());
       case plant:
         return MaterialPageRoute(
           builder: (_) => PlantDetailScreen(
-            plantName: settings.arguments is String ? settings.arguments as String : 'Tomato',
+            plantName: settings.arguments is String
+                ? settings.arguments as String
+                : 'Tomato',
           ),
         );
       case assistant:
@@ -53,13 +58,15 @@ class AppBottomNav extends StatelessWidget {
   const AppBottomNav({super.key, required this.selectedIndex});
 
   void _go(BuildContext context, int index) {
-    final routes = [
+    if (index == selectedIndex) return;
+
+    const routes = [
       AppRouter.dashboard,
       AppRouter.scanner,
       AppRouter.library,
       AppRouter.assistant,
     ];
-    if (index == selectedIndex) return;
+
     Navigator.pushReplacementNamed(context, routes[index]);
   }
 
@@ -69,10 +76,26 @@ class AppBottomNav extends StatelessWidget {
       selectedIndex: selectedIndex,
       onDestinationSelected: (index) => _go(context, index),
       destinations: const [
-        NavigationDestination(icon: Icon(Icons.home_outlined), selectedIcon: Icon(Icons.home), label: 'Garden'),
-        NavigationDestination(icon: Icon(Icons.document_scanner_outlined), selectedIcon: Icon(Icons.document_scanner), label: 'Scan'),
-        NavigationDestination(icon: Icon(Icons.local_florist_outlined), selectedIcon: Icon(Icons.local_florist), label: 'Library'),
-        NavigationDestination(icon: Icon(Icons.auto_awesome_outlined), selectedIcon: Icon(Icons.auto_awesome), label: 'AI'),
+        NavigationDestination(
+          icon: Icon(Icons.home_outlined),
+          selectedIcon: Icon(Icons.home),
+          label: 'Garden',
+        ),
+        NavigationDestination(
+          icon: Icon(Icons.add_outlined),
+          selectedIcon: Icon(Icons.add),
+          label: 'Scan',
+        ),
+        NavigationDestination(
+          icon: Icon(Icons.grid_view_outlined),
+          selectedIcon: Icon(Icons.grid_view),
+          label: 'Library',
+        ),
+        NavigationDestination(
+          icon: Icon(Icons.person_outline),
+          selectedIcon: Icon(Icons.person),
+          label: 'Profile',
+        ),
       ],
     );
   }
