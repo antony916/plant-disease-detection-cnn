@@ -6,6 +6,8 @@ import 'services/diagnosis_repository.dart';
 import 'services/diagnosis_service.dart';
 import 'services/garden_repository.dart';
 import 'services/location_service.dart';
+import 'services/image_storage_service.dart';
+import 'services/supabase_image_storage_service.dart';
 import 'services/family_sharing_service.dart';
 import 'services/notification_center_service.dart';
 import 'services/notification_coordinator.dart';
@@ -38,6 +40,9 @@ class AppServices {
   static DiagnosisRepository get diagnosis => _diagnosis;
 
   static FamilySharingService _family = DemoFamilySharingService();
+
+  static ImageStorageService _imageStorage = DemoImageStorageService();
+  static ImageStorageService get imageStorage => _imageStorage;
   static FamilySharingService get family => _family;
 
   static NotificationService _notifications = DemoNotificationService();
@@ -67,6 +72,7 @@ class AppServices {
       _auth = SupabaseAuthService(client);
       _garden = SupabaseGardenRepository(client: client);
       _family = SupabaseFamilySharingService(client);
+      _imageStorage = SupabaseImageStorageService(client);
       _diagnosis = SupabaseDiagnosisRepository(
         client: client,
         service: _diagnosisService,
@@ -82,6 +88,7 @@ class AppServices {
       _auth = DemoAuthService();
       _garden = DemoGardenRepository();
       _family = DemoFamilySharingService();
+      _imageStorage = DemoImageStorageService();
       _diagnosis = DemoDiagnosisRepository(_diagnosisService);
       _notifications = DemoNotificationService();
       _push = DemoPushNotificationService();
