@@ -464,8 +464,20 @@ Completed in this build:
 
 ## 17. NEXT TASK — CONTINUE HERE
 
+Cloud Garden Persistence is now explicitly wired and documented:
+- default garden loading/creation is exposed through `GardenRepository.getGarden()`;
+- Supabase resolves the authenticated user's owned garden first, then an active shared garden, then creates `My Garden` when needed;
+- Demo mode exposes a stable `demo-garden` for `demo-user`;
+- Supabase plant CRUD is scoped to the resolved garden for reads, updates and deletes;
+- Add Plant already writes through the runtime-selected garden repository;
+- Dashboard now loads the resolved garden and displays its cloud/demo garden name;
+- Plant Detail exposes delete and existing watering update through the same repository;
+- Demo mode remains the fallback when Supabase is not configured.
+
+Cloud Garden Persistence does not require a live Supabase project yet. Live activation still waits for real project credentials and schema application.
+
 NEXT TASK:
-Complete production notification delivery, then move to family sharing and account/profile hardening.
+Complete production notification delivery, then continue family sharing and account/profile hardening.
 
 Completed in this build session:
 1. Supabase notification preference persistence.
