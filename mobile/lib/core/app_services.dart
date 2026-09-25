@@ -1,6 +1,7 @@
 import 'services/care_service.dart';
 import 'services/demo_services.dart';
 import 'services/diagnosis_service.dart';
+import 'services/weather_service.dart';
 
 class AppServices {
   const AppServices._();
@@ -9,5 +10,6 @@ class AppServices {
   static final garden = DemoGardenRepository();
   static final diagnosis = DemoDiagnosisRepository(DemoDiagnosisService());
   static final notifications = DemoNotificationService();
-  static final care = RuleBasedCareService();
+  static final weather = DemoWeatherService();
+  static final care = RuleBasedCareService(weather);
 }
