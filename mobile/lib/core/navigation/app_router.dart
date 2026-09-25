@@ -4,6 +4,7 @@ import '../services/diagnosis_service.dart';
 import '../../features/auth/login_screen.dart';
 import '../../features/assistant/assistant_screen.dart';
 import '../../features/diagnosis/diagnosis_screen.dart';
+import '../../features/garden/add_plant_screen.dart';
 import '../../features/garden/dashboard_screen.dart';
 import '../../features/garden/plant_detail_screen.dart';
 import '../../features/library/library_screen.dart';
@@ -17,6 +18,7 @@ abstract final class AppRouter {
   static const plant = '/plant';
   static const assistant = '/assistant';
   static const library = '/library';
+  static const addPlant = '/add-plant';
 
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -46,6 +48,8 @@ abstract final class AppRouter {
         return MaterialPageRoute(builder: (_) => const AssistantScreen());
       case library:
         return MaterialPageRoute(builder: (_) => const LibraryScreen());
+      case addPlant:
+        return MaterialPageRoute(builder: (_) => const AddPlantScreen());
       default:
         return MaterialPageRoute(builder: (_) => const LoginScreen());
     }
