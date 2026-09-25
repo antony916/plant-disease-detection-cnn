@@ -10,6 +10,7 @@ import 'services/family_sharing_service.dart';
 import 'services/notification_center_service.dart';
 import 'services/notification_coordinator.dart';
 import 'services/notification_service.dart';
+import 'services/push_notification_service.dart';
 import 'services/supabase_auth_service.dart';
 import 'services/supabase_diagnosis_repository.dart';
 import 'services/supabase_family_sharing_service.dart';
@@ -40,6 +41,8 @@ class AppServices {
   static FamilySharingService get family => _family;
 
   static NotificationService _notifications = DemoNotificationService();
+  static PushNotificationService _push = DemoPushNotificationService();
+  static PushNotificationService get push => _push;
   static NotificationService get notifications => _notifications;
 
   static NotificationCenterService _notificationCenter =
@@ -70,6 +73,7 @@ class AppServices {
         garden: _garden,
       );
       _notifications = SupabaseNotificationService(client);
+      _push = DemoPushNotificationService();
       _notificationCenter = SupabaseNotificationCenterService(client);
     } else {
       _auth = DemoAuthService();
@@ -77,9 +81,11 @@ class AppServices {
       _family = DemoFamilySharingService();
       _diagnosis = DemoDiagnosisRepository(_diagnosisService);
       _notifications = DemoNotificationService();
+      _push = DemoPushNotificationService();
       _notificationCenter = DemoNotificationCenterService();
     }
 
     await _notifications.initialize();
+    await _push.initialize();
   }
 }
