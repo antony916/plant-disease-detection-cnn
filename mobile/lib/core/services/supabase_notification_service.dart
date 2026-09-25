@@ -3,14 +3,27 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../models/care_notification.dart';
 import 'notification_service.dart';
+import 'push_notification_service.dart';
 
 class SupabaseNotificationService implements NotificationService {
   final SupabaseClient client;
 
-  const SupabaseNotificationService(this.client);
+  final PushNotificationService push;
+
+  SupabaseNotificationService(
+    this.client, {
+    PushNotificationService? push,
+  }) : push = push ?? DemoPushNotificationService();
 
   @override
-  Future<void> initialize() async {}
+  Future<void> initialize() async {
+    await push.initialize();
+    await push.requestPermission();
+    final token = await push.getDeviceToken();
+    if (token != null && token.isNotEmpty) {
+      await registerDeviceToken(token);
+    }
+  }
 
   @override
   Future<void> registerDeviceToken(String token) async {
@@ -27,13 +40,9 @@ class SupabaseNotificationService implements NotificationService {
   }
 
   @override
-  Future<void> schedule(PlantCareNotification notification) async {
-    // Cloud persistence is implemented separately from OS push delivery.
-    // Local/FCM scheduling will be added with the production push provider.
-  }
+  Future<void> schedule(PlantCareNotification notification) =>
+      push.schedule(notification);
 
   @override
-  Future<void> cancel(String notificationId) async {
-    // Production push cancellation will be connected to the push provider.
-  }
+  Future<void> cancel(String notificationId) => push.cancel(notificationId);
 }
