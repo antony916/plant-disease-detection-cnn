@@ -55,7 +55,7 @@ class SupabaseDiagnosisRepository implements DiagnosisRepository {
     await client.from('diagnoses').insert({
       'plant_id': record.plantId,
       'owner_id': user.id,
-      'image_url': null,
+      'image_url': record.imagePath.isEmpty ? null : record.imagePath,
       'plant_name': record.result.plantName,
       'condition': record.result.condition,
       'confidence': record.result.confidence,
