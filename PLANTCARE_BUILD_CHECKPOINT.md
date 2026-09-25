@@ -476,8 +476,7 @@ Cloud Garden Persistence is now explicitly wired and documented:
 
 Cloud Garden Persistence does not require a live Supabase project yet. Live activation still waits for real project credentials and schema application.
 
-NEXT TASK:
-Continue with production image storage/upload and real camera/gallery capture; then connect the evaluated PlantVillage model through a production inference service.
+NEXT TASK: USER UPLOAD / ACTIVATION GATE — provide the model artifact and Flutter/Firebase native configuration listed in PLANTCARE_ACTIVATION_UPLOAD_CHECKLIST.md. After those assets are available, continue with deployment, live cloud wiring, end-to-end testing, and fixes.
 
 Completed in this build session:
 1. Supabase notification preference persistence.
@@ -487,12 +486,12 @@ Completed in this build session:
 5. Demo fallback preserved.
 
 Remaining sequence:
-1. Connect an actual mobile push provider (FCM/APNs) and OS scheduling/permission handling.
-2. Build family-sharing UI: invite/accept, member list, role management and leave/remove flows.
+1. Connect an actual mobile push provider (FCM/APNs) and OS scheduling/permission handling. [CODE PREPARED 2026-09-25: Firebase Messaging provider and runtime switch; native Firebase/APNs configuration still required.]
+2. Build family-sharing UI: invite/accept, member list, role management and leave/remove flows. [UI + cloud RLS hardening prepared 2026-09-25; secure invite acceptance remains part of live activation/testing.]
 3. Build account/profile UI and logout UX on top of the session foundation already implemented. [COMPLETED 2026-09-25: Profile screen, account display, Family Sharing/Notification Settings entry points, and sign-out flow.]
-4. Add secure image storage and production image-upload path.
-5. Connect the evaluated PlantVillage model through a production inference service while preserving the current 38-class baseline and confidence safeguards.
-6. Add real camera/gallery capture.
+4. Add secure image storage and production image-upload path. [COMPLETED 2026-09-25: private storage boundary, gallery/camera capture, cloud image upload, and diagnosis image-reference separation.]
+5. Connect the evaluated PlantVillage model through a production inference service while preserving the current 38-class baseline and confidence safeguards. [CODE PREPARED 2026-09-25: FastAPI inference service, Dockerfile, mobile remote inference client, configurable endpoint; deployment waits for the model artifact.]
+6. Add real camera/gallery capture. [COMPLETED 2026-09-25 in Dart layer; native Android/iOS project configuration is still required for device testing.]
 7. Security/testing audit.
 8. Only then activate and live-test a real Supabase project.
 9. Continue expanded datasets/models, community, experts, shops and admin panel according to PRODUCT_BLUEPRINT.md.
