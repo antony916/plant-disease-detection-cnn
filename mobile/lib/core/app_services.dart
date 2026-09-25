@@ -20,6 +20,8 @@ import 'services/supabase_garden_repository.dart';
 import 'services/supabase_notification_center_service.dart';
 import 'services/supabase_notification_service.dart';
 import 'services/weather_service.dart';
+import 'services/inference_runtime_config.dart';
+import 'services/remote_diagnosis_service.dart';
 
 class AppServices {
   const AppServices._();
@@ -34,7 +36,10 @@ class AppServices {
   static GardenRepository _garden = DemoGardenRepository();
   static GardenRepository get garden => _garden;
 
-  static final DiagnosisService _diagnosisService = DemoDiagnosisService();
+  static final InferenceRuntimeConfig inference =
+      InferenceRuntimeConfig.fromEnvironment();
+
+  static DiagnosisService _diagnosisService = DemoDiagnosisService();
   static DiagnosisRepository _diagnosis =
       DemoDiagnosisRepository(_diagnosisService);
   static DiagnosisRepository get diagnosis => _diagnosis;
@@ -66,6 +71,12 @@ class AppServices {
 
   static Future<void> initialize() async {
     await cloud.initialize();
+
+    if (inference.isConfigured) {
+      _diagnosisService = RemoteDiagnosisService(endpoint: inference.endpoint);
+    } else {
+      _diagnosisService = DemoDiagnosisService();
+    }
 
     if (cloud.isCloudEnabled && cloud.client != null) {
       final client = cloud.client!;
