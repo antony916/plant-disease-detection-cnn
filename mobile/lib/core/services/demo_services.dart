@@ -67,6 +67,36 @@ class DemoGardenRepository implements GardenRepository {
 
   final List<GardenTask> _tasks = [];
 
+  List<GardenTask> _buildTodayTasks() {
+    final now = DateTime.now();
+    final start = DateTime(now.year, now.month, now.day);
+    final end = start.add(const Duration(days: 1));
+    final generated = <GardenTask>[];
+
+    for (final plant in _plants) {
+      final next = plant.nextWatering;
+      if (next != null && !next.isBefore(start) && next.isBefore(end)) {
+        generated.add(
+          GardenTask(
+            id: 'watering-${plant.id}-${start.millisecondsSinceEpoch}',
+            plantId: plant.id,
+            type: GardenTaskType.watering,
+            title: 'Water ${plant.name}',
+            subtitle: '${plant.location} • Every ${plant.wateringIntervalDays} days',
+            dueAt: next,
+          ),
+        );
+      }
+    }
+
+    final existing = {for (final task in _tasks) task.id: task};
+    return [
+      for (final task in generated)
+        existing[task.id] ?? task,
+      ..._tasks.where((task) => !generated.any((item) => item.id == task.id)),
+    ];
+  }
+
   @override
   Future<List<Plant>> getPlants() async => List.unmodifiable(_plants);
 
@@ -89,10 +119,33 @@ class DemoGardenRepository implements GardenRepository {
 
   @override
   Future<List<GardenTask>> getTodayTasks() async =>
-      List.unmodifiable(_tasks);
+      List.unmodifiable(_buildTodayTasks());
 
   @override
-  Future<void> completeTask(String taskId) async {}
+  Future<void> completeTask(String taskId) async {
+    final tasks = _buildTodayTasks();
+    final index = tasks.indexWhere((task) => task.id == taskId);
+    if (index < 0) return;
+    final task = tasks[index];
+    final completed = task.copyWith(
+      completed: true,
+      completedAt: DateTime.now(),
+    );
+    _tasks.removeWhere((item) => item.id == taskId);
+    _tasks.add(completed);
+
+    if (task.type == GardenTaskType.watering) {
+      final plantIndex = _plants.indexWhere((plant) => plant.id == task.plantId);
+      if (plantIndex >= 0) {
+        final plant = _plants[plantIndex];
+        final now = DateTime.now();
+        _plants[plantIndex] = plant.copyWith(
+          lastWateredAt: now,
+          nextWatering: now.add(Duration(days: plant.wateringIntervalDays)),
+        );
+      }
+    }
+  }
 }
 
 class DemoNotificationService implements NotificationService {
