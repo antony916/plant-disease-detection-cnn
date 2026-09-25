@@ -214,6 +214,7 @@ class DemoDiagnosisRepository implements DiagnosisRepository {
 }
 
 class DemoNotificationService implements NotificationService {
+  final List<PlantCareNotification> scheduled = [];
   @override
   Future<void> initialize() async {}
 
@@ -221,8 +222,15 @@ class DemoNotificationService implements NotificationService {
   Future<void> registerDeviceToken(String token) async {}
 
   @override
-  Future<void> schedule(PlantCareNotification notification) async {}
+  Future<void> schedule(PlantCareNotification notification) async {
+    scheduled.removeWhere((item) =>
+        item.plantId == notification.plantId &&
+        item.scheduledAt == notification.scheduledAt);
+    scheduled.add(notification);
+  }
 
   @override
-  Future<void> cancel(String notificationId) async {}
+  Future<void> cancel(String notificationId) async {
+    scheduled.removeWhere((item) => item.scheduledAt.millisecondsSinceEpoch.toString() == notificationId);
+  }
 }
