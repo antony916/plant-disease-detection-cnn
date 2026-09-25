@@ -12,6 +12,7 @@ class AppServices {
   static final diagnosis = DemoDiagnosisRepository(DemoDiagnosisService());
   static final notifications = DemoNotificationService();
   static final notificationCenter = DemoNotificationCenterService();
+  static final notificationCoordinator = NotificationCoordinator(notificationCenter);
   static final location = SelectedLocationService();
   static final weather = OpenMeteoWeatherService(
     locationService: location,
