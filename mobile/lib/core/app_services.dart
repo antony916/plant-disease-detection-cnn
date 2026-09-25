@@ -72,7 +72,10 @@ class AppServices {
         service: _diagnosisService,
         garden: _garden,
       );
-      _notifications = SupabaseNotificationService(client);
+      _notifications = SupabaseNotificationService(
+        client,
+        push: _push,
+      );
       _push = DemoPushNotificationService();
       _notificationCenter = SupabaseNotificationCenterService(client);
     } else {
