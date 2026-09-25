@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../core/app_services.dart';
+import '../../core/models/care_recommendation.dart';
 import '../../core/models/diagnosis_record.dart';
 import '../../core/models/plant.dart';
 import '../../core/theme/app_theme.dart';
@@ -16,11 +17,19 @@ class PlantDetailScreen extends StatefulWidget {
 
 class _PlantDetailScreenState extends State<PlantDetailScreen> {
   late Future<Plant?> _plantFuture;
+  late Future<CareRecommendation?> _careFuture;
 
   @override
   void initState() {
     super.initState();
     _plantFuture = _findPlant();
+    _careFuture = _loadCareRecommendation();
+  }
+
+  Future<CareRecommendation?> _loadCareRecommendation() async {
+    final plant = await _findPlant();
+    if (plant == null) return null;
+    return AppServices.care.wateringRecommendation(plant);
   }
 
   Future<Plant?> _findPlant() async {
@@ -44,6 +53,7 @@ class _PlantDetailScreenState extends State<PlantDetailScreen> {
 
     setState(() {
       _plantFuture = Future.value(updated);
+      _careFuture = AppServices.care.wateringRecommendation(updated);
     });
 
     ScaffoldMessenger.of(context).showSnackBar(
@@ -180,7 +190,68 @@ class _PlantDetailScreenState extends State<PlantDetailScreen> {
                   ),
                 ),
               ],
-              const SizedBox(height: PlantCareSpacing.sm),
+              const SizedBox(height: PlantCareSpacing.md),
+              FutureBuilder<CareRecommendation?>(
+                future: _careFuture,
+                builder: (context, careSnapshot) {
+                  final recommendation = careSnapshot.data;
+                  if (recommendation == null) return const SizedBox.shrink();
+
+                  final isWater = recommendation.action ==
+                      CareRecommendationAction.water;
+                  final isWait = recommendation.action ==
+                      CareRecommendationAction.wait;
+
+                  final icon = isWater
+                      ? Icons.water_drop_outlined
+                      : isWait
+                          ? Icons.check_circle_outline
+                          : Icons.info_outline;
+
+                  final iconColor = isWater
+                      ? PlantCareColors.warning
+                      : isWait
+                          ? PlantCareColors.success
+                          : PlantCareColors.primary;
+
+                  return Card(
+                    child: Padding(
+                      padding: const EdgeInsets.all(PlantCareSpacing.md),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Icon(icon, color: iconColor),
+                          const SizedBox(width: PlantCareSpacing.sm),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  recommendation.title,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.w800,
+                                  ),
+                                ),
+                                const SizedBox(height: 4),
+                                Text(recommendation.message),
+                                const SizedBox(height: 6),
+                                Text(
+                                  'Why: ${recommendation.reason}',
+                                  style: const TextStyle(
+                                    color: PlantCareColors.muted,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              ),
+              const SizedBox(height: PlantCareSpacing.md),
               FutureBuilder<List<DiagnosisRecord>>(
                 future: AppServices.diagnosis.history(plantId: plant.id),
                 builder: (context, historySnapshot) {
