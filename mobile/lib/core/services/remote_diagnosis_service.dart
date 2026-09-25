@@ -9,10 +9,10 @@ class RemoteDiagnosisService implements DiagnosisService {
   final String endpoint;
   final http.Client client;
 
-  const RemoteDiagnosisService({
+  RemoteDiagnosisService({
     required this.endpoint,
-    this.client = const http.Client(),
-  });
+    http.Client? client,
+  }) : client = client ?? http.Client();
 
   @override
   Future<DiagnosisResult> diagnose({
