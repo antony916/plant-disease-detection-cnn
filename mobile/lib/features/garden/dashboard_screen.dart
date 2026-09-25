@@ -56,11 +56,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
         ),
         actions: [
           IconButton(
-            onPressed: () {},
+            tooltip: 'Notifications',
+            onPressed: () => Navigator.pushNamed(context, AppRouter.notifications),
             icon: const Icon(Icons.notifications_none),
           ),
           IconButton(
-            onPressed: () {},
+            tooltip: 'Notification settings',
+            onPressed: () => Navigator.pushNamed(context, AppRouter.notificationSettings),
             icon: const Icon(Icons.account_circle_outlined),
           ),
         ],
