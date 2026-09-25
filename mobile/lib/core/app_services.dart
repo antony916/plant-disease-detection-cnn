@@ -12,6 +12,8 @@ import 'services/notification_service.dart';
 import 'services/supabase_auth_service.dart';
 import 'services/supabase_diagnosis_repository.dart';
 import 'services/supabase_garden_repository.dart';
+import 'services/supabase_notification_center_service.dart';
+import 'services/supabase_notification_service.dart';
 import 'services/weather_service.dart';
 
 class AppServices {
@@ -32,10 +34,17 @@ class AppServices {
       DemoDiagnosisRepository(_diagnosisService);
   static DiagnosisRepository get diagnosis => _diagnosis;
 
-  static final NotificationService notifications = DemoNotificationService();
-  static final notificationCenter = DemoNotificationCenterService();
-  static final notificationCoordinator =
-      NotificationCoordinator(notificationCenter);
+  static NotificationService _notifications = DemoNotificationService();
+  static NotificationService get notifications => _notifications;
+
+  static NotificationCenterService _notificationCenter =
+      DemoNotificationCenterService();
+  static NotificationCenterService get notificationCenter =>
+      _notificationCenter;
+
+  static NotificationCoordinator get notificationCoordinator =>
+      NotificationCoordinator(_notificationCenter);
+
   static final location = SelectedLocationService();
   static final weather = OpenMeteoWeatherService(
     locationService: location,
@@ -46,19 +55,24 @@ class AppServices {
     await cloud.initialize();
 
     if (cloud.isCloudEnabled && cloud.client != null) {
-      _auth = SupabaseAuthService(cloud.client!);
-      _garden = SupabaseGardenRepository(client: cloud.client!);
+      final client = cloud.client!;
+      _auth = SupabaseAuthService(client);
+      _garden = SupabaseGardenRepository(client: client);
       _diagnosis = SupabaseDiagnosisRepository(
-        client: cloud.client!,
+        client: client,
         service: _diagnosisService,
         garden: _garden,
       );
+      _notifications = SupabaseNotificationService(client);
+      _notificationCenter = SupabaseNotificationCenterService(client);
     } else {
       _auth = DemoAuthService();
       _garden = DemoGardenRepository();
       _diagnosis = DemoDiagnosisRepository(_diagnosisService);
+      _notifications = DemoNotificationService();
+      _notificationCenter = DemoNotificationCenterService();
     }
 
-    await notifications.initialize();
+    await _notifications.initialize();
   }
 }
