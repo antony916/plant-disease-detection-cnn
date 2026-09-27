@@ -5,7 +5,14 @@
 -- plant while preserving shared-garden editor access.
 
 drop policy if exists "owners manage diagnoses" on public.diagnoses;
+drop policy if exists "owners view own diagnoses" on public.diagnoses;
+drop policy if exists "shared members view diagnoses" on public.diagnoses;
 drop policy if exists "shared editors create diagnoses" on public.diagnoses;
+drop policy if exists "owners create diagnoses for own plants" on public.diagnoses;
+drop policy if exists "owners update own diagnoses" on public.diagnoses;
+drop policy if exists "owners delete own diagnoses" on public.diagnoses;
+drop policy if exists "shared editors update diagnoses" on public.diagnoses;
+drop policy if exists "shared editors delete diagnoses" on public.diagnoses;
 
 create policy "owners view own diagnoses"
 on public.diagnoses for select
