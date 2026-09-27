@@ -715,3 +715,23 @@ Completed:
 Verification:
 - Current Supabase migration tree is now numbered 001 through 006 without duplicate numeric prefixes.
 - Latest GitHub status API currently reports no commit status entries for the test commit, so CI execution remains unverified until GitHub publishes a run result.
+
+## 32. Family Sharing Reliability Pass — 2026-09-27
+
+Completed:
+- Added family-sharing service regression tests covering:
+  - pending invitation creation/discovery,
+  - invitation acceptance preserving the same membership and activating it,
+  - role changes preserving membership identity, garden identity, and active status.
+- Added mobile-side invitation input validation:
+  - trims and lowercases the invitation email,
+  - rejects blank invitation addresses before the Supabase insert.
+- No restrictive email-format regex was added; account identity remains governed by Supabase Auth.
+
+Commits:
+- `4ae841c2` — Add family invitation contract tests.
+- `f2274187` — Validate family invitation email input.
+
+Verification:
+- Test source is committed.
+- GitHub status endpoint has not yet exposed a CI result for the latest commits, so Flutter execution remains unverified in this environment.
