@@ -54,9 +54,20 @@ class SupabaseDiagnosisRepository implements DiagnosisRepository {
       throw const AuthException('Sign in required.');
     }
 
+    final plant = await client
+        .from('plants')
+        .select('owner_id')
+        .eq('id', record.plantId)
+        .maybeSingle();
+
+    final ownerId = plant?['owner_id'] as String?;
+    if (ownerId == null) {
+      throw StateError('Plant ownership could not be verified.');
+    }
+
     await client.from('diagnoses').insert({
       'plant_id': record.plantId,
-      'owner_id': user.id,
+      'owner_id': ownerId,
       'image_url': record.imageReference ?? (record.imagePath.isEmpty ? null : record.imagePath),
       'plant_name': record.result.plantName,
       'condition': record.result.condition,
