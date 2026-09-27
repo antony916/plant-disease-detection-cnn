@@ -4,6 +4,7 @@ class DiagnosisResult {
   final double confidence;
   final String explanation;
   final bool needsExpertReview;
+  final String modelVersion;
 
   const DiagnosisResult({
     required this.plantName,
@@ -11,6 +12,7 @@ class DiagnosisResult {
     required this.confidence,
     required this.explanation,
     required this.needsExpertReview,
+    this.modelVersion = 'unknown',
   });
 }
 
@@ -37,8 +39,10 @@ class DemoDiagnosisService implements DiagnosisService {
       plantName: 'Tomato',
       condition: 'Early blight',
       confidence: 0.94,
-      explanation: 'Development placeholder only. Connect this service to the evaluated PlantCare model before production diagnosis.',
+      explanation:
+          'Development placeholder only. Connect this service to the evaluated PlantCare model before production diagnosis.',
       needsExpertReview: false,
+      modelVersion: 'demo-placeholder',
     );
   }
 }
