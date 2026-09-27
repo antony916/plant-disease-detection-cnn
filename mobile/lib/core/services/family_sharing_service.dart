@@ -2,11 +2,13 @@ import '../models/family_member.dart';
 
 abstract interface class FamilySharingService {
   Future<List<FamilyMember>> members(String gardenId);
+  Future<List<FamilyMember>> pendingInvites();
   Future<FamilyMember> invite({
     required String gardenId,
     required String email,
     FamilyMemberRole role = FamilyMemberRole.viewer,
   });
+  Future<void> acceptInvite(String membershipId);
   Future<void> remove(String membershipId);
   Future<void> changeRole(
     String membershipId,
@@ -19,9 +21,11 @@ class DemoFamilySharingService implements FamilySharingService {
 
   @override
   Future<List<FamilyMember>> members(String gardenId) async =>
-      List.unmodifiable(
-        _members.where((member) => member.gardenId == gardenId),
-      );
+      List.unmodifiable(_members.where((member) => member.gardenId == gardenId));
+
+  @override
+  Future<List<FamilyMember>> pendingInvites() async =>
+      List.unmodifiable(_members.where((member) => member.status == FamilyMemberStatus.pending));
 
   @override
   Future<FamilyMember> invite({
@@ -42,15 +46,29 @@ class DemoFamilySharingService implements FamilySharingService {
   }
 
   @override
+  Future<void> acceptInvite(String membershipId) async {
+    final index = _members.indexWhere((member) => member.id == membershipId);
+    if (index < 0) return;
+    final member = _members[index];
+    _members[index] = FamilyMember(
+      id: member.id,
+      gardenId: member.gardenId,
+      userId: 'demo-user',
+      inviteEmail: member.inviteEmail,
+      role: member.role,
+      status: FamilyMemberStatus.active,
+      invitedBy: member.invitedBy,
+      createdAt: member.createdAt,
+    );
+  }
+
+  @override
   Future<void> remove(String membershipId) async {
     _members.removeWhere((member) => member.id == membershipId);
   }
 
   @override
-  Future<void> changeRole(
-    String membershipId,
-    FamilyMemberRole role,
-  ) async {
+  Future<void> changeRole(String membershipId, FamilyMemberRole role) async {
     final index = _members.indexWhere((member) => member.id == membershipId);
     if (index < 0) return;
     final member = _members[index];
