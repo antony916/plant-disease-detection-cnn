@@ -640,3 +640,14 @@ Verification status:
 - CI configuration and test source were committed through GitHub.
 - GitHub Actions execution has not been independently verified from this environment yet.
 - No claim is made that Flutter analyze/test currently passes until an actual workflow run reports success.
+
+## 27. CI QUALITY GATE HARDENING — 2026-09-27
+
+Completed:
+- Flutter CI now checks Dart formatting before analysis and tests.
+- Existing Flutter analysis/test and Python syntax checks remain enabled.
+- Commit: `f66b78d1429f18e1caf52eb7cf18c454c5e95562`.
+
+Verification:
+- GitHub reports no status result yet for this commit from the connected status endpoint.
+- CI is therefore not being represented as passed.
