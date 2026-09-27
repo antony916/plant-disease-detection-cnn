@@ -75,10 +75,7 @@ class SupabaseDiagnosisRepository implements DiagnosisRepository {
       throw const AuthException('Sign in required.');
     }
 
-    var query = client
-        .from('diagnoses')
-        .select()
-        .eq('owner_id', user.id);
+    var query = client.from('diagnoses').select();
 
     if (plantId != null) {
       query = query.eq('plant_id', plantId);
