@@ -64,14 +64,10 @@ class SupabaseFamilySharingService implements FamilySharingService {
   @override
   Future<void> acceptInvite(String membershipId) async {
     _requireUser();
-    await client
-        .from('family_members')
-        .update({
-          'user_id': client.auth.currentUser!.id,
-          'status': 'active',
-        })
-        .eq('id', membershipId)
-        .eq('status', 'pending');
+    await client.rpc(
+      'accept_family_invitation',
+      params: {'p_membership_id': membershipId},
+    );
   }
 
   @override
