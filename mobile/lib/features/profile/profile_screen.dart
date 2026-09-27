@@ -131,6 +131,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
               Card(
                 child: ListTile(
                   leading: const Icon(
+                    Icons.mail_outline,
+                    color: PlantCareColors.primary,
+                  ),
+                  title: const Text(
+                    'Garden Invitations',
+                    style: TextStyle(fontWeight: FontWeight.w700),
+                  ),
+                  subtitle: const Text(
+                    'Accept invitations to shared gardens',
+                  ),
+                  trailing: const Icon(Icons.chevron_right),
+                  onTap: () => Navigator.pushNamed(
+                    context,
+                    AppRouter.familyInvites,
+                  ),
+                ),
+              ),
+              const SizedBox(height: PlantCareSpacing.sm),
+              Card(
+                child: ListTile(
+                  leading: const Icon(
                     Icons.notifications_outlined,
                     color: PlantCareColors.primary,
                   ),
