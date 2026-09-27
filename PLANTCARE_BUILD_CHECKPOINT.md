@@ -616,3 +616,27 @@ Commit:
 Verification status:
 - Repository logic was reviewed against the current family-sharing RLS.
 - Flutter compilation/device tests and live Supabase execution remain unverified.
+
+## 26. CONTINUOUS QUALITY / PROVENANCE FOUNDATION — 2026-09-27
+
+Completed:
+- Added `.github/workflows/plantcare-ci.yml`.
+- CI runs Flutter dependency installation, `flutter analyze`, and `flutter test` on pushes/PRs to `main`.
+- CI runs Python bytecode compilation checks for `api`, `src`, and `config.py`.
+- Added the first Flutter unit tests at `mobile/test/core/services/diagnosis_service_test.dart` for the diagnosis result/model-version contract.
+- The project now has an automated quality gate rather than relying only on manual inspection.
+
+AI-authorship/provenance approach:
+- Do not attempt to manipulate AI-detector scores or use “humanizer”/evasion techniques.
+- Build authenticity through original product decisions, real tests, traceable Git history, architecture documentation, security review, reproducible CI, and human verification.
+- Current research indicates AI-generated source-code detectors have poor practical performance/generalizability, while GitHub recommends testing, static analysis, security review, dependency scrutiny, and human oversight for AI-assisted code.
+- Release-stage artifact provenance/attestations can be added later.
+
+Commits:
+- `5363053ec77994b5c70d4684193a1673906fda16` — Add diagnosis contract unit tests.
+- `daf9a5b18b8ff8c6dab17170647c4bc674706cdf` — Add PlantCare Flutter and Python CI.
+
+Verification status:
+- CI configuration and test source were committed through GitHub.
+- GitHub Actions execution has not been independently verified from this environment yet.
+- No claim is made that Flutter analyze/test currently passes until an actual workflow run reports success.
