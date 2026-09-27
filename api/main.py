@@ -1,3 +1,4 @@
+import io
 import os
 from pathlib import Path
 
@@ -12,6 +13,7 @@ from src.model import build_model
 ROOT = Path(__file__).resolve().parents[1]
 MODEL_FILE = ROOT / os.getenv("PLANTCARE_MODEL_PATH", MODEL_PATH)
 CLASSES_FILE = ROOT / os.getenv("PLANTCARE_CLASSES_PATH", CLASS_NAMES_PATH)
+EXPECTED_CLASS_COUNT = int(os.getenv("PLANTCARE_EXPECTED_CLASS_COUNT", "38"))
 LOW_CONFIDENCE_THRESHOLD = float(
     os.getenv("PLANTCARE_LOW_CONFIDENCE_THRESHOLD", "0.60")
 )
@@ -45,15 +47,37 @@ def load_artifacts():
     if not CLASSES_FILE.exists():
         raise RuntimeError(f"Class names file not found: {CLASSES_FILE}")
 
-    _classes = [
+    classes = [
         line.strip()
         for line in CLASSES_FILE.read_text(encoding="utf-8").splitlines()
         if line.strip()
     ]
-    _model = build_model(len(_classes)).to(_device)
-    state = torch.load(MODEL_FILE, map_location=_device)
-    _model.load_state_dict(state)
-    _model.eval()
+
+    if len(classes) != EXPECTED_CLASS_COUNT:
+        raise RuntimeError(
+            "Invalid PlantCare class configuration: "
+            f"expected {EXPECTED_CLASS_COUNT} classes, found {len(classes)}."
+        )
+
+    if len(set(classes)) != len(classes):
+        raise RuntimeError(
+            "Invalid PlantCare class configuration: duplicate class names found."
+        )
+
+    model = build_model(len(classes)).to(_device)
+
+    try:
+        state = torch.load(MODEL_FILE, map_location=_device)
+        model.load_state_dict(state)
+    except Exception as exc:
+        raise RuntimeError(
+            "Model artifact is incompatible with the configured "
+            f"{len(classes)}-class MobileNetV3 architecture."
+        ) from exc
+
+    model.eval()
+    _classes = classes
+    _model = model
 
 
 @app.on_event("startup")
@@ -63,10 +87,13 @@ def startup():
 
 @app.get("/health")
 def health():
+    if _model is None or _classes is None:
+        raise HTTPException(status_code=503, detail="Model is not ready.")
+
     return {
         "status": "ok",
         "model": "MobileNetV3-Large",
-        "classes": len(_classes or []),
+        "classes": len(_classes),
         "device": str(_device),
     }
 
@@ -90,7 +117,7 @@ async def predict(
         raise HTTPException(status_code=400, detail="Empty image.")
 
     try:
-        with Image.open(__import__("io").BytesIO(data)) as source:
+        with Image.open(io.BytesIO(data)) as source:
             pil_image = source.convert("RGB")
         tensor = transform(pil_image).unsqueeze(0).to(_device)
     except Exception as exc:
