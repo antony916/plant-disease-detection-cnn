@@ -63,7 +63,7 @@ class SupabaseDiagnosisRepository implements DiagnosisRepository {
       'confidence': record.result.confidence,
       'explanation': record.result.explanation,
       'needs_expert_review': record.result.needsExpertReview,
-      'model_version': 'mobile-demo-service',
+      'model_version': record.result.modelVersion,
       'created_at': record.createdAt.toIso8601String(),
     });
   }
@@ -113,6 +113,7 @@ class SupabaseDiagnosisRepository implements DiagnosisRepository {
         confidence: (row['confidence'] as num).toDouble(),
         explanation: row['explanation'] as String? ?? '',
         needsExpertReview: row['needs_expert_review'] as bool? ?? false,
+        modelVersion: row['model_version'] as String? ?? 'unknown',
       ),
       createdAt:
           DateTime.tryParse(row['created_at'].toString()) ?? DateTime.now(),
