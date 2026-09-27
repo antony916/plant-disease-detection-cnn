@@ -1,23 +1,41 @@
-# Plant Disease Detection — Project Status
+# PlantCare AI — Project Status
 
-## Status
+## Current status
 
-**Technical implementation: COMPLETE**
+**PlantCare AI product build: active**
 
-## Verified locally
+The repository has evolved from the original Plant Disease Detection mini-project into the PlantCare AI application. The original CNN experiment remains the model baseline; it is not the complete product.
 
-- Python 3.12.10
-- PyTorch 2.11.0+cu128
-- Torchvision 0.26.0+cu128
-- CUDA available
-- NVIDIA GeForce RTX 5060 Laptop GPU
-- Streamlit application launched successfully
-- Image upload and inference verified
+## Implemented product foundation
 
-## Model
+- Flutter mobile application foundation
+- Garden dashboard and plant management
+- Cloud garden persistence architecture
+- Plant detail and care data
+- AI scanner with camera/gallery capture
+- Diagnosis result and history architecture
+- Confidence-aware diagnosis contract
+- Remote FastAPI inference service
+- Model-version tracking
+- Private Supabase plant-image storage
+- Supabase Auth integration boundary
+- Family-sharing UI and RLS hardening
+- Secure family invitation acceptance
+- Cloud notification persistence architecture
+- Device-token persistence
+- Optional Firebase Messaging provider
+- Weather/location abstraction
+- Care recommendation foundation
+- Demo/Supabase runtime switching
+- Continuous Integration foundation
+- Flutter unit-test foundation
+- Python syntax validation
+- Repository checkpoints and activation documentation
+
+## AI model baseline
 
 - Architecture: MobileNetV3-Large
-- Transfer learning: ImageNet pretrained weights
+- Dataset: `geraldmc/plantvillage-full`
 - Classes: 38
 - Input: 224 × 224 RGB
 - Epochs: 10
@@ -25,41 +43,31 @@
 - Learning rate: 3e-4
 - Optimizer: AdamW
 - Loss: Cross Entropy
-
-## Final held-out test evaluation
-
-- Test samples: 10,948
+- Documented held-out test set: 10,948 samples
 - Accuracy: 98.72%
-- Weighted Precision: 98.75%
-- Weighted Recall: 98.72%
+- Weighted precision: 98.75%
+- Weighted recall: 98.72%
 - Weighted F1: 98.72%
 
-## Deliverables completed
+These are benchmark results on the documented held-out dataset, not a claim of equivalent real-world field accuracy.
 
-- Source code
-- Dataset loading and split handling
-- Training pipeline
-- Evaluation pipeline
-- Classification report generation
-- Confusion matrix generation
-- Streamlit inference app
-- Requirements
-- Training guide
-- Academic report outline
-- PPT outline
-- Viva question set
-- GitHub repository documentation
+## Activation blockers
 
-## UI workflow
+The following require external project/device assets and cannot be truthfully marked live from repository code alone:
 
-The current working application remains **Streamlit**.
+1. Evaluated model artifact:
+   - `artifacts/plant_disease_mobilenetv3.pth`
+   - `artifacts/class_names.txt`
+2. Flutter Android/iOS native platform folders.
+3. Supabase project URL and publishable/anon key.
+4. Application of Supabase migrations to the intended project.
+5. Firebase/FCM native configuration if push is enabled.
+6. Real-device end-to-end verification.
 
-Figma is deliberately deferred until both mini-projects are technically complete. Figma will be used as the final UI/UX design reference and polish stage; it is not a replacement for the Streamlit implementation.
+See `PLANTCARE_ACTIVATION_UPLOAD_CHECKLIST.md` for the activation sequence.
 
-## Documentation workflow
+## Current engineering rule
 
-Notion is used as the project-management/documentation space for milestones, architecture, experiment notes, results, issues, and final checklist.
+Do not describe a cloud, inference, push, or mobile-native feature as live until it has been verified in a configured environment.
 
-## Final remaining item for this project
-
-No core technical implementation remains. The only deferred item is the final Figma UI/UX reference stage, which is intentionally scheduled after the second project is also technically complete.
+The durable continuation source is `PLANTCARE_BUILD_CHECKPOINT.md`.
