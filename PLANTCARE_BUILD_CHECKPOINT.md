@@ -601,3 +601,18 @@ Commit:
 Verification status:
 - SQL was reviewed against the existing 001/004 policy structure.
 - Live Supabase execution has not been performed because no project is configured.
+
+## 25. SHARED DIAGNOSIS ACCESS CONSISTENCY — 2026-09-27
+
+Completed:
+- Supabase diagnosis history no longer filters only by `owner_id`; RLS now determines whether the signed-in user can see owner/shared-garden diagnoses.
+- Shared-garden diagnosis writes now resolve the referenced plant's `owner_id` before insertion.
+- This keeps family-editor diagnosis creation compatible with the hardened diagnosis RLS without weakening ownership controls.
+- Plant ownership is verified before a diagnosis is inserted.
+
+Commit:
+- `d3099980cf4d432662bd17dd0c73ce2c5a5c5eca` — Preserve garden owner on shared diagnosis writes.
+
+Verification status:
+- Repository logic was reviewed against the current family-sharing RLS.
+- Flutter compilation/device tests and live Supabase execution remain unverified.
