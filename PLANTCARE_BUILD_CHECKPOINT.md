@@ -560,3 +560,27 @@ Commit:
 - `d8efb151014403eab9008d424882fedbc747b992` — Harden PlantCare inference artifact validation.
 
 This does NOT mean the inference service is live. The actual evaluated `.pth` model artifact and deployment environment are still required before live inference testing.
+
+## 23. MOBILE INFERENCE / DIAGNOSIS HARDENING — 2026-09-27
+
+Completed:
+- Diagnosis result contract now carries `modelVersion`, with a safe `unknown` default for older/demo callers.
+- Remote inference client now validates the endpoint URI before sending.
+- Remote inference requests have a 30-second timeout.
+- Network timeout and socket failures produce actionable service errors.
+- Remote inference responses must be non-empty, valid JSON objects.
+- Required diagnosis fields (`plant_name`, `condition`, `explanation`) are validated.
+- Confidence must be finite and within 0..1.
+- Low-confidence results always remain marked for expert review.
+- Server `model_version` is required and retained in the diagnosis result.
+- Supabase diagnosis persistence now stores the actual diagnosis `modelVersion` instead of the previous hardcoded demo value.
+
+Commits:
+- `ab637b19a4a7344075b16bca723e7c08f9b64fe8` — Track diagnosis model version in result contract.
+- `038e2683b326a9181ff89d2a352192ae8fe69ce5` — Harden mobile remote inference response handling.
+- `3139a4025605353012464b7550c3361ef579df40` — Persist diagnosis inference model version.
+
+Verification status:
+- Repository changes were committed through GitHub.
+- Flutter CLI/device tests were not executed in this environment.
+- Live inference, Supabase, FCM/APNs, and production model deployment remain unverified.
