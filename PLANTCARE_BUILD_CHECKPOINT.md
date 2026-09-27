@@ -763,3 +763,32 @@ Commit:
 Verification:
 - Test source committed to GitHub.
 - Actual Flutter test execution remains pending until a native/Flutter execution environment or published CI run is available.
+
+
+## 35. DIAGNOSIS CARE-KNOWLEDGE FOUNDATION — 2026-09-27
+
+Completed:
+- Added `mobile/lib/core/services/plant_care_guidance_service.dart`.
+- Diagnosis conditions now map to structured, conservative guidance:
+  - what the classification may mean;
+  - immediate care/observation actions;
+  - prevention and monitoring.
+- Covered common current-model classes including early/late blight, bacterial spot, powdery mildew, leaf mold, Septoria, target spot, leaf scorch, spider mites, citrus greening and viral classes.
+- Added a safe generic fallback for unsupported/unknown conditions.
+- Diagnosis results now display the guidance sections without replacing the existing confidence/expert-review safeguards.
+- Added unit tests at `mobile/test/core/services/plant_care_guidance_service_test.dart`.
+- Guidance intentionally avoids invented pesticide dosages or unsupported treatment claims.
+
+Commits:
+- `3bb79a79` — Add structured PlantCare diagnosis guidance.
+- `4c833350` — Fix guidance service unused import.
+- `802b4e8d` — Show actionable care guidance on diagnosis results.
+- `846c3296` — Test PlantCare diagnosis care guidance.
+
+Verification:
+- Source and tests are committed through GitHub.
+- Flutter formatting/analyze/test execution is still unverified because no successful GitHub Actions result has been published for the current commits.
+- Live inference, Supabase, FCM/APNs, and production model deployment remain unverified.
+
+NEXT BUILD TARGET:
+- Continue the production-readiness path without blocking on credentials: strengthen diagnosis/image provenance and activation checks, then proceed toward the real model artifact + mobile-native activation gate.
