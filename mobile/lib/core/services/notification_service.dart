@@ -1,12 +1,14 @@
 import '../models/care_notification.dart';
 
 class PlantCareNotification {
+  final String id;
   final String title;
   final String body;
   final DateTime scheduledAt;
   final String? plantId;
 
   const PlantCareNotification({
+    required this.id,
     required this.title,
     required this.body,
     required this.scheduledAt,
@@ -37,6 +39,7 @@ class NotificationScheduler {
 
     await service.schedule(
       PlantCareNotification(
+        id: id,
         title: 'PlantCare watering reminder',
         body: 'Check ' + plantName + ' and water it if the soil needs it.',
         scheduledAt: when,
