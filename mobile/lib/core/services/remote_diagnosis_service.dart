@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -6,6 +7,9 @@ import 'package:http/http.dart' as http;
 import 'diagnosis_service.dart';
 
 class RemoteDiagnosisService implements DiagnosisService {
+  static const Duration requestTimeout = Duration(seconds: 30);
+  static const double lowConfidenceThreshold = 0.60;
+
   final String endpoint;
   final http.Client client;
 
@@ -24,23 +28,30 @@ class RemoteDiagnosisService implements DiagnosisService {
       throw StateError('Selected image file no longer exists.');
     }
 
-    final request = http.MultipartRequest(
-      'POST',
-      Uri.parse(endpoint),
-    );
+    final uri = Uri.tryParse(endpoint);
+    if (uri == null || !uri.hasScheme || uri.host.isEmpty) {
+      throw StateError('Inference service endpoint is invalid.');
+    }
+
+    final request = http.MultipartRequest('POST', uri);
 
     if (plantHint != null && plantHint.trim().isNotEmpty) {
       request.fields['plant_hint'] = plantHint.trim();
     }
 
     request.files.add(
-      await http.MultipartFile.fromPath(
-        'image',
-        imagePath,
-      ),
+      await http.MultipartFile.fromPath('image', imagePath),
     );
 
-    final streamed = await client.send(request);
+    final http.StreamedResponse streamed;
+    try {
+      streamed = await client.send(request).timeout(requestTimeout);
+    } on TimeoutException {
+      throw StateError('Inference service timed out. Please try again.');
+    } on SocketException {
+      throw StateError('Could not reach the inference service.');
+    }
+
     final response = await http.Response.fromStream(streamed);
 
     if (response.statusCode < 200 || response.statusCode >= 300) {
@@ -49,25 +60,69 @@ class RemoteDiagnosisService implements DiagnosisService {
       );
     }
 
-    final payload = jsonDecode(response.body);
-    if (payload is! Map<String, dynamic>) {
+    if (response.body.trim().isEmpty) {
+      throw const FormatException(
+        'Inference service returned an empty response.',
+      );
+    }
+
+    final dynamic decoded;
+    try {
+      decoded = jsonDecode(response.body);
+    } on FormatException {
+      throw const FormatException(
+        'Inference service returned invalid JSON.',
+      );
+    }
+
+    if (decoded is! Map<String, dynamic>) {
       throw const FormatException('Invalid inference response.');
     }
 
-    final plantName = payload['plant_name'] as String? ?? 'Unknown plant';
-    final condition = payload['condition'] as String? ?? 'Unknown condition';
-    final confidence = (payload['confidence'] as num?)?.toDouble() ?? 0;
-    final explanation =
-        payload['explanation'] as String? ?? 'Model inference completed.';
-    final needsExpertReview =
-        payload['needs_expert_review'] as bool? ?? confidence < 0.60;
+    final plantName = _requiredText(decoded, 'plant_name');
+    final condition = _requiredText(decoded, 'condition');
+    final explanation = _requiredText(decoded, 'explanation');
+
+    final confidenceValue = decoded['confidence'];
+    if (confidenceValue is! num) {
+      throw const FormatException(
+        'Inference confidence is missing or invalid.',
+      );
+    }
+
+    final confidence = confidenceValue.toDouble();
+    if (!confidence.isFinite || confidence < 0 || confidence > 1) {
+      throw const FormatException(
+        'Inference confidence must be between 0 and 1.',
+      );
+    }
+
+    final needsExpertReviewValue = decoded['needs_expert_review'];
+    final needsExpertReview = needsExpertReviewValue is bool
+        ? needsExpertReviewValue
+        : confidence < lowConfidenceThreshold;
+
+    final modelVersion = decoded['model_version'];
+    if (modelVersion is! String || modelVersion.trim().isEmpty) {
+      throw const FormatException('Inference model version is missing.');
+    }
 
     return DiagnosisResult(
       plantName: plantName,
       condition: condition,
       confidence: confidence,
       explanation: explanation,
-      needsExpertReview: needsExpertReview,
+      needsExpertReview:
+          needsExpertReview || confidence < lowConfidenceThreshold,
+      modelVersion: modelVersion.trim(),
     );
+  }
+
+  String _requiredText(Map<String, dynamic> payload, String key) {
+    final value = payload[key];
+    if (value is! String || value.trim().isEmpty) {
+      throw FormatException('Inference field "$key" is missing or empty.');
+    }
+    return value.trim();
   }
 }
