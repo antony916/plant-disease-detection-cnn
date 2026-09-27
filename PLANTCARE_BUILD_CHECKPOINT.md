@@ -667,3 +667,22 @@ Verification:
 - Database policy is scoped to pending rows and the authenticated email.
 - Existing owner/editor garden permissions remain unchanged.
 - Full Flutter/CI execution is still not verified from this environment.
+
+## 29. Shared Garden Permission Consistency — 2026-09-27
+
+Completed:
+- Fixed cloud task loading so shared garden members see tasks by garden/plant rather than only by task owner.
+- Preserved database ownership semantics: garden tasks remain owned by the garden owner while editor/viewer access is granted through garden membership RLS.
+- Hardened family invitation acceptance:
+  - Removed the broad invitee UPDATE policy.
+  - Added `accept_family_invitation(uuid)` SECURITY DEFINER RPC.
+  - RPC verifies authenticated email matches the pending invitation.
+  - RPC changes only the membership's `user_id` and `status`.
+  - Function execution is revoked from public and granted only to authenticated users.
+- Mobile acceptance now calls the RPC instead of directly updating membership rows.
+- Commits: `c03f8ad0`, `4fbee183`, `9df226af`.
+
+Verification:
+- Shared task visibility now matches the RLS access model.
+- Invitation role cannot be changed as part of the claim operation.
+- Live Supabase execution remains unverified until a project is connected.
