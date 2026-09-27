@@ -45,12 +45,16 @@ class SupabaseFamilySharingService implements FamilySharingService {
     FamilyMemberRole role = FamilyMemberRole.viewer,
   }) async {
     final user = _requireUser();
+    final normalizedEmail = email.trim().toLowerCase();
+    if (normalizedEmail.isEmpty) {
+      throw const FormatException('Invitation email is required.');
+    }
 
     final row = await client
         .from('family_members')
         .insert({
           'garden_id': gardenId,
-          'invite_email': email.trim().toLowerCase(),
+          'invite_email': normalizedEmail,
           'invited_by': user.id,
           'role': _roleName(role),
           'status': 'pending',
