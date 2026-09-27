@@ -699,3 +699,19 @@ Completed:
 Verification:
 - Repository documentation now distinguishes the original 38-class CNN benchmark from the larger PlantCare product.
 - Security automation is configured in GitHub but its first runs are not yet verified from this environment.
+
+## 31. Multi-track Reliability Hardening — 2026-09-27
+
+Completed:
+- Removed the obsolete duplicate `003_family_sharing_rls.sql` migration so the Supabase migration sequence is unambiguous.
+- Hardened cloud notification `markRead` with explicit current-user scoping in the client query.
+- Added notification quiet-hour boundary unit tests.
+- Added remote inference contract tests for:
+  - forced expert review below the confidence threshold,
+  - missing model-version rejection,
+  - out-of-range confidence rejection.
+- Commits: `0b49f983`, `ba02f13a`, `a1bb6a72`, `e71f61f3`.
+
+Verification:
+- Current Supabase migration tree is now numbered 001 through 006 without duplicate numeric prefixes.
+- Latest GitHub status API currently reports no commit status entries for the test commit, so CI execution remains unverified until GitHub publishes a run result.
