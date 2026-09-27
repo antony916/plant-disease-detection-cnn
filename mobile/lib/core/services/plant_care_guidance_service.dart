@@ -1,5 +1,3 @@
-import '../models/plant.dart';
-
 class PlantCareGuidance {
   final String summary;
   final List<String> actions;
