@@ -686,3 +686,16 @@ Verification:
 - Shared task visibility now matches the RLS access model.
 - Invitation role cannot be changed as part of the claim operation.
 - Live Supabase execution remains unverified until a project is connected.
+
+## 30. Release-Readiness Documentation and Security Automation — 2026-09-27
+
+Completed:
+- Replaced stale project-status language with the current PlantCare AI product state.
+- Documented explicit activation blockers rather than implying cloud/native features are live.
+- Added Dependabot coverage for root Python dependencies, inference API Python dependencies, Flutter/Dart dependencies, and GitHub Actions.
+- Added scheduled/on-change Python CodeQL scanning.
+- Commits: `3461a3bf`, `6a2e83be`, `8316ac5b`.
+
+Verification:
+- Repository documentation now distinguishes the original 38-class CNN benchmark from the larger PlantCare product.
+- Security automation is configured in GitHub but its first runs are not yet verified from this environment.
