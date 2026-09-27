@@ -12,6 +12,7 @@ import '../../features/profile/profile_screen.dart';
 import '../../features/notifications/notification_center_screen.dart';
 import '../../features/notifications/notification_settings_screen.dart';
 import '../../features/family/family_sharing_screen.dart';
+import '../../features/family/family_invites_screen.dart';
 import '../../features/scanner/scanner_screen.dart';
 
 abstract final class AppRouter {
@@ -26,6 +27,7 @@ abstract final class AppRouter {
   static const notifications = '/notifications';
   static const notificationSettings = '/notification-settings';
   static const familySharing = '/family-sharing';
+  static const familyInvites = '/family-invites';
   static const profile = '/profile';
 
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
@@ -64,6 +66,8 @@ abstract final class AppRouter {
         return MaterialPageRoute(builder: (_) => const NotificationSettingsScreen());
       case familySharing:
         return MaterialPageRoute(builder: (_) => const FamilySharingScreen());
+      case familyInvites:
+        return MaterialPageRoute(builder: (_) => const FamilyInvitesScreen());
       case profile:
         return MaterialPageRoute(builder: (_) => const ProfileScreen());
       default:
