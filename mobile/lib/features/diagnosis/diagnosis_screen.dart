@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../core/navigation/app_router.dart';
 import '../../core/services/diagnosis_service.dart';
+import '../../core/services/plant_care_guidance_service.dart';
 import '../../core/theme/app_theme.dart';
 
 class DiagnosisScreen extends StatelessWidget {
@@ -13,6 +14,7 @@ class DiagnosisScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final percent = (result.confidence * 100).round();
     final lowConfidence = result.needsExpertReview || result.confidence < 0.70;
+    final guidance = const PlantCareGuidanceService().forCondition(result.condition);
 
     return Scaffold(
       appBar: AppBar(
@@ -99,6 +101,24 @@ class DiagnosisScreen extends StatelessWidget {
             ),
           ),
           const SizedBox(height: PlantCareSpacing.lg),
+          _GuidanceSection(
+            title: 'What this may mean',
+            icon: Icons.info_outline,
+            items: [guidance.summary],
+          ),
+          const SizedBox(height: PlantCareSpacing.md),
+          _GuidanceSection(
+            title: 'What to do now',
+            icon: Icons.health_and_safety_outlined,
+            items: guidance.actions,
+          ),
+          const SizedBox(height: PlantCareSpacing.md),
+          _GuidanceSection(
+            title: 'Prevention & monitoring',
+            icon: Icons.shield_outlined,
+            items: guidance.prevention,
+          ),
+          const SizedBox(height: PlantCareSpacing.lg),
           if (!lowConfidence)
             FilledButton(
               onPressed: () => Navigator.pushNamed(
@@ -121,6 +141,65 @@ class DiagnosisScreen extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+
+class _GuidanceSection extends StatelessWidget {
+  final String title;
+  final IconData icon;
+  final List<String> items;
+
+  const _GuidanceSection({
+    required this.title,
+    required this.icon,
+    required this.items,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(PlantCareSpacing.md),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(icon, color: PlantCareColors.primary),
+                const SizedBox(width: PlantCareSpacing.sm),
+                Expanded(
+                  child: Text(
+                    title,
+                    style: const TextStyle(fontWeight: FontWeight.w800),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: PlantCareSpacing.sm),
+            for (final item in items)
+              Padding(
+                padding: const EdgeInsets.only(bottom: PlantCareSpacing.sm),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Padding(
+                      padding: EdgeInsets.only(top: 6),
+                      child: Icon(
+                        Icons.circle,
+                        size: 6,
+                        color: PlantCareColors.muted,
+                      ),
+                    ),
+                    const SizedBox(width: PlantCareSpacing.sm),
+                    Expanded(child: Text(item)),
+                  ],
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }
