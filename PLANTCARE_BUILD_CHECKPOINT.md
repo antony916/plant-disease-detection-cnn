@@ -735,3 +735,17 @@ Commits:
 Verification:
 - Test source is committed.
 - GitHub status endpoint has not yet exposed a CI result for the latest commits, so Flutter execution remains unverified in this environment.
+
+## 33. Notification Identity Hardening — 2026-09-27
+
+Completed:
+- Added a required deterministic `id` to the mobile `PlantCareNotification` contract.
+- Watering reminders now pass the same deterministic ID to the notification provider.
+- This gives OS/provider implementations a stable identifier for replacement/cancellation across lifecycle events, while retaining the in-memory duplicate guard.
+
+Commit:
+- `52756048` — Make PlantCare notification IDs deterministic.
+
+Verification:
+- Code change committed to GitHub.
+- Native OS notification delivery remains unverified until Android/iOS platform configuration is available.
