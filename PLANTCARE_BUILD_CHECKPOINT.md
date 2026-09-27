@@ -546,3 +546,17 @@ Reference research:
 - Agrio: https://agrio.app/
 
 The Figma and reference products are inputs to the product design; PlantCare's own design system remains the source of truth for implementation.
+
+## 22. INFERENCE API HARDENING — 2026-09-27
+
+Completed:
+- Added strict expected-class-count validation to `api/main.py` (default 38, configurable through `PLANTCARE_EXPECTED_CLASS_COUNT`).
+- Added duplicate class-name validation.
+- Added explicit MobileNetV3 state-dict compatibility validation before the model is exposed.
+- Added normal `io` import for image decoding.
+- Health endpoint now returns HTTP 503 when the model is not ready.
+
+Commit:
+- `d8efb151014403eab9008d424882fedbc747b992` — Harden PlantCare inference artifact validation.
+
+This does NOT mean the inference service is live. The actual evaluated `.pth` model artifact and deployment environment are still required before live inference testing.
