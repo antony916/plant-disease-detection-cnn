@@ -97,11 +97,15 @@ class SupabaseGardenRepository implements CloudGardenRepository {
     final now = DateTime.now();
     final start = DateTime(now.year, now.month, now.day);
     final end = start.add(const Duration(days: 1));
+    final gardenId = await _gardenId();
 
+    // Shared members need the same garden task view as the owner. Filtering
+    // by owner_id would hide tasks because task ownership remains with the
+    // garden owner by design.
     final rows = await client
         .from('garden_tasks')
-        .select()
-        .eq('owner_id', user.id)
+        .select('*, plants!inner(garden_id)')
+        .eq('plants.garden_id', gardenId)
         .gte('due_at', start.toIso8601String())
         .lt('due_at', end.toIso8601String())
         .order('due_at');
