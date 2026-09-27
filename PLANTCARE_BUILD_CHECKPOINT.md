@@ -651,3 +651,19 @@ Completed:
 Verification:
 - GitHub reports no status result yet for this commit from the connected status endpoint.
 - CI is therefore not being represented as passed.
+
+## 28. Family Invitation Acceptance — 2026-09-27
+
+Completed:
+- Added pending-invitation discovery to the family-sharing service contract.
+- Added secure invite acceptance for Supabase accounts.
+- Added RLS allowing only the authenticated account matching `invite_email` to claim its own pending invitation.
+- Acceptance sets `user_id = auth.uid()` and `status = active`.
+- Added a mobile invitation inbox and Profile entry point.
+- Demo runtime supports the same invitation flow.
+- Commits: `1434a647`, `d8bde474`, `a6a923f8`, `9eeafad3`, `94878adf`, `63cc29dd`.
+
+Verification:
+- Database policy is scoped to pending rows and the authenticated email.
+- Existing owner/editor garden permissions remain unchanged.
+- Full Flutter/CI execution is still not verified from this environment.
