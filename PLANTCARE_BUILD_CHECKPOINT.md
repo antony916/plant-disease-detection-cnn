@@ -584,3 +584,20 @@ Verification status:
 - Repository changes were committed through GitHub.
 - Flutter CLI/device tests were not executed in this environment.
 - Live inference, Supabase, FCM/APNs, and production model deployment remain unverified.
+
+## 24. SUPABASE DIAGNOSIS OWNERSHIP HARDENING — 2026-09-27
+
+Completed:
+- Added `backend/supabase/005_diagnosis_ownership_hardening.sql`.
+- Diagnosis creation now requires the referenced plant to belong to the signed-in user, unless the write is through an authorized shared-garden editor path.
+- Diagnosis updates enforce the same plant ownership/shared-garden relationship.
+- Diagnosis reads remain available to owners and active shared-garden members.
+- Diagnosis deletes are restricted to the diagnosis owner or authorized shared-garden editor path.
+- Migration explicitly drops/recreates affected policies so it can be applied after the existing family-sharing migration without duplicate-policy failures.
+
+Commit:
+- `0b20200dd5e734d6261850e2e35a7922bb5f08bf` — Make diagnosis RLS migration replayable.
+
+Verification status:
+- SQL was reviewed against the existing 001/004 policy structure.
+- Live Supabase execution has not been performed because no project is configured.
