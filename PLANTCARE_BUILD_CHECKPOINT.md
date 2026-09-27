@@ -749,3 +749,17 @@ Commit:
 Verification:
 - Code change committed to GitHub.
 - Native OS notification delivery remains unverified until Android/iOS platform configuration is available.
+
+## 34. Notification Scheduler Regression Coverage — 2026-09-27
+
+Completed:
+- Added tests for deterministic watering reminder IDs.
+- Added idempotency coverage for repeated scheduling within one app session.
+- Added cancellation/re-scheduling coverage for the scheduler cache.
+
+Commit:
+- `f3deef4f` — Add notification scheduler regression tests.
+
+Verification:
+- Test source committed to GitHub.
+- Actual Flutter test execution remains pending until a native/Flutter execution environment or published CI run is available.
