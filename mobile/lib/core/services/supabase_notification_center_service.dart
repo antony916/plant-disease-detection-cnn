@@ -43,10 +43,14 @@ class SupabaseNotificationCenterService
 
   @override
   Future<void> markRead(String id) async {
+    final user = client.auth.currentUser;
+    if (user == null) throw const AuthException('Sign in required.');
+
     await client
         .from('notifications')
         .update({'read': true})
-        .eq('id', id);
+        .eq('id', id)
+        .eq('user_id', user.id);
   }
 
   @override
