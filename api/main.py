@@ -9,7 +9,7 @@ from torchvision import transforms
 
 from config import IMAGE_SIZE
 from src.model import build_model
-from api.model_registry import (
+from .model_registry import (
     get_model_definition,
     model_summary,
     resolve_artifact_paths,
