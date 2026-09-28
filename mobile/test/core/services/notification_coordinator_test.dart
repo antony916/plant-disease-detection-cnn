@@ -109,7 +109,7 @@ void main() {
     final coordinator = NotificationCoordinator(
       center,
       _FakeCareService(
-        const CareRecommendation(
+        CareRecommendation(
           action: CareRecommendationAction.water,
           title: 'Water today',
           message: 'Check soil moisture before watering.',
