@@ -211,6 +211,11 @@ class DemoDiagnosisRepository implements DiagnosisRepository {
     );
   }
 
+  @override
+  Future<void> clearHistory() async {
+    _history.clear();
+  }
+
   String? _plantIdForName(String plantName) {
     final normalized = plantName.trim().toLowerCase();
     for (final plant in const [
