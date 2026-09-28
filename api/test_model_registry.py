@@ -22,6 +22,12 @@ class ModelRegistryTest(unittest.TestCase):
             self.assertIn(capability, summary)
             self.assertEqual(summary[capability]["status"], "planned")
 
+    def test_legacy_environment_alias_resolves(self):
+        definition = get_model_definition("plant-stress-model")
+
+        self.assertEqual(definition.capability, "environment")
+        self.assertEqual(definition.model_id, "plant-stress-model")
+
     def test_unknown_capability_is_rejected(self):
         with self.assertRaises(ValueError):
             get_model_definition("unknown")
