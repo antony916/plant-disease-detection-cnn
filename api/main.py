@@ -7,20 +7,22 @@ from fastapi import FastAPI, File, Form, HTTPException, UploadFile
 from PIL import Image
 from torchvision import transforms
 
-from config import CLASS_NAMES_PATH, IMAGE_SIZE, MODEL_PATH
+from config import IMAGE_SIZE
 from src.model import build_model
+from api.model_registry import (
+    get_model_definition,
+    model_summary,
+    resolve_artifact_paths,
+)
 
 ROOT = Path(__file__).resolve().parents[1]
-MODEL_FILE = ROOT / os.getenv("PLANTCARE_MODEL_PATH", MODEL_PATH)
-CLASSES_FILE = ROOT / os.getenv("PLANTCARE_CLASSES_PATH", CLASS_NAMES_PATH)
-EXPECTED_CLASS_COUNT = int(os.getenv("PLANTCARE_EXPECTED_CLASS_COUNT", "38"))
 LOW_CONFIDENCE_THRESHOLD = float(
     os.getenv("PLANTCARE_LOW_CONFIDENCE_THRESHOLD", "0.60")
 )
 
 app = FastAPI(
     title="PlantCare AI Inference API",
-    version="0.1.0",
+    version="0.2.0",
 )
 
 transform = transforms.Compose(
@@ -34,29 +36,41 @@ transform = transforms.Compose(
     ]
 )
 
-_model = None
-_classes = None
+_models: dict[str, torch.nn.Module] = {}
+_classes: dict[str, list[str]] = {}
 _device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 
-def load_artifacts():
-    global _model, _classes
+def load_model(capability: str) -> None:
+    definition = get_model_definition(capability)
+    if definition.status != "available":
+        raise RuntimeError(
+            f"PlantCare capability '{capability}' is not available yet."
+        )
 
-    if not MODEL_FILE.exists():
-        raise RuntimeError(f"Model artifact not found: {MODEL_FILE}")
-    if not CLASSES_FILE.exists():
-        raise RuntimeError(f"Class names file not found: {CLASSES_FILE}")
+    model_path, classes_path = resolve_artifact_paths(definition)
+    model_file = ROOT / model_path
+    classes_file = ROOT / classes_path
+
+    if not model_file.exists():
+        raise RuntimeError(f"Model artifact not found: {model_file}")
+    if not classes_file.exists():
+        raise RuntimeError(f"Class names file not found: {classes_file}")
 
     classes = [
         line.strip()
-        for line in CLASSES_FILE.read_text(encoding="utf-8").splitlines()
+        for line in classes_file.read_text(encoding="utf-8").splitlines()
         if line.strip()
     ]
 
-    if len(classes) != EXPECTED_CLASS_COUNT:
+    if (
+        definition.expected_class_count is not None
+        and len(classes) != definition.expected_class_count
+    ):
         raise RuntimeError(
             "Invalid PlantCare class configuration: "
-            f"expected {EXPECTED_CLASS_COUNT} classes, found {len(classes)}."
+            f"expected {definition.expected_class_count} classes, "
+            f"found {len(classes)}."
         )
 
     if len(set(classes)) != len(classes):
@@ -67,7 +81,7 @@ def load_artifacts():
     model = build_model(len(classes)).to(_device)
 
     try:
-        state = torch.load(MODEL_FILE, map_location=_device)
+        state = torch.load(model_file, map_location=_device)
         model.load_state_dict(state)
     except Exception as exc:
         raise RuntimeError(
@@ -76,35 +90,70 @@ def load_artifacts():
         ) from exc
 
     model.eval()
-    _classes = classes
-    _model = model
+    _classes[capability] = classes
+    _models[capability] = model
 
 
 @app.on_event("startup")
 def startup():
-    load_artifacts()
+    load_model("disease")
 
 
 @app.get("/health")
 def health():
-    if _model is None or _classes is None:
-        raise HTTPException(status_code=503, detail="Model is not ready.")
+    if "disease" not in _models or "disease" not in _classes:
+        raise HTTPException(status_code=503, detail="Disease model is not ready.")
 
+    available = sorted(_models)
     return {
         "status": "ok",
-        "model": "MobileNetV3-Large",
-        "classes": len(_classes),
         "device": str(_device),
+        "available_capabilities": available,
+        "models": [
+            {
+                "capability": capability,
+                "classes": len(_classes[capability]),
+                "model_id": get_model_definition(capability).model_id,
+                "model_version": get_model_definition(capability).version,
+            }
+            for capability in available
+        ],
     }
+
+
+@app.get("/models")
+def models():
+    return {"models": model_summary()}
 
 
 @app.post("/predict")
 async def predict(
     image: UploadFile = File(...),
     plant_hint: str | None = Form(default=None),
+    capability: str = Form(default="disease"),
 ):
-    if _model is None or _classes is None:
-        raise HTTPException(status_code=503, detail="Model is not ready.")
+    try:
+        definition = get_model_definition(capability)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+    if definition.status != "available":
+        raise HTTPException(
+            status_code=501,
+            detail=(
+                f"The '{definition.capability}' capability is planned but "
+                "not available in the current inference deployment."
+            ),
+        )
+
+    if capability not in _models or capability not in _classes:
+        try:
+            load_model(capability)
+        except RuntimeError as exc:
+            raise HTTPException(status_code=503, detail=str(exc)) from exc
+
+    model = _models[capability]
+    classes = _classes[capability]
 
     if image.content_type not in {"image/jpeg", "image/png", "image/webp"}:
         raise HTTPException(
@@ -124,14 +173,14 @@ async def predict(
         raise HTTPException(status_code=400, detail="Invalid image.") from exc
 
     with torch.inference_mode():
-        probabilities = torch.softmax(_model(tensor), dim=1)[0]
+        probabilities = torch.softmax(model(tensor), dim=1)[0]
         values, indices = torch.topk(
             probabilities,
-            k=min(5, len(_classes)),
+            k=min(5, len(classes)),
         )
 
     confidence = float(values[0])
-    predicted = _classes[int(indices[0])]
+    predicted = classes[int(indices[0])]
     parts = predicted.split("___", 1)
     plant_name = parts[0].replace("_", " ")
     condition = parts[1].replace("_", " ") if len(parts) == 2 else predicted
@@ -141,20 +190,26 @@ async def predict(
         "The model confidence is below the review threshold. "
         "Use a clearer image or seek agricultural verification."
         if needs_expert_review
-        else "PlantCare AI identified the most likely class from the evaluated PlantVillage model."
+        else (
+            "PlantCare AI identified the most likely class from the "
+            f"{definition.display_name} model."
+        )
     )
 
     return {
+        "schema_version": "1.1",
+        "capability": definition.capability,
+        "model_id": definition.model_id,
+        "model_version": definition.version,
         "plant_name": plant_name,
         "condition": condition,
         "confidence": confidence,
         "explanation": explanation,
         "needs_expert_review": needs_expert_review,
         "plant_hint": plant_hint,
-        "model_version": "plantvillage-mobilenetv3-38-class",
         "top_predictions": [
             {
-                "class": _classes[int(index)],
+                "class": classes[int(index)],
                 "confidence": float(value),
             }
             for value, index in zip(values, indices)
