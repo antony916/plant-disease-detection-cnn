@@ -950,3 +950,17 @@ Activation boundary:
 - Firebase native configuration files are not present.
 - Render deployment configuration exists but has not been activated and no public inference URL is claimed.
 - The next practical activation step remains configured hosting plus native mobile setup, followed by the new endpoint smoke test with a real plant photo and then Flutter -> Supabase diagnosis E2E.
+
+## 40. RENDER BLUEPRINT SCHEMA ALIGNMENT — 2026-09-28
+
+Completed:
+- Updated `render.yaml` to use the current Render Blueprint field `autoDeployTrigger: off` instead of the deprecated `autoDeploy: false` alias.
+- The deployment remains intentionally non-auto-deploying until hosting is deliberately activated.
+
+Commit:
+- `dd80eec53fc449003f9c7a5924d801e239e9f977` — deploy: use current Render auto-deploy field.
+
+Current external activation boundary is unchanged:
+- Render service has not been activated from this environment.
+- No public inference URL is claimed.
+- Android/iOS native Flutter folders and Firebase native configuration are still absent from the repository.
