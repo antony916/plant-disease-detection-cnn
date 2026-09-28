@@ -110,8 +110,8 @@ class AppBottomNav extends StatelessWidget {
           label: 'Garden',
         ),
         NavigationDestination(
-          icon: Icon(Icons.add_outlined),
-          selectedIcon: Icon(Icons.add),
+          icon: Icon(Icons.camera_alt_outlined),
+          selectedIcon: Icon(Icons.camera_alt),
           label: 'Scan',
         ),
         NavigationDestination(
