@@ -1,3 +1,13 @@
+class DiagnosisPrediction {
+  final String className;
+  final double confidence;
+
+  const DiagnosisPrediction({
+    required this.className,
+    required this.confidence,
+  });
+}
+
 class DiagnosisResult {
   final String plantName;
   final String condition;
@@ -7,6 +17,7 @@ class DiagnosisResult {
   final String modelVersion;
   final String capability;
   final String modelId;
+  final List<DiagnosisPrediction> topPredictions;
 
   const DiagnosisResult({
     required this.plantName,
@@ -17,6 +28,7 @@ class DiagnosisResult {
     this.modelVersion = 'unknown',
     this.capability = 'disease',
     this.modelId = 'unknown',
+    this.topPredictions = const [],
   });
 }
 
