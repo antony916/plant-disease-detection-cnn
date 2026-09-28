@@ -68,7 +68,8 @@ abstract final class AppRouter {
       case editPlant:
         final plant = settings.arguments;
         if (plant is Plant) {
-          return MaterialPageRoute(builder: (_) => EditPlantScreen(plant: plant));
+          return MaterialPageRoute(
+              builder: (_) => EditPlantScreen(plant: plant));
         }
         return MaterialPageRoute(builder: (_) => const DashboardScreen());
       case notifications:

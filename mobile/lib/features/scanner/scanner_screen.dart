@@ -237,35 +237,36 @@ class _ScannerScreenState extends State<ScannerScreen> {
                                 }),
                               )
                             : const Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(
-                                Icons.add,
-                                size: 42,
-                                color: PlantCareColors.primary,
-                              ),
-                              SizedBox(height: 16),
-                              Text(
-                                'Capture a clear photo of the affected leaf',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  fontSize: 17,
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                              SizedBox(height: 8),
-                              Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 32),
-                                child: Text(
-                                  'Use daylight, keep the leaf in focus, and avoid glare for a clearer diagnosis.',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    color: PlantCareColors.muted,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.add,
+                                    size: 42,
+                                    color: PlantCareColors.primary,
                                   ),
-                                ),
+                                  SizedBox(height: 16),
+                                  Text(
+                                    'Capture a clear photo of the affected leaf',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontSize: 17,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
+                                  SizedBox(height: 8),
+                                  Padding(
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 32),
+                                    child: Text(
+                                      'Use daylight, keep the leaf in focus, and avoid glare for a clearer diagnosis.',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        color: PlantCareColors.muted,
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ],
-                          ),
                   ),
                 ),
                 if (_error != null) ...[
@@ -286,7 +287,9 @@ class _ScannerScreenState extends State<ScannerScreen> {
                             : () => _pickAndAnalyze(ImageSource.gallery),
                         icon: const Icon(Icons.photo_library_outlined),
                         label: Text(
-                          _selectedImagePath == null ? 'Upload photo' : 'Change photo',
+                          _selectedImagePath == null
+                              ? 'Upload photo'
+                              : 'Change photo',
                         ),
                       ),
                     ),
@@ -298,7 +301,9 @@ class _ScannerScreenState extends State<ScannerScreen> {
                             : () => _pickAndAnalyze(ImageSource.camera),
                         icon: const Icon(Icons.camera_alt_outlined),
                         label: Text(
-                          _selectedImagePath == null ? 'Take photo' : 'Retake photo',
+                          _selectedImagePath == null
+                              ? 'Take photo'
+                              : 'Retake photo',
                         ),
                       ),
                     ),
@@ -360,7 +365,6 @@ class _AnalyzingState extends StatelessWidget {
     );
   }
 }
-
 
 class _ImagePreview extends StatelessWidget {
   final String path;

@@ -29,7 +29,8 @@ class _EditPlantScreenState extends State<EditPlantScreen> {
     super.initState();
     final p = widget.plant;
     _name = TextEditingController(text: p.name);
-    _species = TextEditingController(text: p.species == 'Unknown species' ? '' : p.species);
+    _species = TextEditingController(
+        text: p.species == 'Unknown species' ? '' : p.species);
     _location = TextEditingController(text: p.location);
     _notes = TextEditingController(text: p.notes);
     _sunlight = p.sunlight;
@@ -52,8 +53,11 @@ class _EditPlantScreenState extends State<EditPlantScreen> {
     final interval = _watering.round();
     final updated = widget.plant.copyWith(
       name: _name.text.trim(),
-      species: _species.text.trim().isEmpty ? 'Unknown species' : _species.text.trim(),
-      location: _location.text.trim().isEmpty ? 'Garden' : _location.text.trim(),
+      species: _species.text.trim().isEmpty
+          ? 'Unknown species'
+          : _species.text.trim(),
+      location:
+          _location.text.trim().isEmpty ? 'Garden' : _location.text.trim(),
       notes: _notes.text.trim(),
       sunlight: _sunlight,
       soilType: _soil,
@@ -66,7 +70,8 @@ class _EditPlantScreenState extends State<EditPlantScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('\${updated.name} updated.')),
       );
-      Navigator.pushReplacementNamed(context, AppRouter.plant, arguments: updated.name);
+      Navigator.pushReplacementNamed(context, AppRouter.plant,
+          arguments: updated.name);
     } catch (error) {
       if (!mounted) return;
       setState(() => _saving = false);
@@ -80,65 +85,93 @@ class _EditPlantScreenState extends State<EditPlantScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Edit plant', style: TextStyle(fontWeight: FontWeight.w800)),
+        title: const Text('Edit plant',
+            style: TextStyle(fontWeight: FontWeight.w800)),
       ),
       body: Form(
         key: _formKey,
         child: ListView(
           padding: const EdgeInsets.all(PlantCareSpacing.lg),
           children: [
-            const Text('Plant basics', style: TextStyle(fontSize: 21, fontWeight: FontWeight.w800)),
+            const Text('Plant basics',
+                style: TextStyle(fontSize: 21, fontWeight: FontWeight.w800)),
             const SizedBox(height: PlantCareSpacing.sm),
             TextFormField(
               controller: _name,
               textInputAction: TextInputAction.next,
               decoration: const InputDecoration(labelText: 'Plant name'),
-              validator: (value) => value == null || value.trim().isEmpty ? 'Enter a plant name' : null,
+              validator: (value) => value == null || value.trim().isEmpty
+                  ? 'Enter a plant name'
+                  : null,
             ),
             const SizedBox(height: PlantCareSpacing.md),
             TextFormField(
               controller: _species,
               textInputAction: TextInputAction.next,
-              decoration: const InputDecoration(labelText: 'Species (optional)'),
+              decoration:
+                  const InputDecoration(labelText: 'Species (optional)'),
             ),
             const SizedBox(height: PlantCareSpacing.lg),
-            const Text('Growing conditions', style: TextStyle(fontSize: 21, fontWeight: FontWeight.w800)),
+            const Text('Growing conditions',
+                style: TextStyle(fontSize: 21, fontWeight: FontWeight.w800)),
             const SizedBox(height: PlantCareSpacing.sm),
             DropdownButtonFormField<String>(
               initialValue: _sunlight,
-              decoration: const InputDecoration(labelText: 'Sunlight', prefixIcon: Icon(Icons.wb_sunny_outlined)),
+              decoration: const InputDecoration(
+                  labelText: 'Sunlight',
+                  prefixIcon: Icon(Icons.wb_sunny_outlined)),
               items: const [
                 DropdownMenuItem(value: 'Full sun', child: Text('Full sun')),
                 DropdownMenuItem(value: '6–8 hours', child: Text('6–8 hours')),
-                DropdownMenuItem(value: 'Partial sun', child: Text('Partial sun')),
-                DropdownMenuItem(value: 'Bright indirect light', child: Text('Bright indirect light')),
+                DropdownMenuItem(
+                    value: 'Partial sun', child: Text('Partial sun')),
+                DropdownMenuItem(
+                    value: 'Bright indirect light',
+                    child: Text('Bright indirect light')),
                 DropdownMenuItem(value: 'Low light', child: Text('Low light')),
               ],
-              onChanged: (value) { if (value != null) setState(() => _sunlight = value); },
+              onChanged: (value) {
+                if (value != null) setState(() => _sunlight = value);
+              },
             ),
             const SizedBox(height: PlantCareSpacing.md),
             TextFormField(
               controller: _location,
               textInputAction: TextInputAction.next,
-              decoration: const InputDecoration(labelText: 'Garden location', prefixIcon: Icon(Icons.place_outlined)),
+              decoration: const InputDecoration(
+                  labelText: 'Garden location',
+                  prefixIcon: Icon(Icons.place_outlined)),
             ),
             const SizedBox(height: PlantCareSpacing.md),
             DropdownButtonFormField<String>(
               initialValue: _soil,
-              decoration: const InputDecoration(labelText: 'Soil type', prefixIcon: Icon(Icons.grass_outlined)),
+              decoration: const InputDecoration(
+                  labelText: 'Soil type',
+                  prefixIcon: Icon(Icons.grass_outlined)),
               items: const [
-                DropdownMenuItem(value: 'General potting mix', child: Text('General potting mix')),
-                DropdownMenuItem(value: 'Loamy potting mix', child: Text('Loamy potting mix')),
-                DropdownMenuItem(value: 'Moist, well-drained mix', child: Text('Moist, well-drained mix')),
-                DropdownMenuItem(value: 'Sandy soil', child: Text('Sandy soil')),
+                DropdownMenuItem(
+                    value: 'General potting mix',
+                    child: Text('General potting mix')),
+                DropdownMenuItem(
+                    value: 'Loamy potting mix',
+                    child: Text('Loamy potting mix')),
+                DropdownMenuItem(
+                    value: 'Moist, well-drained mix',
+                    child: Text('Moist, well-drained mix')),
+                DropdownMenuItem(
+                    value: 'Sandy soil', child: Text('Sandy soil')),
                 DropdownMenuItem(value: 'Clay soil', child: Text('Clay soil')),
               ],
-              onChanged: (value) { if (value != null) setState(() => _soil = value); },
+              onChanged: (value) {
+                if (value != null) setState(() => _soil = value);
+              },
             ),
             const SizedBox(height: PlantCareSpacing.lg),
-            const Text('Watering', style: TextStyle(fontSize: 21, fontWeight: FontWeight.w800)),
+            const Text('Watering',
+                style: TextStyle(fontSize: 21, fontWeight: FontWeight.w800)),
             const SizedBox(height: PlantCareSpacing.sm),
-            Text('Every \${_watering.round()} days', style: const TextStyle(fontWeight: FontWeight.w700)),
+            Text('Every \${_watering.round()} days',
+                style: const TextStyle(fontWeight: FontWeight.w700)),
             Slider(
               value: _watering,
               min: 1,
@@ -148,19 +181,25 @@ class _EditPlantScreenState extends State<EditPlantScreen> {
               onChanged: (value) => setState(() => _watering = value),
             ),
             const SizedBox(height: PlantCareSpacing.lg),
-            const Text('Notes', style: TextStyle(fontSize: 21, fontWeight: FontWeight.w800)),
+            const Text('Notes',
+                style: TextStyle(fontSize: 21, fontWeight: FontWeight.w800)),
             const SizedBox(height: PlantCareSpacing.sm),
             TextField(
               controller: _notes,
               minLines: 3,
               maxLines: 5,
-              decoration: const InputDecoration(hintText: 'Optional notes about this plant', alignLabelWithHint: true),
+              decoration: const InputDecoration(
+                  hintText: 'Optional notes about this plant',
+                  alignLabelWithHint: true),
             ),
             const SizedBox(height: PlantCareSpacing.xl),
             FilledButton(
               onPressed: _saving ? null : _save,
               child: _saving
-                  ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2))
+                  ? const SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(strokeWidth: 2))
                   : const Text('Save changes'),
             ),
           ],
