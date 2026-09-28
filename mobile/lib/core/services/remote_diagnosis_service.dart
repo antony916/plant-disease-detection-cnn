@@ -39,6 +39,8 @@ class RemoteDiagnosisService implements DiagnosisService {
       request.fields['plant_hint'] = plantHint.trim();
     }
 
+    request.fields['capability'] = 'disease';
+
     request.files.add(
       await http.MultipartFile.fromPath('image', imagePath),
     );
@@ -107,6 +109,18 @@ class RemoteDiagnosisService implements DiagnosisService {
       throw const FormatException('Inference model version is missing.');
     }
 
+    final capabilityValue = decoded['capability'];
+    final capability =
+        capabilityValue is String && capabilityValue.trim().isNotEmpty
+            ? capabilityValue.trim()
+            : 'disease';
+
+    final modelIdValue = decoded['model_id'];
+    final modelId =
+        modelIdValue is String && modelIdValue.trim().isNotEmpty
+            ? modelIdValue.trim()
+            : 'unknown';
+
     return DiagnosisResult(
       plantName: plantName,
       condition: condition,
@@ -115,6 +129,8 @@ class RemoteDiagnosisService implements DiagnosisService {
       needsExpertReview:
           needsExpertReview || confidence < lowConfidenceThreshold,
       modelVersion: modelVersion.trim(),
+      capability: capability,
+      modelId: modelId,
     );
   }
 
