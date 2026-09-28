@@ -5,6 +5,10 @@ This script does not deploy services or require secrets. It reports which
 repository-side activation assets are present and which external assets remain.
 """
 
+from __future__ import annotations
+
+import subprocess
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -18,6 +22,7 @@ ANDROID_FIREBASE = ANDROID / "app" / "google-services.json"
 IOS_FIREBASE = IOS / "Runner" / "GoogleService-Info.plist"
 
 EXPECTED_CLASSES = 38
+VALIDATOR = ROOT / "scripts" / "validate_model_artifact.py"
 
 
 def report(label: str, ok: bool, detail: str) -> None:
@@ -33,11 +38,40 @@ def main() -> int:
 
     class_ok = False
     count = 0
+    duplicate_names = False
     if CLASSES.is_file():
-        count = sum(1 for line in CLASSES.read_text(encoding="utf-8").splitlines() if line.strip())
-        class_ok = count == EXPECTED_CLASSES
-    report("Class names", class_ok, f"{count}/{EXPECTED_CLASSES} classes at {CLASSES}")
+        classes = [
+            line.strip()
+            for line in CLASSES.read_text(encoding="utf-8").splitlines()
+            if line.strip()
+        ]
+        count = len(classes)
+        duplicate_names = len(set(classes)) != len(classes)
+        class_ok = count == EXPECTED_CLASSES and not duplicate_names
+    detail = f"{count}/{EXPECTED_CLASSES} classes at {CLASSES}"
+    if duplicate_names:
+        detail += "; duplicate class names detected"
+    report("Class names", class_ok, detail)
     blocked += not class_ok
+
+    if artifact_ok and class_ok:
+        validator = subprocess.run(
+            [sys.executable, str(VALIDATOR), "--json"],
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+        )
+        validator_ok = validator.returncode == 0
+        report(
+            "Model package compatibility",
+            validator_ok,
+            (
+                "MobileNetV3 state_dict + class mapping passed."
+                if validator_ok
+                else validator.stdout.strip() or validator.stderr.strip()
+            ),
+        )
+        blocked += not validator_ok
 
     android_ok = ANDROID.is_dir()
     ios_ok = IOS.is_dir()
@@ -70,7 +104,10 @@ def main() -> int:
         print("This checker intentionally does not treat Demo mode as production activation.")
         return 1
 
-    print("Repository-side activation assets are present. Proceed to configured-environment E2E verification.")
+    print(
+        "Repository-side activation assets are present. "
+        "Proceed to configured-environment E2E verification."
+    )
     return 0
 
 
