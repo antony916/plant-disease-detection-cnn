@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: plantcare-inference
+    runtime: docker
+    plan: 1c-2g
+    dockerfilePath: ./api/Dockerfile
+    dockerContext: .
+    healthCheckPath: /health
+    autoDeploy: false
+    envVars:
+      - key: PORT
+        value: 8000
