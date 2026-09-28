@@ -78,7 +78,7 @@ def load_model(capability: str) -> None:
             "Invalid PlantCare class configuration: duplicate class names found."
         )
 
-    model = build_model(len(classes)).to(_device)
+    model = build_model(len(classes), pretrained=False).to(_device)
 
     try:
         state = torch.load(model_file, map_location=_device)
