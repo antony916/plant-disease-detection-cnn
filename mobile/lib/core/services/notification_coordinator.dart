@@ -2,10 +2,13 @@ import '../models/garden_task.dart';
 import '../models/notification_center_item.dart';
 import '../models/plant.dart';
 import 'notification_center_service.dart';
+import 'care_service.dart';
 
 class NotificationCoordinator {
   final NotificationCenterService center;
-  NotificationCoordinator(this.center);
+  final CareService care;
+
+  NotificationCoordinator(this.center, this.care);
 
   Future<void> syncGardenTasks({
     required List<Plant> plants,
@@ -14,28 +17,38 @@ class NotificationCoordinator {
   }) async {
     final current = now ?? DateTime.now();
     final preferences = await center.getPreferences();
-    if (!preferences.wateringReminders || preferences.isQuietHour(current))
+    if (!preferences.wateringReminders || preferences.isQuietHour(current)) {
       return;
+    }
 
     for (final task in tasks) {
       if (task.type != GardenTaskType.watering || task.completed) continue;
       final plant = _plantForTask(plants, task.plantId);
       if (plant == null) continue;
+
+      final recommendation = await care.wateringRecommendation(plant);
       final dateKey = task.dueAt.year.toString() +
           '-' +
           task.dueAt.month.toString() +
           '-' +
           task.dueAt.day.toString();
-      await center.add(NotificationCenterItem(
-        id: 'watering-' + plant.id + '-' + dateKey,
-        type: NotificationCenterType.watering,
-        title: 'Water ' + plant.name,
-        body: 'Your ' +
-            plant.name +
-            ' is due for watering. Check the soil first.',
-        createdAt: current,
-        plantId: plant.id,
-      ));
+
+      final title = switch (recommendation.action) {
+        CareRecommendationAction.water => 'Water ${plant.name}',
+        CareRecommendationAction.wait => 'Hold watering: ${plant.name}',
+        CareRecommendationAction.monitor => 'Check ${plant.name}',
+      };
+
+      await center.add(
+        NotificationCenterItem(
+          id: 'watering-${plant.id}-$dateKey',
+          type: NotificationCenterType.watering,
+          title: title,
+          body: recommendation.message,
+          createdAt: current,
+          plantId: plant.id,
+        ),
+      );
     }
   }
 
