@@ -19,6 +19,8 @@ from pathlib import Path
 import torch
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT))
+
 MODEL_PATH = ROOT / "artifacts" / "plant_disease_mobilenetv3.pth"
 CLASS_NAMES_PATH = ROOT / "artifacts" / "class_names.txt"
 EXPECTED_CLASSES = 38
