@@ -45,9 +45,7 @@ class _FakeCareService implements CareService {
   const _FakeCareService(this.recommendation);
 
   @override
-  Future<CareRecommendation> wateringRecommendation(
-    Plant plant,
-  ) async =>
+  Future<CareRecommendation> wateringRecommendation(Plant plant) async =>
       recommendation;
 }
 
