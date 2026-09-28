@@ -56,6 +56,21 @@ class _LibraryScreenState extends State<LibraryScreen> {
             label: const Text('Health Timeline'),
           ),
           const SizedBox(height: PlantCareSpacing.lg),
+          TextField(
+            onChanged: (value) => setState(() => _query = value),
+            decoration: InputDecoration(
+              hintText: 'Search plants, diseases or warning signs',
+              prefixIcon: const Icon(Icons.search),
+              suffixIcon: _query.isEmpty
+                  ? null
+                  : IconButton(
+                      tooltip: 'Clear search',
+                      onPressed: () => setState(() => _query = ''),
+                      icon: const Icon(Icons.clear),
+                    ),
+            ),
+          ),
+          const SizedBox(height: PlantCareSpacing.md),
           const Text('Starter knowledge',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800)),
           const SizedBox(height: PlantCareSpacing.sm),
