@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 
 import '../../core/navigation/app_router.dart';
@@ -154,6 +155,15 @@ class DiagnosisScreen extends StatelessWidget {
               child: const Text('View plant care'),
             ),
           if (!lowConfidence) const SizedBox(height: PlantCareSpacing.sm),
+          OutlinedButton.icon(
+            onPressed: () => Navigator.pushReplacementNamed(
+              context,
+              AppRouter.scanner,
+            ),
+            icon: const Icon(Icons.camera_alt_outlined),
+            label: const Text('Scan another photo'),
+          ),
+          const SizedBox(height: PlantCareSpacing.sm),
           OutlinedButton.icon(
             onPressed: () => Navigator.pushNamed(
               context,
