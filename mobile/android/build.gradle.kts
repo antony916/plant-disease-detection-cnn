@@ -1,3 +1,9 @@
+plugins {
+    // Firebase Google Services plugin; applied by the app module only when
+    // a real google-services.json is supplied.
+    id("com.google.gms.google-services") version "4.5.0" apply false
+}
+
 allprojects {
     repositories {
         google()
