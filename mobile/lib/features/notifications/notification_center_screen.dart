@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../core/app_services.dart';
 import '../../core/models/notification_center_item.dart';
 import '../../core/theme/app_theme.dart';
+import '../../core/navigation/app_router.dart';
 
 class NotificationCenterScreen extends StatefulWidget {
   const NotificationCenterScreen({super.key});
@@ -22,6 +23,57 @@ class _NotificationCenterScreenState extends State<NotificationCenterScreen> {
   void _reload() =>
       setState(() => _future = AppServices.notificationCenter.getItems());
 
+  Future<void> _confirmClearAll() async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Clear notifications?'),
+        content: const Text('This removes all notifications from your notification history.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancel'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Clear all'),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true || !mounted) return;
+
+    try {
+      await AppServices.notificationCenter.clearAll();
+      if (!mounted) return;
+      _reload();
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Notifications cleared.')),
+      );
+    } catch (error) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Couldn’t clear notifications: $error')),
+      );
+    }
+  }
+
+  Future<void> _openNotification(NotificationCenterItem item) async {
+    await AppServices.notificationCenter.markRead(item.id);
+    if (!mounted) return;
+    _reload();
+
+    if (item.plantId == null) return;
+    final plants = await AppServices.garden.getPlants();
+    if (!mounted) return;
+    for (final plant in plants) {
+      if (plant.id == item.plantId) {
+        Navigator.pushNamed(context, AppRouter.plant, arguments: plant.name);
+        return;
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,11 +81,17 @@ class _NotificationCenterScreenState extends State<NotificationCenterScreen> {
         title: const Text('Notifications'),
         actions: [
           TextButton(
-              onPressed: () async {
-                await AppServices.notificationCenter.markAllRead();
-                _reload();
-              },
-              child: const Text('Mark all read'))
+            onPressed: () async {
+              await AppServices.notificationCenter.markAllRead();
+              _reload();
+            },
+            child: const Text('Mark all read'),
+          ),
+          IconButton(
+            tooltip: 'Clear notifications',
+            onPressed: _confirmClearAll,
+            icon: const Icon(Icons.delete_outline),
+          ),
         ],
       ),
       body: FutureBuilder<List<NotificationCenterItem>>(
@@ -84,12 +142,7 @@ class _NotificationCenterScreenState extends State<NotificationCenterScreen> {
                             item.read ? FontWeight.w500 : FontWeight.w800)),
                 subtitle: Text(item.body),
                 trailing: item.read ? null : const Icon(Icons.circle, size: 9),
-                onTap: item.read
-                    ? null
-                    : () async {
-                        await AppServices.notificationCenter.markRead(item.id);
-                        _reload();
-                      },
+                onTap: () => _openNotification(item),
               ));
             },
           );
