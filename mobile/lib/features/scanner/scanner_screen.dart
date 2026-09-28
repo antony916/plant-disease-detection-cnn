@@ -240,7 +240,7 @@ class _ScannerScreenState extends State<ScannerScreen> {
                               ),
                               SizedBox(height: 16),
                               Text(
-                                'Position the affected leaf inside the frame',
+                                'Capture a clear photo of the affected leaf',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                   fontSize: 17,
@@ -251,7 +251,7 @@ class _ScannerScreenState extends State<ScannerScreen> {
                               Padding(
                                 padding: EdgeInsets.symmetric(horizontal: 32),
                                 child: Text(
-                                  'Use daylight and avoid blur for a clearer diagnosis.',
+                                  'Use daylight, keep the leaf in focus, and avoid glare for a clearer diagnosis.',
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                     color: PlantCareColors.muted,
