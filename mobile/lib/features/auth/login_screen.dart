@@ -18,6 +18,7 @@ class _LoginScreenState extends State<LoginScreen> {
     setState(() => _busy = true);
     try {
       final user = await AppServices.auth.signInWithGoogle();
+      await AppServices.syncPushRegistration();
       if (!mounted) return;
       Navigator.pushReplacementNamed(context, AppRouter.dashboard);
       ScaffoldMessenger.of(context).showSnackBar(
@@ -89,6 +90,7 @@ class _LoginScreenState extends State<LoginScreen> {
         email: credentials.email,
         password: credentials.password,
       );
+      await AppServices.syncPushRegistration();
       if (!mounted) return;
       Navigator.pushReplacementNamed(context, AppRouter.dashboard);
       ScaffoldMessenger.of(context).showSnackBar(
