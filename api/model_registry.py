@@ -52,9 +52,14 @@ MODEL_REGISTRY: dict[str, ModelDefinition] = {
     ),
 }
 
+CAPABILITY_ALIASES = {
+    "plant-stress-model": "environment",
+}
+
 
 def get_model_definition(capability: str) -> ModelDefinition:
     normalized = capability.strip().lower()
+    normalized = CAPABILITY_ALIASES.get(normalized, normalized)
     try:
         return MODEL_REGISTRY[normalized]
     except KeyError as exc:
