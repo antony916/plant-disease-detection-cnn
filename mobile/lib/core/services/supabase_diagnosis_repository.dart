@@ -33,7 +33,7 @@ class SupabaseDiagnosisRepository implements DiagnosisRepository {
     if (resolvedPlantId != null) {
       await saveDiagnosis(
         DiagnosisRecord(
-          id: 'local-diagnosis-\${DateTime.now().microsecondsSinceEpoch}',
+          id: 'local-diagnosis-${DateTime.now().microsecondsSinceEpoch}',
           plantId: resolvedPlantId,
           imagePath: imagePath,
           imageReference: imageReference,
@@ -121,15 +121,19 @@ class SupabaseDiagnosisRepository implements DiagnosisRepository {
 
   List<DiagnosisPrediction> _predictionsFromRow(dynamic value) {
     if (value is! List) return const [];
-    return value.whereType<Map>().map((item) {
-      final className = item['class'];
-      final confidence = item['confidence'];
-      if (className is! String || confidence is! num) return null;
-      return DiagnosisPrediction(
-        className: className,
-        confidence: confidence.toDouble(),
-      );
-    }).whereType<DiagnosisPrediction>().toList();
+    return value
+        .whereType<Map>()
+        .map((item) {
+          final className = item['class'];
+          final confidence = item['confidence'];
+          if (className is! String || confidence is! num) return null;
+          return DiagnosisPrediction(
+            className: className,
+            confidence: confidence.toDouble(),
+          );
+        })
+        .whereType<DiagnosisPrediction>()
+        .toList();
   }
 
   DiagnosisRecord _fromRow(Map<String, dynamic> row) {
