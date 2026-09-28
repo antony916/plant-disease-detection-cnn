@@ -16,7 +16,7 @@ class BackendRuntime {
 
     await Supabase.initialize(
       url: config.url,
-      anonKey: config.publishableKey,
+      publishableKey: config.publishableKey,
     );
 
     client = Supabase.instance.client;
