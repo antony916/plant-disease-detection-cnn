@@ -1025,3 +1025,23 @@ NEXT PRACTICAL TASK:
 - Separately activate Render and obtain the real HTTPS inference URL.
 - Run the hosted endpoint verifier with a real plant image.
 - Configure `PLANTCARE_INFERENCE_URL` and perform Flutter -> inference -> Supabase diagnosis E2E.
+
+## 43. ACTIVATION CHECKER GATE FIX — 2026-09-28
+
+Completed:
+- Fixed `scripts/plantcare_activation_check.py` so missing Firebase native configuration is counted as an actual activation blocker rather than only being reported.
+- Added an explicit repository-side inference-hosting configuration gate requiring both `render.yaml` and `scripts/verify_inference_endpoint.py`.
+- The Supabase migration-tree check is now also included in the blocker count when absent.
+
+Commit:
+- `7061f1445f4d0936a41ce6dfba249d484a9430ee` — `fix: enforce activation readiness gates`.
+
+Verification boundary:
+- This is a repository-side readiness correction only.
+- It does not claim Render hosting, Firebase native configuration, Flutter platform generation, or live mobile/Supabase E2E.
+
+NEXT PRACTICAL TASK:
+- Let GitHub Actions validate the updated activation checker.
+- In a Flutter-enabled environment, generate the official Android/iOS shells.
+- Activate hosting and run the real-image inference verifier.
+- Then configure the mobile runtime and complete Flutter -> inference -> Supabase diagnosis E2E.
