@@ -121,6 +121,28 @@ class RemoteDiagnosisService implements DiagnosisService {
             ? modelIdValue.trim()
             : 'unknown';
 
+    final predictionsValue = decoded['top_predictions'];
+    final topPredictions = predictionsValue is List
+        ? predictionsValue.whereType<Map>().map((item) {
+            final className = item['class'];
+            final predictionConfidence = item['confidence'];
+            if (className is! String || predictionConfidence is! num) {
+              return null;
+            }
+            final value = predictionConfidence.toDouble();
+            if (className.trim().isEmpty ||
+                !value.isFinite ||
+                value < 0 ||
+                value > 1) {
+              return null;
+            }
+            return DiagnosisPrediction(
+              className: className.trim(),
+              confidence: value,
+            );
+          }).whereType<DiagnosisPrediction>().toList()
+        : const <DiagnosisPrediction>[];
+
     return DiagnosisResult(
       plantName: plantName,
       condition: condition,
@@ -131,6 +153,7 @@ class RemoteDiagnosisService implements DiagnosisService {
       modelVersion: modelVersion.trim(),
       capability: capability,
       modelId: modelId,
+      topPredictions: topPredictions,
     );
   }
 
