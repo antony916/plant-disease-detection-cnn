@@ -10,7 +10,8 @@ This checkpoint is the handoff point after the code-side work that can be comple
 - Gallery/camera image capture boundary.
 - Cloud image upload path.
 - Diagnosis image-reference separation.
-- Configurable remote inference client.
+- Capability-driven configurable remote inference client.
+- Extensible model registry for disease, pest, nutrient and environmental coverage.
 - FastAPI PlantCare inference service.
 - Inference Dockerfile and requirements.
 - Optional Firebase Cloud Messaging provider.
@@ -67,9 +68,9 @@ For iOS push, the APNs authentication key must be configured in Firebase/Apple t
 
 ## What happens after the upload gate
 
-1. Verify the uploaded model artifact against the 38 class names.
+1. Verify the uploaded disease-model artifact against the 38 class names and model registry contract.
 2. Complete the FastAPI inference deployment configuration.
-3. Connect the mobile app to the deployed inference endpoint.
+3. Connect the mobile app to the deployed inference endpoint using the capability-driven contract.
 4. Configure Firebase Messaging and verify device-token registration.
 5. Apply Supabase migrations and verify Auth, Garden, Family Sharing, Storage and Notifications with RLS.
 6. Run end-to-end mobile testing.
