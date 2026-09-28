@@ -54,7 +54,7 @@ class OpenMeteoWeatherService implements WeatherService {
               const <double>[];
 
       final rainProbability = probabilities.isEmpty
-          ? 0
+          ? 0.0
           : probabilities.reduce((a, b) => a > b ? a : b);
 
       return WeatherSnapshot(
