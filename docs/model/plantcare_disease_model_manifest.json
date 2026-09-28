@@ -1,0 +1,29 @@
+{
+  "model_id": "plant-disease-mobilenetv3",
+  "model_version": "plantvillage-mobilenetv3-38-class",
+  "capability": "disease",
+  "status": "verified-uploaded-artifact",
+  "architecture": "MobileNetV3-Large",
+  "framework": "PyTorch",
+  "input_size": [224, 224],
+  "classifier_output_classes": 38,
+  "model_file": {
+    "name": "plant_disease_mobilenetv3.pth",
+    "size_bytes": 17214059,
+    "sha256": "5bf8424e8d4f6f63fa7ad6bde6e992cab7545e3d78a220f5eca55ec326241eea"
+  },
+  "class_file": {
+    "name": "class_names.txt",
+    "class_count": 38,
+    "sha256": "14c46d9d16b9d773d0183ae0b08c474947ba660d87f83760579b0ede139b2eba"
+  },
+  "validation": {
+    "state_dict_type": "OrderedDict",
+    "missing_keys": 0,
+    "unexpected_keys": 0,
+    "shape_mismatches": 0,
+    "dummy_inference_output_shape": [1, 38],
+    "dummy_inference_finite": true
+  },
+  "benchmark_note": "The documented 98.72% result is the held-out PlantVillage benchmark and is not real-world field accuracy."
+}
