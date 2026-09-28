@@ -108,10 +108,24 @@ class _PlantDetailScreenState extends State<PlantDetailScreen> {
             builder: (context, snapshot) {
               final plant = snapshot.data;
               if (plant == null) return const SizedBox.shrink();
-              return IconButton(
-                tooltip: 'Delete plant',
-                icon: const Icon(Icons.delete_outline),
-                onPressed: () => _confirmDelete(plant),
+              return Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  IconButton(
+                    tooltip: 'Edit plant',
+                    icon: const Icon(Icons.edit_outlined),
+                    onPressed: () => Navigator.pushNamed(
+                      context,
+                      AppRouter.editPlant,
+                      arguments: plant,
+                    ),
+                  ),
+                  IconButton(
+                    tooltip: 'Delete plant',
+                    icon: const Icon(Icons.delete_outline),
+                    onPressed: () => _confirmDelete(plant),
+                  ),
+                ],
               );
             },
           ),
