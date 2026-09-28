@@ -8,13 +8,9 @@ import 'package:http/http.dart' as http;
 import 'package:plantcare_ai/core/services/remote_diagnosis_service.dart';
 
 class _FakeHttpClient extends http.BaseClient {
-  final int statusCode;
   final String body;
 
-  _FakeHttpClient({
-    this.statusCode = 200,
-    required this.body,
-  });
+  _FakeHttpClient({required this.body});
 
   @override
   Future<http.StreamedResponse> send(http.BaseRequest request) async {
