@@ -31,7 +31,8 @@ class FirebasePushNotificationService implements PushNotificationService {
   }
 
   @override
-  Stream<String> get onTokenRefresh => FirebaseMessaging.instance.onTokenRefresh;
+  Stream<String> get onTokenRefresh =>
+      FirebaseMessaging.instance.onTokenRefresh;
 
   @override
   Future<void> schedule(PlantCareNotification notification) async {
