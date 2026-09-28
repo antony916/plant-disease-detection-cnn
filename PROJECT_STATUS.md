@@ -15,7 +15,8 @@ The repository has evolved from the original Plant Disease Detection mini-projec
 - AI scanner with camera/gallery capture
 - Diagnosis result and history architecture
 - Confidence-aware diagnosis contract
-- Remote FastAPI inference service
+- Capability-driven remote FastAPI inference service
+- Extensible inference model registry for disease, pest, nutrient and environmental capabilities
 - Model-version tracking
 - Private Supabase plant-image storage
 - Supabase Auth integration boundary
@@ -35,6 +36,18 @@ The repository has evolved from the original Plant Disease Detection mini-projec
 - Automated activation-readiness checker
 - Python syntax validation
 - Repository checkpoints and activation documentation
+
+## AI inference architecture
+
+The original 38-class PlantVillage MobileNetV3 model is the current disease-model baseline, not the intended final coverage of PlantCare AI.
+
+Current registry capabilities:
+- `disease`: available; PlantVillage MobileNetV3, 38 classes.
+- `pest`: planned; model slot reserved, no production model claimed.
+- `nutrient`: planned; model slot reserved, no production model claimed.
+- `environment`: planned; model slot reserved, no production model claimed.
+
+The inference API now exposes model metadata and a stable capability-driven contract so additional models can be added without redesigning the mobile diagnosis pipeline.
 
 ## AI model baseline
 
