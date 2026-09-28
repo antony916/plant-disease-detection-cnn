@@ -25,6 +25,45 @@ class _DiagnosisHistoryScreenState extends State<DiagnosisHistoryScreen> {
     _historyFuture = AppServices.diagnosis.history();
   }
 
+  Future<void> _confirmClearHistory() async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Clear diagnosis history?'),
+        content: const Text(
+          'This permanently removes your saved diagnosis history. '
+          'Your plants will not be deleted.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancel'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Clear history'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed != true || !mounted) return;
+
+    try {
+      await AppServices.diagnosis.clearHistory();
+      if (!mounted) return;
+      setState(_load);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Diagnosis history cleared.')),
+      );
+    } catch (error) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Couldn’t clear history: $error')),
+      );
+    }
+  }
+
   Future<void> _refresh() async {
     setState(_load);
     await _historyFuture;
@@ -38,6 +77,13 @@ class _DiagnosisHistoryScreenState extends State<DiagnosisHistoryScreen> {
           'Health Timeline',
           style: TextStyle(fontWeight: FontWeight.w800),
         ),
+        actions: [
+          IconButton(
+            tooltip: 'Clear diagnosis history',
+            onPressed: _confirmClearHistory,
+            icon: const Icon(Icons.delete_outline),
+          ),
+        ],
       ),
       body: FutureBuilder<List<DiagnosisRecord>>(
         future: _historyFuture,
