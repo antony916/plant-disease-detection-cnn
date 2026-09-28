@@ -21,11 +21,12 @@ class DemoFamilySharingService implements FamilySharingService {
 
   @override
   Future<List<FamilyMember>> members(String gardenId) async =>
-      List.unmodifiable(_members.where((member) => member.gardenId == gardenId));
+      List.unmodifiable(
+          _members.where((member) => member.gardenId == gardenId));
 
   @override
-  Future<List<FamilyMember>> pendingInvites() async =>
-      List.unmodifiable(_members.where((member) => member.status == FamilyMemberStatus.pending));
+  Future<List<FamilyMember>> pendingInvites() async => List.unmodifiable(
+      _members.where((member) => member.status == FamilyMemberStatus.pending));
 
   @override
   Future<FamilyMember> invite({

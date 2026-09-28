@@ -74,7 +74,8 @@ class AppTheme {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
-          borderSide: const BorderSide(color: PlantCareColors.primary, width: 1.5),
+          borderSide:
+              const BorderSide(color: PlantCareColors.primary, width: 1.5),
         ),
         contentPadding: const EdgeInsets.symmetric(
           horizontal: PlantCareSpacing.md,

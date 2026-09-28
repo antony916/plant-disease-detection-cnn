@@ -77,17 +77,20 @@ class _DashboardScreenState extends State<DashboardScreen> {
         actions: [
           IconButton(
             tooltip: 'Notifications',
-            onPressed: () => Navigator.pushNamed(context, AppRouter.notifications),
+            onPressed: () =>
+                Navigator.pushNamed(context, AppRouter.notifications),
             icon: const Icon(Icons.notifications_none),
           ),
           IconButton(
             tooltip: 'Notification settings',
-            onPressed: () => Navigator.pushNamed(context, AppRouter.notificationSettings),
+            onPressed: () =>
+                Navigator.pushNamed(context, AppRouter.notificationSettings),
             icon: const Icon(Icons.account_circle_outlined),
           ),
           IconButton(
             tooltip: 'Family sharing',
-            onPressed: () => Navigator.pushNamed(context, AppRouter.familySharing),
+            onPressed: () =>
+                Navigator.pushNamed(context, AppRouter.familySharing),
             icon: const Icon(Icons.groups_outlined),
           ),
         ],
@@ -147,7 +150,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   child: _QuickAction(
                     icon: Icons.add_circle_outline,
                     title: 'Add plant',
-                    onTap: () => Navigator.pushNamed(context, AppRouter.addPlant),
+                    onTap: () =>
+                        Navigator.pushNamed(context, AppRouter.addPlant),
                   ),
                 ),
               ],
@@ -190,7 +194,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         onComplete: tasks[i].completed
                             ? null
                             : () async {
-                                await AppServices.garden.completeTask(tasks[i].id);
+                                await AppServices.garden
+                                    .completeTask(tasks[i].id);
                                 _refresh();
                               },
                       ),
@@ -228,15 +233,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 final plants = snapshot.data ?? const <Plant>[];
                 if (plants.isEmpty) {
                   return const _EmptyState(
-                    message: 'Your garden is empty. Add your first plant to get started.',
+                    message:
+                        'Your garden is empty. Add your first plant to get started.',
                   );
                 }
 
                 return Column(
                   children: [
                     for (int i = 0; i < plants.length; i++) ...[
-                      if (i > 0)
-                        const SizedBox(height: PlantCareSpacing.sm),
+                      if (i > 0) const SizedBox(height: PlantCareSpacing.sm),
                       _PlantCard(
                         plant: plants[i],
                         onTap: () => Navigator.pushNamed(

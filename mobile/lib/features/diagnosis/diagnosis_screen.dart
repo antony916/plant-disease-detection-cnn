@@ -14,7 +14,8 @@ class DiagnosisScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final percent = (result.confidence * 100).round();
     final lowConfidence = result.needsExpertReview || result.confidence < 0.70;
-    final guidance = const PlantCareGuidanceService().forCondition(result.condition);
+    final guidance =
+        const PlantCareGuidanceService().forCondition(result.condition);
 
     return Scaffold(
       appBar: AppBar(
@@ -128,8 +129,7 @@ class DiagnosisScreen extends StatelessWidget {
               ),
               child: const Text('View plant care'),
             ),
-          if (!lowConfidence)
-            const SizedBox(height: PlantCareSpacing.sm),
+          if (!lowConfidence) const SizedBox(height: PlantCareSpacing.sm),
           OutlinedButton.icon(
             onPressed: () => Navigator.pushNamed(
               context,
@@ -137,7 +137,9 @@ class DiagnosisScreen extends StatelessWidget {
             ),
             icon: const Icon(Icons.auto_awesome),
             label: Text(
-              lowConfidence ? 'Ask an expert / PlantCare AI' : 'Ask PlantCare AI',
+              lowConfidence
+                  ? 'Ask an expert / PlantCare AI'
+                  : 'Ask PlantCare AI',
             ),
           ),
         ],
@@ -145,7 +147,6 @@ class DiagnosisScreen extends StatelessWidget {
     );
   }
 }
-
 
 class _GuidanceSection extends StatelessWidget {
   final String title;

@@ -22,7 +22,8 @@ void main() {
       expect(preferences.isQuietHour(DateTime(2026, 9, 27, 7)), isFalse);
     });
 
-    test('treats the start boundary as active when quiet hours are disabled', () {
+    test('treats the start boundary as active when quiet hours are disabled',
+        () {
       const disabled = NotificationPreferences(quietHoursEnabled: false);
       expect(disabled.isQuietHour(DateTime(2026, 9, 27, 23)), isFalse);
     });

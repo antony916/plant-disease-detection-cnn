@@ -25,13 +25,13 @@ class SupabaseImageStorageService implements ImageStorageService {
         '$userId/plants/${DateTime.now().microsecondsSinceEpoch}.$extension';
 
     await client.storage.from(bucket).upload(
-      path,
-      file,
-      fileOptions: const FileOptions(
-        upsert: false,
-        cacheControl: '3600',
-      ),
-    );
+          path,
+          file,
+          fileOptions: const FileOptions(
+            upsert: false,
+            cacheControl: '3600',
+          ),
+        );
 
     return path;
   }

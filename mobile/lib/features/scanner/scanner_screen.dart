@@ -275,7 +275,9 @@ class _ScannerScreenState extends State<ScannerScreen> {
                   children: [
                     Expanded(
                       child: OutlinedButton.icon(
-                        onPressed: _isAnalyzing ? null : () => _pickAndAnalyze(ImageSource.gallery),
+                        onPressed: _isAnalyzing
+                            ? null
+                            : () => _pickAndAnalyze(ImageSource.gallery),
                         icon: const Icon(Icons.photo_library_outlined),
                         label: const Text('Upload photo'),
                       ),
@@ -283,7 +285,9 @@ class _ScannerScreenState extends State<ScannerScreen> {
                     const SizedBox(width: PlantCareSpacing.sm),
                     Expanded(
                       child: FilledButton.icon(
-                        onPressed: _isAnalyzing ? null : () => _pickAndAnalyze(ImageSource.camera),
+                        onPressed: _isAnalyzing
+                            ? null
+                            : () => _pickAndAnalyze(ImageSource.camera),
                         icon: const Icon(Icons.camera_alt_outlined),
                         label: const Text('Take photo'),
                       ),

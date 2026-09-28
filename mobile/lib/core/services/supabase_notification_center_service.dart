@@ -4,8 +4,7 @@ import '../models/notification_center_item.dart';
 import '../models/notification_preferences.dart';
 import 'notification_center_service.dart';
 
-class SupabaseNotificationCenterService
-    implements NotificationCenterService {
+class SupabaseNotificationCenterService implements NotificationCenterService {
   final SupabaseClient client;
 
   const SupabaseNotificationCenterService(this.client);
@@ -60,8 +59,7 @@ class SupabaseNotificationCenterService
 
     await client
         .from('notifications')
-        .update({'read': true})
-        .eq('user_id', user.id);
+        .update({'read': true}).eq('user_id', user.id);
   }
 
   @override

@@ -23,9 +23,11 @@ void main() {
     final guidance = service.forCondition('Unseen condition');
 
     expect(guidance.summary, contains('model classification'));
-    expect(guidance.actions, contains(
-      'If symptoms are spreading or severe, seek qualified local horticultural advice.',
-    ));
+    expect(
+        guidance.actions,
+        contains(
+          'If symptoms are spreading or severe, seek qualified local horticultural advice.',
+        ));
   });
 
   test('healthy results do not prescribe disease treatment', () {

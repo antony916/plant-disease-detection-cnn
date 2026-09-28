@@ -34,7 +34,8 @@ class NotificationScheduler {
     required String plantName,
     required DateTime when,
   }) async {
-    final id = 'watering-' + plantId + '-' + when.millisecondsSinceEpoch.toString();
+    final id =
+        'watering-' + plantId + '-' + when.millisecondsSinceEpoch.toString();
     if (_scheduledIds.contains(id)) return;
 
     await service.schedule(

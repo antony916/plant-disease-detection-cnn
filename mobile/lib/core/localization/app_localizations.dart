@@ -42,8 +42,7 @@ class _AppLocalizationsDelegate
   const _AppLocalizationsDelegate();
 
   @override
-  bool isSupported(Locale locale) =>
-      AppLocalizations.supportedLocales.any(
+  bool isSupported(Locale locale) => AppLocalizations.supportedLocales.any(
         (supported) => supported.languageCode == locale.languageCode,
       );
 

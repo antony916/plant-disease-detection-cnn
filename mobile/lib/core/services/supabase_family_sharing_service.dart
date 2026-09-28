@@ -77,13 +77,17 @@ class SupabaseFamilySharingService implements FamilySharingService {
   @override
   Future<void> remove(String membershipId) async {
     _requireUser();
-    await client.from('family_members').update({'status': 'removed'}).eq('id', membershipId);
+    await client
+        .from('family_members')
+        .update({'status': 'removed'}).eq('id', membershipId);
   }
 
   @override
   Future<void> changeRole(String membershipId, FamilyMemberRole role) async {
     _requireUser();
-    await client.from('family_members').update({'role': _roleName(role)}).eq('id', membershipId);
+    await client
+        .from('family_members')
+        .update({'role': _roleName(role)}).eq('id', membershipId);
   }
 
   User _requireUser() {
@@ -101,31 +105,41 @@ class SupabaseFamilySharingService implements FamilySharingService {
       role: _roleFromName(row['role'] as String?),
       status: _statusFromName(row['status'] as String?),
       invitedBy: row['invited_by']?.toString(),
-      createdAt: DateTime.tryParse(row['created_at'].toString()) ?? DateTime.now(),
+      createdAt:
+          DateTime.tryParse(row['created_at'].toString()) ?? DateTime.now(),
     );
   }
 
   FamilyMemberRole _roleFromName(String? value) {
     switch (value) {
-      case 'owner': return FamilyMemberRole.owner;
-      case 'editor': return FamilyMemberRole.editor;
-      default: return FamilyMemberRole.viewer;
+      case 'owner':
+        return FamilyMemberRole.owner;
+      case 'editor':
+        return FamilyMemberRole.editor;
+      default:
+        return FamilyMemberRole.viewer;
     }
   }
 
   String _roleName(FamilyMemberRole role) {
     switch (role) {
-      case FamilyMemberRole.owner: return 'owner';
-      case FamilyMemberRole.editor: return 'editor';
-      case FamilyMemberRole.viewer: return 'viewer';
+      case FamilyMemberRole.owner:
+        return 'owner';
+      case FamilyMemberRole.editor:
+        return 'editor';
+      case FamilyMemberRole.viewer:
+        return 'viewer';
     }
   }
 
   FamilyMemberStatus _statusFromName(String? value) {
     switch (value) {
-      case 'pending': return FamilyMemberStatus.pending;
-      case 'removed': return FamilyMemberStatus.removed;
-      default: return FamilyMemberStatus.active;
+      case 'pending':
+        return FamilyMemberStatus.pending;
+      case 'removed':
+        return FamilyMemberStatus.removed;
+      default:
+        return FamilyMemberStatus.active;
     }
   }
 }

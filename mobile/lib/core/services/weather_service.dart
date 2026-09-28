@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 
 import '../models/weather_snapshot.dart';
 import 'location_service.dart';
+
 abstract interface class WeatherService {
   Future<WeatherSnapshot?> getCurrentWeather({String? location});
 }
@@ -28,8 +29,7 @@ class OpenMeteoWeatherService implements WeatherService {
       {
         'latitude': selected.latitude.toString(),
         'longitude': selected.longitude.toString(),
-        'current':
-            'temperature_2m,relative_humidity_2m,precipitation,rain',
+        'current': 'temperature_2m,relative_humidity_2m,precipitation,rain',
         'hourly': 'precipitation_probability',
         'forecast_days': '1',
         'timezone': 'auto',
@@ -48,10 +48,10 @@ class OpenMeteoWeatherService implements WeatherService {
 
       final probabilities =
           (hourly?['precipitation_probability'] as List<dynamic>?)
-              ?.whereType<num>()
-              .map((value) => value.toDouble())
-              .toList() ??
-          const <double>[];
+                  ?.whereType<num>()
+                  .map((value) => value.toDouble())
+                  .toList() ??
+              const <double>[];
 
       final rainProbability = probabilities.isEmpty
           ? 0
@@ -59,8 +59,7 @@ class OpenMeteoWeatherService implements WeatherService {
 
       return WeatherSnapshot(
         locationLabel: selected.label,
-        temperatureC:
-            (current['temperature_2m'] as num?)?.toDouble() ?? 0,
+        temperatureC: (current['temperature_2m'] as num?)?.toDouble() ?? 0,
         humidityPercent:
             (current['relative_humidity_2m'] as num?)?.toDouble() ?? 0,
         rainProbabilityPercent: rainProbability,

@@ -7,8 +7,7 @@ class SupabaseRuntimeConfig {
     required this.publishableKey,
   });
 
-  bool get isConfigured =>
-      url.isNotEmpty && publishableKey.isNotEmpty;
+  bool get isConfigured => url.isNotEmpty && publishableKey.isNotEmpty;
 
   factory SupabaseRuntimeConfig.fromEnvironment() {
     const url = String.fromEnvironment('SUPABASE_URL');

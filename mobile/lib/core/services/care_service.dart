@@ -15,7 +15,8 @@ class RuleBasedCareService implements CareService {
   Future<CareRecommendation> wateringRecommendation(Plant plant) async {
     final now = DateTime.now();
     final next = plant.nextWatering;
-    final weather = await weatherService.getCurrentWeather(location: plant.location);
+    final weather =
+        await weatherService.getCurrentWeather(location: plant.location);
 
     if (next == null) {
       return CareRecommendation(
@@ -37,7 +38,8 @@ class RuleBasedCareService implements CareService {
         action: CareRecommendationAction.wait,
         title: 'Rain may cover watering',
         message: 'Check the soil after the rain before watering this plant.',
-        reason: 'The weather service reports a high chance of rain with measurable rainfall.',
+        reason:
+            'The weather service reports a high chance of rain with measurable rainfall.',
         evaluatedAt: now,
       );
     }
@@ -67,7 +69,8 @@ class RuleBasedCareService implements CareService {
     return CareRecommendation(
       action: CareRecommendationAction.wait,
       title: 'No watering needed yet',
-      message: 'Keep the current schedule and check the plant if conditions change.',
+      message:
+          'Keep the current schedule and check the plant if conditions change.',
       reason: 'The next saved watering date is still in the future.',
       evaluatedAt: now,
     );
