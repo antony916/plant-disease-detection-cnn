@@ -6,7 +6,7 @@ services:
     dockerfilePath: ./api/Dockerfile
     dockerContext: .
     healthCheckPath: /health
-    autoDeployTrigger: off
+    autoDeployTrigger: "off"
     envVars:
       - key: PORT
         value: 8000
