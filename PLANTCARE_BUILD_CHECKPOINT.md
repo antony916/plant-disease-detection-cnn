@@ -490,7 +490,7 @@ Remaining sequence:
 2. Build family-sharing UI: invite/accept, member list, role management and leave/remove flows. [UI + cloud RLS hardening prepared 2026-09-25; secure invite acceptance remains part of live activation/testing.]
 3. Build account/profile UI and logout UX on top of the session foundation already implemented. [COMPLETED 2026-09-25: Profile screen, account display, Family Sharing/Notification Settings entry points, and sign-out flow.]
 4. Add secure image storage and production image-upload path. [COMPLETED 2026-09-25: private storage boundary, gallery/camera capture, cloud image upload, and diagnosis image-reference separation.]
-5. Connect the evaluated PlantVillage disease model through a production inference service while preserving the current 38-class baseline and confidence safeguards. [CODE PREPARED 2026-09-28: capability-driven FastAPI inference service, model registry, Dockerfile, mobile remote inference client, model metadata contract; deployment waits for the model artifact.]
+5. Connect the evaluated PlantVillage disease model through a production inference service while preserving the current 38-class baseline and confidence safeguards. [MODEL VERIFIED 2026-09-28: supplied `.pth` checkpoint matches MobileNetV3-Large with 38 outputs, exact state_dict compatibility, and recorded SHA-256 manifest. Remaining: configured hosting deployment + real-image verification.]
 6. Add real camera/gallery capture. [COMPLETED 2026-09-25 in Dart layer; native Android/iOS project configuration is still required for device testing.]
 7. Security/testing audit.
 8. Only then activate and live-test a real Supabase project.
@@ -791,7 +791,7 @@ Verification:
 - Live inference, Supabase, FCM/APNs, and production model deployment remain unverified.
 
 NEXT BUILD TARGET:
-- Continue the production-readiness path without blocking on credentials: complete the disease-model artifact activation gate, deploy the inference API, verify the mobile contract end-to-end, then expand the inference registry with separately evaluated real-world disease/pest/nutrient/environment models. Never represent planned capabilities as available until a model is trained and evaluated.
+- Continue the production-readiness path: deploy the verified disease inference API to a configured hosting environment, verify the mobile contract with real images, then expand the inference registry with separately evaluated real-world disease/pest/nutrient/environment models. Never represent planned capabilities as available until a model is trained and evaluated.
 
 
 ## 36. FULL CODE-SIDE PRODUCT BUILD PASS — 2026-09-28
