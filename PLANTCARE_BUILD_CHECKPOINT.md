@@ -1002,3 +1002,26 @@ NEXT PRACTICAL TASK:
 - Run `scripts/verify_inference_endpoint.py` against the real endpoint, including a real plant image.
 - Configure `PLANTCARE_INFERENCE_URL` via `--dart-define`.
 - Perform Flutter -> inference -> Supabase diagnosis E2E.
+
+
+## 42. NATIVE MOBILE ACTIVATION HANDOFF HARDENING — 2026-09-28
+
+Completed:
+- Expanded `mobile/README.md` with the exact official Flutter native-shell generation procedure.
+- Documented the guardrail to preserve `mobile/lib/`, `mobile/pubspec.yaml`, tests and the existing PlantCare application architecture.
+- Documented the required order for Android/iOS generation, Firebase configuration, inference hosting, runtime endpoint configuration, Supabase-safe credentials and real-device E2E.
+- Explicitly documented that native Firebase/APNs delivery, camera permissions and OS notifications are not considered live until exercised on a device/emulator.
+
+Commit:
+- `d139e3becea030cdf92c9e56f79c7ff4ac116d66` — docs: harden native mobile activation handoff.
+
+Current verification boundary:
+- No Android/iOS native folders were fabricated because Flutter CLI is unavailable in this environment.
+- No public inference URL is claimed.
+- GitHub commit-run lookup for the new HEAD did not expose a workflow run yet, so no new CI result is claimed from this environment.
+
+NEXT PRACTICAL TASK:
+- In an environment with Flutter CLI, run the documented official platform generation.
+- Separately activate Render and obtain the real HTTPS inference URL.
+- Run the hosted endpoint verifier with a real plant image.
+- Configure `PLANTCARE_INFERENCE_URL` and perform Flutter -> inference -> Supabase diagnosis E2E.
