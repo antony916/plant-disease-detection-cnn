@@ -56,6 +56,10 @@ class OpenMeteoWeatherService implements WeatherService {
       final rainProbability = probabilities.isEmpty
           ? 0.0
           : probabilities.reduce((a, b) => a > b ? a : b);
+      final nearTermProbability = probabilities.take(6).fold<double>(
+            0,
+            (highest, value) => value > highest ? value : highest,
+          );
 
       return WeatherSnapshot(
         locationLabel: selected.label,
@@ -63,6 +67,7 @@ class OpenMeteoWeatherService implements WeatherService {
         humidityPercent:
             (current['relative_humidity_2m'] as num?)?.toDouble() ?? 0,
         rainProbabilityPercent: rainProbability,
+        nearTermRainProbabilityPercent: nearTermProbability,
         rainfallMm: (current['rain'] as num?)?.toDouble() ??
             (current['precipitation'] as num?)?.toDouble() ??
             0,
