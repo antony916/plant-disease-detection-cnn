@@ -790,6 +790,12 @@ Verification:
 - Flutter formatting/analyze/test execution is still unverified because no successful GitHub Actions result has been published for the current commits.
 - Live inference, Supabase, FCM/APNs, and production model deployment remain unverified.
 
+CURRENT BUILD STATE:
+- Verified disease model artifact is available and validated.
+- Diagnosis API/mobile contract now carries model capability, model ID/version, and top predictions.
+- Supabase diagnosis records now persist capability, model ID and top predictions through migration `009_diagnosis_model_metadata`.
+- Diagnosis UI shows alternative model predictions when supplied and records model provenance.
+
 NEXT BUILD TARGET:
 - Continue the production-readiness path: deploy the verified disease inference API to a configured hosting environment, verify the mobile contract with real images, then expand the inference registry with separately evaluated real-world disease/pest/nutrient/environment models. Never represent planned capabilities as available until a model is trained and evaluated.
 
