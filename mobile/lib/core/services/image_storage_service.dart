@@ -1,5 +1,3 @@
-import 'dart:io';
-
 abstract interface class ImageStorageService {
   Future<String> uploadPlantImage({
     required String filePath,
