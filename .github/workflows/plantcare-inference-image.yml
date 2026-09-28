@@ -9,6 +9,7 @@ on:
       - "config.py"
       - "artifacts/**"
       - "docs/model/plantcare_disease_model_manifest.json"
+      - "scripts/**"
       - ".github/workflows/plantcare-inference-image.yml"
   workflow_dispatch:
 
