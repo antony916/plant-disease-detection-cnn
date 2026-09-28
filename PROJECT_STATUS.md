@@ -29,6 +29,10 @@ The repository has evolved from the original Plant Disease Detection mini-projec
 - Demo/Supabase runtime switching
 - Continuous Integration foundation
 - Flutter unit-test foundation
+- Context-aware AI assistant foundation
+- Starter plant knowledge library
+- Community/expert/shop/resource support hub foundation
+- Automated activation-readiness checker
 - Python syntax validation
 - Repository checkpoints and activation documentation
 
