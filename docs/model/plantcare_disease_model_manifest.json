@@ -2,7 +2,7 @@
   "model_id": "plant-disease-mobilenetv3",
   "model_version": "plantvillage-mobilenetv3-38-class",
   "capability": "disease",
-  "status": "verified-user-supplied-artifact",
+  "status": "verified-repository-artifact",
   "architecture": "MobileNetV3-Large",
   "framework": "PyTorch",
   "input_size": [
@@ -32,6 +32,5 @@
     "dummy_inference_finite": true
   },
   "benchmark_note": "The documented 98.72% result is the held-out PlantVillage benchmark and is not real-world field accuracy.",
-  "repository_binary_status": "not_committed",
-  "repository_binary_note": "The exact supplied checkpoint was validated by SHA-256 and MobileNetV3-Large state-dict compatibility, but the connected GitHub write interface cannot stream the 17 MB binary artifact into a repository blob."
+  "repository_binary_status": "committed"
 }
