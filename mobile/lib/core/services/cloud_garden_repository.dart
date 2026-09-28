@@ -1,13 +1,3 @@
-import '../models/garden.dart';
-import '../models/garden_task.dart';
-import '../models/plant.dart';
+import 'garden_repository.dart';
 
-abstract interface class CloudGardenRepository {
-  Future<Garden> getGarden();
-  Future<List<Plant>> getPlants();
-  Future<Plant> addPlant(Plant plant);
-  Future<void> updatePlant(Plant plant);
-  Future<void> deletePlant(String plantId);
-  Future<List<GardenTask>> getTodayTasks();
-  Future<void> completeTask(String taskId);
-}
+abstract interface class CloudGardenRepository extends GardenRepository {}
