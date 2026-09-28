@@ -48,18 +48,23 @@ These are configuration assets, not Supabase service-role credentials.
 
 ### 3. Supabase activation values
 
-When the code is ready to activate cloud services, provide only:
+The PlantCare AI Supabase project is already created and migrations 001–009 have been applied and verified.
 
+Verified project:
+- Project ref: xtkdeheeukqxbgzyywvq
+- Region: ap-south-1 (Mumbai)
+- Status: ACTIVE_HEALTHY
+
+For mobile runtime activation, provide only:
 - Supabase Project URL
 - Supabase Publishable/Anon key
 
 Never provide:
-
 - Supabase database password
 - Supabase service-role key
 - other private server secrets
 
-The SQL migrations in backend/supabase/ must be applied to the intended Supabase project before live cloud testing.
+Live user-auth/garden/diagnosis/notification end-to-end testing still needs to be performed from a configured mobile build.
 
 ### 4. Push delivery credentials
 
@@ -69,12 +74,12 @@ For iOS push, the APNs authentication key must be configured in Firebase/Apple t
 
 ## What happens after the upload gate
 
-1. Run the strict model-package validator against the uploaded disease-model artifact, class names and model registry contract.
-2. Complete the FastAPI inference deployment configuration.
+1. Run the strict model-package validator against the evaluated disease-model artifact, class names and model registry contract.
+2. Complete the FastAPI inference deployment configuration with the verified model checkpoint accessible to the host.
 3. Connect the mobile app to the deployed inference endpoint using the capability-driven contract.
 4. Configure Firebase Messaging and verify device-token registration.
-5. Apply Supabase migrations and verify Auth, Garden, Family Sharing, Storage and Notifications with RLS.
-6. Run end-to-end mobile testing.
+5. Verify the already-applied Supabase schema with Auth, Garden, Family Sharing, Storage and Notifications under RLS.
+6. Run real-image end-to-end mobile testing.
 7. Fix any build/runtime issues found during that verification.
 8. Only then move to expanded AI coverage, richer camera UX, assistant/community/expert features and production release hardening.
 
