@@ -5,14 +5,20 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
+  workflow_dispatch:
 
 permissions:
   contents: read
+
+concurrency:
+  group: plantcare-ci-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   flutter:
     name: Flutter analyze and test
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     defaults:
       run:
         working-directory: mobile
@@ -41,6 +47,7 @@ jobs:
   python:
     name: Python syntax check
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - name: Checkout
         uses: actions/checkout@v4
