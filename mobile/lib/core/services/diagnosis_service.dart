@@ -5,6 +5,8 @@ class DiagnosisResult {
   final String explanation;
   final bool needsExpertReview;
   final String modelVersion;
+  final String capability;
+  final String modelId;
 
   const DiagnosisResult({
     required this.plantName,
@@ -13,6 +15,8 @@ class DiagnosisResult {
     required this.explanation,
     required this.needsExpertReview,
     this.modelVersion = 'unknown',
+    this.capability = 'disease',
+    this.modelId = 'unknown',
   });
 }
 
@@ -43,6 +47,8 @@ class DemoDiagnosisService implements DiagnosisService {
           'Development placeholder only. Connect this service to the evaluated PlantCare model before production diagnosis.',
       needsExpertReview: false,
       modelVersion: 'demo-placeholder',
+      capability: 'disease',
+      modelId: 'demo-placeholder',
     );
   }
 }
