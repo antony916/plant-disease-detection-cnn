@@ -530,6 +530,7 @@ class _MetadataChip extends StatelessWidget {
     );
   }
 }
+
 class _Metric extends StatelessWidget {
   final String title;
   final String value;
