@@ -14,6 +14,7 @@ import '../../features/notifications/notification_settings_screen.dart';
 import '../../features/family/family_sharing_screen.dart';
 import '../../features/family/family_invites_screen.dart';
 import '../../features/scanner/scanner_screen.dart';
+import '../../features/library/support_hub_screen.dart';
 
 abstract final class AppRouter {
   static const login = '/';
@@ -29,6 +30,7 @@ abstract final class AppRouter {
   static const familySharing = '/family-sharing';
   static const familyInvites = '/family-invites';
   static const profile = '/profile';
+  static const support = '/support';
 
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -70,6 +72,8 @@ abstract final class AppRouter {
         return MaterialPageRoute(builder: (_) => const FamilyInvitesScreen());
       case profile:
         return MaterialPageRoute(builder: (_) => const ProfileScreen());
+      case support:
+        return MaterialPageRoute(builder: (_) => const SupportHubScreen());
       default:
         return MaterialPageRoute(builder: (_) => const LoginScreen());
     }
