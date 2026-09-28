@@ -5,6 +5,7 @@ import '../../features/auth/login_screen.dart';
 import '../../features/assistant/assistant_screen.dart';
 import '../../features/diagnosis/diagnosis_screen.dart';
 import '../../features/garden/add_plant_screen.dart';
+import '../../features/garden/edit_plant_screen.dart';
 import '../../features/garden/dashboard_screen.dart';
 import '../../features/garden/plant_detail_screen.dart';
 import '../../features/library/library_screen.dart';
@@ -25,6 +26,7 @@ abstract final class AppRouter {
   static const assistant = '/assistant';
   static const library = '/library';
   static const addPlant = '/add-plant';
+  static const editPlant = '/edit-plant';
   static const notifications = '/notifications';
   static const notificationSettings = '/notification-settings';
   static const familySharing = '/family-sharing';
@@ -62,6 +64,12 @@ abstract final class AppRouter {
         return MaterialPageRoute(builder: (_) => const LibraryScreen());
       case addPlant:
         return MaterialPageRoute(builder: (_) => const AddPlantScreen());
+      case editPlant:
+        final plant = settings.arguments;
+        if (plant is Plant) {
+          return MaterialPageRoute(builder: (_) => EditPlantScreen(plant: plant));
+        }
+        return MaterialPageRoute(builder: (_) => const DashboardScreen());
       case notifications:
         return MaterialPageRoute(
             builder: (_) => const NotificationCenterScreen());
