@@ -2,6 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:plantcare_ai/core/models/plant.dart';
 import 'package:plantcare_ai/core/services/care_service.dart';
 import 'package:plantcare_ai/core/services/plant_assistant_service.dart';
+import 'package:plantcare_ai/core/models/weather_snapshot.dart';
 import 'package:plantcare_ai/core/services/weather_service.dart';
 
 class _WeatherStub implements WeatherService {
