@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -31,11 +33,7 @@ class _ScannerScreenState extends State<ScannerScreen> {
   Future<List<Plant>> _loadPlants() async {
     final plants = await AppServices.garden.getPlants();
     if (_selectedPlantId == null && plants.isNotEmpty) {
-      final preferred = plants.where(
-        (plant) => plant.name.toLowerCase() == 'tomato',
-      );
-      _selectedPlantId =
-          preferred.isNotEmpty ? preferred.first.id : plants.first.id;
+      _selectedPlantId = plants.first.id;
     }
     return plants;
   }
@@ -64,7 +62,7 @@ class _ScannerScreenState extends State<ScannerScreen> {
       _error = null;
     });
 
-    await _analyze();
+    // Let the user review the selected image before analysis.
   }
 
   Future<void> _analyze() async {
@@ -230,7 +228,15 @@ class _ScannerScreenState extends State<ScannerScreen> {
                     ),
                     child: _isAnalyzing
                         ? const _AnalyzingState()
-                        : const Column(
+                        : _selectedImagePath != null
+                            ? _ImagePreview(
+                                path: _selectedImagePath!,
+                                onClear: () => setState(() {
+                                  _selectedImagePath = null;
+                                  _error = null;
+                                }),
+                              )
+                            : const Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Icon(
@@ -279,7 +285,9 @@ class _ScannerScreenState extends State<ScannerScreen> {
                             ? null
                             : () => _pickAndAnalyze(ImageSource.gallery),
                         icon: const Icon(Icons.photo_library_outlined),
-                        label: const Text('Upload photo'),
+                        label: Text(
+                          _selectedImagePath == null ? 'Upload photo' : 'Change photo',
+                        ),
                       ),
                     ),
                     const SizedBox(width: PlantCareSpacing.sm),
@@ -289,11 +297,24 @@ class _ScannerScreenState extends State<ScannerScreen> {
                             ? null
                             : () => _pickAndAnalyze(ImageSource.camera),
                         icon: const Icon(Icons.camera_alt_outlined),
-                        label: const Text('Take photo'),
+                        label: Text(
+                          _selectedImagePath == null ? 'Take photo' : 'Retake photo',
+                        ),
                       ),
                     ),
                   ],
                 ),
+                if (_selectedImagePath != null && !_isAnalyzing) ...[
+                  const SizedBox(height: PlantCareSpacing.sm),
+                  SizedBox(
+                    width: double.infinity,
+                    child: FilledButton.icon(
+                      onPressed: selected == null ? null : _analyze,
+                      icon: const Icon(Icons.auto_awesome),
+                      label: const Text('Analyze this photo'),
+                    ),
+                  ),
+                ],
                 const SizedBox(height: PlantCareSpacing.sm),
                 Text(
                   selected == null
@@ -334,6 +355,42 @@ class _AnalyzingState extends StatelessWidget {
           'Checking the image for known disease patterns.',
           textAlign: TextAlign.center,
           style: TextStyle(color: PlantCareColors.muted),
+        ),
+      ],
+    );
+  }
+}
+
+
+class _ImagePreview extends StatelessWidget {
+  final String path;
+  final VoidCallback onClear;
+
+  const _ImagePreview({required this.path, required this.onClear});
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      fit: StackFit.expand,
+      children: [
+        ClipRRect(
+          borderRadius: BorderRadius.circular(PlantCareRadius.featured),
+          child: Image.file(
+            File(path),
+            fit: BoxFit.cover,
+            errorBuilder: (_, __, ___) => const Center(
+              child: Icon(Icons.broken_image_outlined, size: 48),
+            ),
+          ),
+        ),
+        Positioned(
+          top: 12,
+          right: 12,
+          child: IconButton.filledTonal(
+            tooltip: 'Remove selected photo',
+            onPressed: onClear,
+            icon: const Icon(Icons.close),
+          ),
         ),
       ],
     );
