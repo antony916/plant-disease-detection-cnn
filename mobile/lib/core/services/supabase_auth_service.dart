@@ -42,7 +42,6 @@ class SupabaseAuthService implements CloudAuthService {
         'Google OAuth requires the mobile redirect configuration.',
       );
 
-  
   @override
   Future<void> signOut() => client.auth.signOut();
 }
