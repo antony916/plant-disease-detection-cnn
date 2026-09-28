@@ -149,6 +149,7 @@ class _AssistantScreenState extends State<AssistantScreen> {
                   ),
                   const SizedBox(width: 8),
                   IconButton.filled(
+                    tooltip: 'Send message',
                     onPressed: isSending ? null : _send,
                     icon: const Icon(Icons.arrow_upward),
                   ),
