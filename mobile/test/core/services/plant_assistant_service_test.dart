@@ -7,8 +7,7 @@ import 'package:plantcare_ai/core/services/weather_service.dart';
 
 class _WeatherStub implements WeatherService {
   @override
-  Future<WeatherSnapshot?> getCurrentWeather({String? location}) async =>
-      null;
+  Future<WeatherSnapshot?> getCurrentWeather({String? location}) async => null;
 }
 
 void main() {
