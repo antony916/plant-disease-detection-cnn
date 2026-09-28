@@ -31,6 +31,9 @@ class FirebasePushNotificationService implements PushNotificationService {
   }
 
   @override
+  Stream<String> get onTokenRefresh => FirebaseMessaging.instance.onTokenRefresh;
+
+  @override
   Future<void> schedule(PlantCareNotification notification) async {
     // Future reminders are delivered by the server-side push scheduler.
     // FCM itself is a transport; it does not provide arbitrary local scheduling.
