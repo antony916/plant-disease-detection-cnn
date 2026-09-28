@@ -105,6 +105,16 @@ class SupabaseDiagnosisRepository implements DiagnosisRepository {
     return rows.map(_fromRow).toList();
   }
 
+  @override
+  Future<void> clearHistory() async {
+    final user = client.auth.currentUser;
+    if (user == null) {
+      throw const AuthException('Sign in required.');
+    }
+
+    await client.from('diagnoses').delete().eq('owner_id', user.id);
+  }
+
   Future<String?> _plantIdForName(String plantName) async {
     final normalized = plantName.trim().toLowerCase();
     final plants = await garden.getPlants();
