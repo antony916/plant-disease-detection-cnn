@@ -38,6 +38,15 @@ class LibraryScreen extends StatelessWidget {
               icon: Icons.healing_outlined,
               title: 'Treatment',
               subtitle: 'Practical management and prevention'),
+          const SizedBox(height: PlantCareSpacing.md),
+          FilledButton.icon(
+            onPressed: () => Navigator.pushNamed(
+              context,
+              AppRouter.diagnosisHistory,
+            ),
+            icon: const Icon(Icons.timeline_outlined),
+            label: const Text('Health Timeline'),
+          ),
           const SizedBox(height: PlantCareSpacing.lg),
           const Text('Starter knowledge',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800)),
