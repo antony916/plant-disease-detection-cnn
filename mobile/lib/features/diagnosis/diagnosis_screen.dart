@@ -119,6 +119,30 @@ class DiagnosisScreen extends StatelessWidget {
             icon: Icons.shield_outlined,
             items: guidance.prevention,
           ),
+          if (result.topPredictions.length > 1) ...[
+            const SizedBox(height: PlantCareSpacing.md),
+            _GuidanceSection(
+              title: 'Other possibilities',
+              icon: Icons.alt_route_outlined,
+              items: [
+                for (final prediction in result.topPredictions.skip(1).take(3))
+                  '\${prediction.className} — \${(prediction.confidence * 100).round()}%',
+              ],
+            ),
+          ],
+          const SizedBox(height: PlantCareSpacing.md),
+          Card(
+            child: Padding(
+              padding: const EdgeInsets.all(PlantCareSpacing.md),
+              child: Text(
+                'AI model: \${result.modelId} • \${result.modelVersion}',
+                style: const TextStyle(
+                  color: PlantCareColors.muted,
+                  fontSize: 12,
+                ),
+              ),
+            ),
+          ),
           const SizedBox(height: PlantCareSpacing.lg),
           if (!lowConfidence)
             FilledButton(
