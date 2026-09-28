@@ -43,5 +43,10 @@ class SupabaseAuthService implements CloudAuthService {
       );
 
   @override
+  Future<AppUser> signInWithGoogle() => throw UnsupportedError(
+        'Google OAuth requires the mobile redirect configuration.',
+      );
+
+  @override
   Future<void> signOut() => client.auth.signOut();
 }
