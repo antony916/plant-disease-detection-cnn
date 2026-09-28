@@ -12,4 +12,6 @@ abstract interface class DiagnosisRepository {
   Future<void> saveDiagnosis(DiagnosisRecord record);
 
   Future<List<DiagnosisRecord>> history({String? plantId});
+
+  Future<void> clearHistory();
 }
