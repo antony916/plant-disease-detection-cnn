@@ -6,6 +6,7 @@ abstract interface class NotificationCenterService {
   Future<void> add(NotificationCenterItem item);
   Future<void> markRead(String id);
   Future<void> markAllRead();
+  Future<void> clearAll();
   Future<NotificationPreferences> getPreferences();
   Future<void> savePreferences(NotificationPreferences preferences);
 }
@@ -35,6 +36,11 @@ class DemoNotificationCenterService implements NotificationCenterService {
     for (var i = 0; i < _items.length; i++) {
       _items[i] = _items[i].copyWith(read: true);
     }
+  }
+
+  @override
+  Future<void> clearAll() async {
+    _items.clear();
   }
 
   @override
