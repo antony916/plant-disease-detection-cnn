@@ -58,4 +58,13 @@ jobs:
           python-version: '3.12'
 
       - name: Compile Python sources
-        run: python -m compileall -q api src config.py
+        run: python -m compileall -q api src scripts config.py
+
+      - name: Validate model package when supplied
+        shell: bash
+        run: |
+          if [[ -f artifacts/plant_disease_mobilenetv3.pth && -f artifacts/class_names.txt ]]; then
+            python scripts/validate_model_artifact.py
+          else
+            echo "Model artifact is not committed; activation gate remains external."
+          fi
