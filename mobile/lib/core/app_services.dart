@@ -75,6 +75,15 @@ class AppServices {
   );
   static final care = RuleBasedCareService(weather);
 
+  static Future<void> syncPushRegistration() async {
+    if (!cloud.isCloudEnabled || !pushRuntime.enabled) return;
+
+    final token = await _push.getDeviceToken();
+    if (token == null || token.isEmpty) return;
+
+    await _notifications.registerDeviceToken(token);
+  }
+
   static Future<void> initialize() async {
     await cloud.initialize();
 
