@@ -42,7 +42,7 @@ class _FakeCenter implements NotificationCenterService {
 class _FakeCareService implements CareService {
   final CareRecommendation recommendation;
 
-  const _FakeCareService(this.recommendation);
+  _FakeCareService(this.recommendation);
 
   @override
   Future<CareRecommendation> wateringRecommendation(Plant plant) async =>
@@ -74,7 +74,7 @@ void main() {
     final coordinator = NotificationCoordinator(
       center,
       _FakeCareService(
-        const CareRecommendation(
+        CareRecommendation(
           action: CareRecommendationAction.wait,
           title: 'Rain may cover watering',
           message: 'Check the soil after the rain before watering this plant.',
