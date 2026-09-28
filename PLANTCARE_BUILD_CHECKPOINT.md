@@ -791,7 +791,7 @@ Verification:
 - Live inference, Supabase, FCM/APNs, and production model deployment remain unverified.
 
 NEXT BUILD TARGET:
-- Continue the production-readiness path without blocking on credentials: complete the disease-model deployment gate, then expand the inference registry with separately evaluated real-world disease/pest/nutrient/environment models. Never represent planned capabilities as available until a model is trained and evaluated.
+- Continue the production-readiness path without blocking on credentials: complete the disease-model artifact activation gate, deploy the inference API, verify the mobile contract end-to-end, then expand the inference registry with separately evaluated real-world disease/pest/nutrient/environment models. Never represent planned capabilities as available until a model is trained and evaluated.
 
 
 ## 36. FULL CODE-SIDE PRODUCT BUILD PASS — 2026-09-28
