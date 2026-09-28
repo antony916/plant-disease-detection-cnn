@@ -83,10 +83,13 @@ These are benchmark results on the documented held-out dataset, not a claim of e
 
 The following require external project/device assets and cannot be truthfully marked live from repository code alone:
 
-1. Evaluated disease-model activation package:
-   - `artifacts/plant_disease_mobilenetv3.pth`
-   - `artifacts/class_names.txt`
-   - The repository now validates class count, duplicate names and MobileNetV3 state_dict compatibility before deployment.
+1. Inference deployment:
+   - The evaluated disease-model artifact has now been supplied and verified against the 38-class MobileNetV3 architecture.
+   - Model SHA-256: `5bf8424e8d4f6f63fa7ad6bde6e992cab7545e3d78a220f5eca55ec326241eea`
+   - Class-list SHA-256: `14c46d9d16b9d773d0183ae0b08c474947ba660d87f83760579b0ede139b2eba`
+   - Validation: 0 missing keys, 0 unexpected keys, 0 tensor-shape mismatches, dummy output `[1, 38]`.
+   - Manifest: `docs/model/plantcare_disease_model_manifest.json`.
+   - Remaining: deploy the inference service to a configured hosting environment and verify it with real images.
 2. Flutter Android/iOS native platform folders.
 3. Flutter runtime configuration with the provisioned Supabase project URL and publishable key.
 4. Firebase/FCM native configuration if push is enabled.
