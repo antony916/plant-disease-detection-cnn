@@ -195,12 +195,43 @@ Implemented user-facing behavior:
 - English/Tamil/Hindi localization foundation.
 - Demo backend so development can continue without credentials.
 
-## 6. SUPABASE STATUS — VERY IMPORTANT
+## 6. SUPABASE STATUS — VERIFIED LIVE PREPARATION
 
-Supabase is PREPARED but not live.
+Supabase is now created and schema-applied for PlantCare AI.
+
+Verified live project:
+- Project: PlantCare AI
+- Project ref: xtkdeheeukqxbgzyywvq
+- Region: ap-south-1 (Mumbai)
+- Status: ACTIVE_HEALTHY
+- Database: PostgreSQL 17.x
+
+Connected project verification performed on 2026-09-28:
+- Supabase migrations 001 through 009 are applied.
+- Public tables present with RLS enabled:
+  - gardens
+  - plants
+  - diagnoses
+  - garden_tasks
+  - family_members
+  - device_tokens
+  - notification_preferences
+  - notifications
+- Security advisor currently reports one intentional warning for
+  public.accept_family_invitation(uuid), a SECURITY DEFINER RPC callable by
+  authenticated users. This RPC is intentionally used for secure invitation
+  acceptance and should remain restricted to authenticated callers.
 
 The repo contains:
 - backend/supabase/001_initial_schema.sql
+- backend/supabase/002_notification_persistence.sql
+- backend/supabase/003_private_plant_images.sql
+- backend/supabase/004_family_sharing_hardening.sql
+- backend/supabase/005_diagnosis_ownership_hardening.sql
+- backend/supabase/006_family_invite_acceptance.sql
+- backend/supabase/007_harden_security_definer_grants.sql
+- backend/supabase/008_revoke_public_helper_execute.sql
+- backend/supabase/009_diagnosis_model_metadata.sql
 - supabase_flutter dependency
 - SUPABASE_URL runtime configuration
 - SUPABASE_PUBLISHABLE_KEY runtime configuration
@@ -208,40 +239,24 @@ The repo contains:
 - Supabase garden service/repository
 - Supabase diagnosis repository
 - runtime backend selection
+- notification persistence services
+- private plant-image storage boundary
+- family-sharing services and secure invitation acceptance.
 
 Current startup behavior:
 - AppServices.initialize() runs before runApp().
 - No valid runtime Supabase credentials -> Demo backend.
-- Valid runtime configuration -> Supabase client is initialized and auth/garden/diagnosis implementations are selected.
+- Valid runtime configuration -> Supabase client is initialized and
+  auth/garden/diagnosis/notification implementations are selected.
 - Credentials are not stored in GitHub.
 
-Current AppServices runtime selection is already implemented for:
-- Auth.
-- Garden repository.
-- Diagnosis repository.
-
-Supabase garden behavior already includes:
-- default garden creation/loading via SupabaseGardenService.
-- plant CRUD.
-- fields for species, health, image URL, sunlight, soil, location, notes, watering interval, last watered, next watering.
-- owner/garden scoping.
-- RLS foundation.
-
-Supabase diagnosis behavior already includes:
-- saving diagnosis results.
-- loading diagnosis history.
-- per-plant history.
-- model version marker for current mobile diagnosis service.
-
-Current important limitation:
-- No live Supabase project has been supplied/configured.
-- SQL schema has not been applied to a user's live project.
-- Live cloud testing has NOT been claimed.
-
-When the code is ready for activation later, the user needs only:
-- Supabase Project URL.
-- Supabase Publishable/Anon client key.
-Never ask the user for database password or service-role key.
+Current important activation limitation:
+- The live database/schema is verified, but mobile runtime credentials have not
+  been supplied to a production build in this environment.
+- Live user-auth/garden/diagnosis/notification E2E has therefore NOT been
+  claimed.
+- Never ask for a database password or service-role key. Only the Supabase
+  Project URL and publishable/anon client key belong in the mobile runtime.
 
 ## 7. CURRENT SUPABASE SCHEMA
 
@@ -476,7 +491,7 @@ Cloud Garden Persistence is now explicitly wired and documented:
 
 Cloud Garden Persistence does not require a live Supabase project yet. Live activation still waits for real project credentials and schema application.
 
-NEXT TASK: USER UPLOAD / ACTIVATION GATE — provide the model artifact and Flutter/Firebase native configuration listed in PLANTCARE_ACTIVATION_UPLOAD_CHECKLIST.md. After those assets are available, continue with deployment, live cloud wiring, end-to-end testing, and fixes.
+NEXT TASK: ACTIVATION GATE — deploy the verified disease inference service, supply the required Flutter/Firebase native configuration, set runtime credentials safely, then perform real-image inference plus Supabase garden/diagnosis E2E testing and fix environment-specific failures. The live Supabase schema is already applied and verified.
 
 Completed in this build session:
 1. Supabase notification preference persistence.
