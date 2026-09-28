@@ -84,7 +84,7 @@ These are benchmark results on the documented held-out dataset, not a claim of e
 The following require external project/device assets and cannot be truthfully marked live from repository code alone:
 
 1. Inference deployment:
-   - The evaluated disease-model artifact has now been supplied and verified against the 38-class MobileNetV3 architecture.
+   - The evaluated disease-model artifact has now been supplied in-chat and verified against the 38-class MobileNetV3 architecture; the binary still needs to be copied into the GitHub `artifacts/` directory for the cloud demo workflow.
    - Model SHA-256: `5bf8424e8d4f6f63fa7ad6bde6e992cab7545e3d78a220f5eca55ec326241eea`
    - Class-list SHA-256: `14c46d9d16b9d773d0183ae0b08c474947ba660d87f83760579b0ede139b2eba`
    - Validation: 0 missing keys, 0 unexpected keys, 0 tensor-shape mismatches, dummy output `[1, 38]`.
