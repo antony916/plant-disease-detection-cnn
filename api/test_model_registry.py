@@ -18,9 +18,9 @@ class ModelRegistryTest(unittest.TestCase):
     def test_future_capabilities_are_explicitly_planned(self):
         summary = {item["capability"]: item for item in model_summary()}
 
-        self.assertEqual(summary["pest"]["status"], "planned")
-        self.assertEqual(summary["nutrient"]["status"], "planned")
-        self.assertEqual(summary["environment"]["status"], "planned")
+        for capability in ("pest", "nutrient", "environment"):
+            self.assertIn(capability, summary)
+            self.assertEqual(summary[capability]["status"], "planned")
 
     def test_unknown_capability_is_rejected(self):
         with self.assertRaises(ValueError):
