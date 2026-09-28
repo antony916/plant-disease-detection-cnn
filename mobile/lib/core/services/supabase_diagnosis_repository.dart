@@ -75,6 +75,15 @@ class SupabaseDiagnosisRepository implements DiagnosisRepository {
       'explanation': record.result.explanation,
       'needs_expert_review': record.result.needsExpertReview,
       'model_version': record.result.modelVersion,
+      'capability': record.result.capability,
+      'model_id': record.result.modelId,
+      'top_predictions': [
+        for (final prediction in record.result.topPredictions)
+          {
+            'class': prediction.className,
+            'confidence': prediction.confidence,
+          },
+      ],
       'created_at': record.createdAt.toIso8601String(),
     });
   }
@@ -110,6 +119,19 @@ class SupabaseDiagnosisRepository implements DiagnosisRepository {
     return null;
   }
 
+  List<DiagnosisPrediction> _predictionsFromRow(dynamic value) {
+    if (value is! List) return const [];
+    return value.whereType<Map>().map((item) {
+      final className = item['class'];
+      final confidence = item['confidence'];
+      if (className is! String || confidence is! num) return null;
+      return DiagnosisPrediction(
+        className: className,
+        confidence: confidence.toDouble(),
+      );
+    }).whereType<DiagnosisPrediction>().toList();
+  }
+
   DiagnosisRecord _fromRow(Map<String, dynamic> row) {
     return DiagnosisRecord(
       id: row['id'].toString(),
@@ -122,6 +144,9 @@ class SupabaseDiagnosisRepository implements DiagnosisRepository {
         explanation: row['explanation'] as String? ?? '',
         needsExpertReview: row['needs_expert_review'] as bool? ?? false,
         modelVersion: row['model_version'] as String? ?? 'unknown',
+        capability: row['capability'] as String? ?? 'disease',
+        modelId: row['model_id'] as String? ?? 'unknown',
+        topPredictions: _predictionsFromRow(row['top_predictions']),
       ),
       createdAt:
           DateTime.tryParse(row['created_at'].toString()) ?? DateTime.now(),
