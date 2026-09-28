@@ -3,6 +3,7 @@ class WeatherSnapshot {
   final double temperatureC;
   final double humidityPercent;
   final double rainProbabilityPercent;
+  final double nearTermRainProbabilityPercent;
   final double rainfallMm;
   final DateTime observedAt;
   final bool isForecast;
@@ -12,6 +13,7 @@ class WeatherSnapshot {
     required this.temperatureC,
     required this.humidityPercent,
     required this.rainProbabilityPercent,
+    this.nearTermRainProbabilityPercent = 0,
     required this.rainfallMm,
     required this.observedAt,
     required this.isForecast,
