@@ -792,3 +792,51 @@ Verification:
 
 NEXT BUILD TARGET:
 - Continue the production-readiness path without blocking on credentials: strengthen diagnosis/image provenance and activation checks, then proceed toward the real model artifact + mobile-native activation gate.
+
+
+## 36. FULL CODE-SIDE PRODUCT BUILD PASS — 2026-09-28
+
+Completed in this pass:
+- Added starter plant knowledge service with searchable plant-care entries.
+- Connected the AI Assistant UI to live repository garden context in Demo/Supabase runtime:
+  - watering questions evaluate saved plant schedules;
+  - symptom questions return conservative diagnostic guidance;
+  - pest questions emphasize inspection/isolation and label-based treatment;
+  - light questions use the plant's saved sunlight preference.
+- Added PlantCare Support Hub foundation for:
+  - gardeners community;
+  - agricultural expert escalation;
+  - nearby garden shops;
+  - trusted resources.
+- Registered the Support Hub route and linked it from the Plant Library.
+- Expanded Plant Library with starter knowledge cards.
+- Added assistant and knowledge regression tests.
+- Added `scripts/plantcare_activation_check.py` to report model/native/mobile activation blockers without requiring secrets.
+- Fixed the weather service contract so `WeatherService` is declared in its own module rather than imported from itself.
+- Corrected the new assistant test's weather-model import.
+
+Commits:
+- `9fdb4a5c` — starter knowledge service.
+- `2a4af7f4` — assistant service.
+- `b42840fc` — support service.
+- `ed8ec2e0` — support hub UI.
+- `98417e92` — assistant garden-context integration.
+- `19a8f2c5` — library knowledge integration.
+- `782d3b9a` — support route.
+- `1a6429c1` — assistant tests.
+- `5006099d` — knowledge tests.
+- `2da1d80e5` — activation readiness checker.
+- `872d3561` — weather service contract fix.
+- `1c11120a` — assistant test import fix.
+
+Verification boundary:
+- GitHub source files were re-read after creation/update.
+- Flutter CLI execution is still not available through the GitHub connector, so Dart format/analyze/test execution is not claimed.
+- GitHub commit status has historically been empty for recent PlantCare commits; a published CI run is still required for verified Flutter execution.
+- Supabase project activation is not available/connected; no live database migration has been claimed.
+- Model binary, Android/iOS native folders, Firebase native configuration and real-device E2E remain activation gates.
+
+NEXT BUILD TARGET:
+- Treat the repository as code-complete for the currently buildable product foundation.
+- Next phase is activation: supply the evaluated model/native assets, configure Supabase/Firebase, deploy inference, run CI/E2E, and fix environment-specific failures.
+- After activation, expand real-world AI coverage, persist community/support content, add admin role enforcement, and connect real shops/resources/providers.
