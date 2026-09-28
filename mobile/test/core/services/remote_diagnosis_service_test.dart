@@ -9,11 +9,19 @@ import 'package:plantcare_ai/core/services/remote_diagnosis_service.dart';
 
 class _FakeHttpClient extends http.BaseClient {
   final String body;
+  final bool expectDiseaseCapability;
 
-  _FakeHttpClient({required this.body});
+  _FakeHttpClient({
+    required this.body,
+    this.expectDiseaseCapability = false,
+  });
 
   @override
   Future<http.StreamedResponse> send(http.BaseRequest request) async {
+    if (expectDiseaseCapability && request is http.MultipartRequest) {
+      expect(request.fields['capability'], 'disease');
+    }
+
     return http.StreamedResponse(
       Stream<List<int>>.value(utf8.encode(body)),
       200,
@@ -48,6 +56,9 @@ void main() {
         endpoint: 'https://inference.example.com/predict',
         client: _FakeHttpClient(
           body: jsonEncode({
+            'schema_version': '1.1',
+            'capability': 'disease',
+            'model_id': 'plant-disease-mobilenetv3',
             'plant_name': 'Tomato',
             'condition': 'Early blight',
             'confidence': 0.41,
@@ -55,6 +66,7 @@ void main() {
             'needs_expert_review': false,
             'model_version': 'plantvillage-mobilenetv3-38-class',
           }),
+          expectDiseaseCapability: true,
         ),
       );
 
@@ -63,6 +75,8 @@ void main() {
       expect(result.confidence, 0.41);
       expect(result.needsExpertReview, isTrue);
       expect(result.modelVersion, 'plantvillage-mobilenetv3-38-class');
+      expect(result.capability, 'disease');
+      expect(result.modelId, 'plant-disease-mobilenetv3');
     });
 
     test('rejects a response without a model version', () async {
