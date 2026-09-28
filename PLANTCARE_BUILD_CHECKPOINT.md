@@ -791,6 +791,8 @@ Verification:
 - Live inference, Supabase, FCM/APNs, and production model deployment remain unverified.
 
 CURRENT BUILD STATE:
+- Plant Detail Health Timeline now shows diagnosis explanation, confidence, review status, AI capability/model version, and alternative predictions in addition to existing watering/profile events.
+- Inference capability contract uses `disease`, `pest`, `nutrient`, and `environment`; legacy `plant-stress-model` input is accepted as an alias for `environment`.
 - Verified disease model artifact is available and validated.
 - Diagnosis API/mobile contract now carries model capability, model ID/version, and top predictions.
 - Supabase diagnosis records now persist capability, model ID and top predictions through migration `009_diagnosis_model_metadata`.
