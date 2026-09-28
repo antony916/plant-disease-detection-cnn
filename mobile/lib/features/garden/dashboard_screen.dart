@@ -232,9 +232,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
                 final plants = snapshot.data ?? const <Plant>[];
                 if (plants.isEmpty) {
-                  return const _EmptyState(
+                  return _EmptyState(
                     message:
                         'Your garden is empty. Add your first plant to get started.',
+                    action: 'Add your first plant',
+                    onPressed: () =>
+                        Navigator.pushNamed(context, AppRouter.addPlant),
                   );
                 }
 
