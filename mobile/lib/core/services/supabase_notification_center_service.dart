@@ -63,6 +63,14 @@ class SupabaseNotificationCenterService implements NotificationCenterService {
   }
 
   @override
+  Future<void> clearAll() async {
+    final user = client.auth.currentUser;
+    if (user == null) throw const AuthException('Sign in required.');
+
+    await client.from('notifications').delete().eq('user_id', user.id);
+  }
+
+  @override
   Future<NotificationPreferences> getPreferences() async {
     final user = client.auth.currentUser;
     if (user == null) throw const AuthException('Sign in required.');
