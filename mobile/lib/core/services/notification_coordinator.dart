@@ -1,3 +1,4 @@
+import '../models/care_recommendation.dart';
 import '../models/garden_task.dart';
 import '../models/notification_center_item.dart';
 import '../models/plant.dart';
