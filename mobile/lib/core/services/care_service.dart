@@ -32,14 +32,14 @@ class RuleBasedCareService implements CareService {
     final due = DateTime(next.year, next.month, next.day);
 
     if (weather != null &&
-        weather.rainProbabilityPercent >= 70 &&
+        weather.nearTermRainProbabilityPercent >= 70 &&
         weather.rainfallMm >= 1) {
       return CareRecommendation(
         action: CareRecommendationAction.wait,
         title: 'Rain may cover watering',
         message: 'Check the soil after the rain before watering this plant.',
         reason:
-            'The weather service reports a high chance of rain with measurable rainfall.',
+            'The near-term weather window shows a high chance of rain with measurable rainfall.',
         evaluatedAt: now,
       );
     }
