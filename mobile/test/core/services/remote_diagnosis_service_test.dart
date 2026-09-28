@@ -16,7 +16,7 @@ class _FakeHttpClient extends http.BaseClient {
   Future<http.StreamedResponse> send(http.BaseRequest request) async {
     return http.StreamedResponse(
       Stream<List<int>>.value(utf8.encode(body)),
-      statusCode,
+      200,
       headers: const {'content-type': 'application/json'},
     );
   }
