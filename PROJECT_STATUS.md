@@ -55,6 +55,16 @@ The repository has evolved from the original Plant Disease Detection mini-projec
 
 These are benchmark results on the documented held-out dataset, not a claim of equivalent real-world field accuracy.
 
+## Supabase provisioning
+
+- Supabase project: `PlantCare AI`
+- Region: `ap-south-1`
+- Project reference: `xtkdeheeukqxbgzyywvq`
+- Migrations `001` through `008` have been applied to the live project.
+- RLS is enabled on the application tables.
+- Security-definer helper grants were hardened; the invitation-acceptance RPC remains callable only by authenticated users as required by the app flow.
+- The mobile publishable key is intentionally not stored in GitHub; provide it at runtime through `SUPABASE_PUBLISHABLE_KEY`.
+
 ## Activation blockers
 
 The following require external project/device assets and cannot be truthfully marked live from repository code alone:
@@ -63,10 +73,9 @@ The following require external project/device assets and cannot be truthfully ma
    - `artifacts/plant_disease_mobilenetv3.pth`
    - `artifacts/class_names.txt`
 2. Flutter Android/iOS native platform folders.
-3. Supabase project URL and publishable/anon key.
-4. Application of Supabase migrations to the intended project.
-5. Firebase/FCM native configuration if push is enabled.
-6. Real-device end-to-end verification.
+3. Flutter runtime configuration with the provisioned Supabase project URL and publishable key.
+4. Firebase/FCM native configuration if push is enabled.
+5. Real-device end-to-end verification.
 
 See `PLANTCARE_ACTIVATION_UPLOAD_CHECKLIST.md` for the activation sequence.
 
