@@ -791,6 +791,9 @@ Verification:
 - Live inference, Supabase, FCM/APNs, and production model deployment remain unverified.
 
 CURRENT BUILD STATE:
+- Smart Care now evaluates near-term precipitation probability separately from the full-day probability and uses the near-term window for watering decisions.
+- NotificationCoordinator now consumes Smart Care recommendations, so watering notifications can say water, hold watering, or check the plant instead of always issuing a generic watering reminder.
+- Smart Care notification integration has focused tests covering recommendation content and quiet-hour suppression.
 - Plant Detail Health Timeline now shows diagnosis explanation, confidence, review status, AI capability/model version, and alternative predictions in addition to existing watering/profile events.
 - Inference capability contract uses `disease`, `pest`, `nutrient`, and `environment`; legacy `plant-stress-model` input is accepted as an alias for `environment`.
 - Verified disease model artifact is available and validated.
