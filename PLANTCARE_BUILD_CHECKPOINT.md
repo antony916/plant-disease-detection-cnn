@@ -917,3 +917,36 @@ NEXT BUILD TARGET:
 - Treat the repository as code-complete for the currently buildable product foundation.
 - Next phase is activation: supply the evaluated model/native assets, configure Supabase/Firebase, deploy inference, run CI/E2E, and fix environment-specific failures.
 - After activation, expand real-world AI coverage, persist community/support content, add admin role enforcement, and connect real shops/resources/providers.
+
+## 39. HOSTED INFERENCE VERIFICATION TOOLING — 2026-09-28
+
+Completed:
+- Added `scripts/verify_inference_endpoint.py`.
+- The script is dependency-free and verifies a deployed HTTPS inference endpoint through:
+  - `GET /health`;
+  - `GET /models`;
+  - optional real-image `POST /predict`.
+- The prediction check validates:
+  - schema version `1.1`;
+  - disease capability;
+  - expected model ID `plant-disease-mobilenetv3`;
+  - expected model version `plantvillage-mobilenetv3-38-class`;
+  - confidence range;
+  - top-prediction structure;
+  - expert-review boolean.
+- The script requires HTTPS for deployed verification and does not require Supabase credentials, Firebase credentials, or a service-role key.
+
+Commit:
+- `283b345a0815ea606f959741e0b12ff122f6ae0b` — test: add hosted inference endpoint smoke check.
+
+Current verified GitHub Actions state before this new commit:
+- PlantCare CI on `fb0428240a12f9f92fe6093f5e6279ca6ae130f8`: success.
+- PlantCare Dart Format on the same commit: success.
+- CodeQL on the same commit: success.
+- PlantCare Inference Image run `36407859868` on `a5734d33a772166976e129903d686cd5d557405d`: success, including image startup/`/health` verification.
+
+Activation boundary:
+- Android and iOS Flutter platform folders are not currently committed under `mobile/`.
+- Firebase native configuration files are not present.
+- Render deployment configuration exists but has not been activated and no public inference URL is claimed.
+- The next practical activation step remains configured hosting plus native mobile setup, followed by the new endpoint smoke test with a real plant photo and then Flutter -> Supabase diagnosis E2E.
