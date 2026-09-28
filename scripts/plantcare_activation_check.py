@@ -90,13 +90,26 @@ def main() -> int:
         firebase_ok,
         "firebase_options.dart + Android + iOS configuration",
     )
+    blocked += not firebase_ok
+
+    render_file = ROOT / "render.yaml"
+    inference_verifier = ROOT / "scripts" / "verify_inference_endpoint.py"
+    hosting_config_ok = render_file.is_file() and inference_verifier.is_file()
+    report(
+        "Inference hosting configuration",
+        hosting_config_ok,
+        "render.yaml + hosted endpoint verifier are present",
+    )
+    blocked += not hosting_config_ok
 
     migrations = sorted((ROOT / "backend" / "supabase").glob("*.sql"))
+    migrations_ok = bool(migrations)
     report(
         "Supabase migration tree",
-        bool(migrations),
+        migrations_ok,
         f"{len(migrations)} migration files present; live application still requires a configured project.",
     )
+    blocked += not migrations_ok
 
     print()
     if blocked:
