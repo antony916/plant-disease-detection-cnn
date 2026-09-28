@@ -964,3 +964,41 @@ Current external activation boundary is unchanged:
 - Render service has not been activated from this environment.
 - No public inference URL is claimed.
 - Android/iOS native Flutter folders and Firebase native configuration are still absent from the repository.
+
+
+## 41. ACTIVATION CHECK WORKFLOW + CURRENT HEAD — 2026-09-28
+
+Completed:
+- Added `.github/workflows/plantcare-activation-check.yml`.
+- The workflow validates inference Python syntax, Render blueprint fields, and the hosted endpoint verifier.
+- If `PLANTCARE_INFERENCE_URL` is later configured as a GitHub Actions secret, the workflow verifies the deployed HTTPS inference contract.
+- The workflow was corrected so the optional secret is handled inside the job rather than in a job-level `if`, which GitHub does not allow for the secrets context.
+
+Current HEAD:
+- `3ca246eb0a66c16f5879f9c2b18dbc53c3039d52`
+- `ci: fix activation workflow secret gating`
+
+Current Actions state at the time of this checkpoint update:
+- PlantCare CI: queued on current HEAD.
+- CodeQL: queued on current HEAD.
+- PlantCare Dart Format: queued on current HEAD.
+- PlantCare Activation Check: queued on current HEAD.
+- Previous HEAD `5f98d1a6d8026ed47aafaff80403e7e2d0c4de6f` had successful PlantCare CI, Dart Format and CodeQL.
+- The first activation-check workflow attempt failed because of the invalid job-level secrets condition; that workflow was fixed in commit `3ca246eb0a66c16f5879f9c2b18dbc53c3039d52`.
+
+Native platform inspection:
+- `mobile/android` is absent.
+- `mobile/ios` is absent.
+- Firebase native configuration files are absent.
+- Flutter CLI is not installed in the current build environment, so native shells were NOT fabricated or manually approximated.
+- Network access from the current build environment cannot reach the Flutter release host, so the official Flutter generator cannot be installed here.
+- This remains an external/native activation gate, not a missing application-layer implementation.
+
+NEXT PRACTICAL TASK:
+- Wait for the current HEAD Actions checks to complete and fix any failures.
+- Then activate/generate official Flutter Android/iOS platform shells in an environment with Flutter CLI available, without overwriting `mobile/lib` or the existing application code.
+- Configure Firebase native files only after the native shells exist.
+- Separately activate the configured inference hosting service and obtain a real HTTPS endpoint.
+- Run `scripts/verify_inference_endpoint.py` against the real endpoint, including a real plant image.
+- Configure `PLANTCARE_INFERENCE_URL` via `--dart-define`.
+- Perform Flutter -> inference -> Supabase diagnosis E2E.
