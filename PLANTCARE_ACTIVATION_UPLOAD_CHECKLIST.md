@@ -11,6 +11,7 @@ This checkpoint is the handoff point after the code-side work that can be comple
 - Cloud image upload path.
 - Diagnosis image-reference separation.
 - Capability-driven configurable remote inference client.
+- Strict model-package validation for the evaluated MobileNetV3 artifact.
 - Extensible model registry for disease, pest, nutrient and environmental coverage.
 - FastAPI PlantCare inference service.
 - Inference Dockerfile and requirements.
@@ -68,7 +69,7 @@ For iOS push, the APNs authentication key must be configured in Firebase/Apple t
 
 ## What happens after the upload gate
 
-1. Verify the uploaded disease-model artifact against the 38 class names and model registry contract.
+1. Run the strict model-package validator against the uploaded disease-model artifact, class names and model registry contract.
 2. Complete the FastAPI inference deployment configuration.
 3. Connect the mobile app to the deployed inference endpoint using the capability-driven contract.
 4. Configure Firebase Messaging and verify device-token registration.
