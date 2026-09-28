@@ -34,6 +34,7 @@ The repository has evolved from the original Plant Disease Detection mini-projec
 - Starter plant knowledge library
 - Community/expert/shop/resource support hub foundation
 - Automated activation-readiness checker
+- Strict evaluated model-artifact validator
 - Python syntax validation
 - Repository checkpoints and activation documentation
 
@@ -82,9 +83,10 @@ These are benchmark results on the documented held-out dataset, not a claim of e
 
 The following require external project/device assets and cannot be truthfully marked live from repository code alone:
 
-1. Evaluated model artifact:
+1. Evaluated disease-model activation package:
    - `artifacts/plant_disease_mobilenetv3.pth`
    - `artifacts/class_names.txt`
+   - The repository now validates class count, duplicate names and MobileNetV3 state_dict compatibility before deployment.
 2. Flutter Android/iOS native platform folders.
 3. Flutter runtime configuration with the provisioned Supabase project URL and publishable key.
 4. Firebase/FCM native configuration if push is enabled.
