@@ -4,7 +4,9 @@ import 'package:http/http.dart' as http;
 
 import '../models/weather_snapshot.dart';
 import 'location_service.dart';
-import 'weather_service.dart';
+abstract interface class WeatherService {
+  Future<WeatherSnapshot?> getCurrentWeather({String? location});
+}
 
 class OpenMeteoWeatherService implements WeatherService {
   final LocationService locationService;
