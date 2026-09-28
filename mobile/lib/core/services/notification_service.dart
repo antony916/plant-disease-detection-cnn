@@ -1,5 +1,3 @@
-import '../models/care_notification.dart';
-
 class PlantCareNotification {
   final String id;
   final String title;
