@@ -391,21 +391,98 @@ class _DiagnosisTimelineCard extends StatelessWidget {
     final percent = (record.result.confidence * 100).round();
     final lowConfidence =
         record.result.needsExpertReview || record.result.confidence < 0.70;
+    final alternatives = record.result.topPredictions.skip(1).take(2).toList();
 
     return Card(
-      child: ListTile(
-        leading: Icon(
-          lowConfidence ? Icons.warning_amber_rounded : Icons.biotech_outlined,
-          color:
-              lowConfidence ? PlantCareColors.warning : PlantCareColors.primary,
-        ),
-        title: Text(
-          record.result.condition,
-          style: const TextStyle(fontWeight: FontWeight.w700),
-        ),
-        subtitle: Text(
-          '${percent}% confidence • ${_formatDate(record.createdAt)}'
-          '${lowConfidence ? ' • Expert review recommended' : ''}',
+      child: Padding(
+        padding: const EdgeInsets.all(PlantCareSpacing.md),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Icon(
+                  lowConfidence
+                      ? Icons.warning_amber_rounded
+                      : Icons.biotech_outlined,
+                  color: lowConfidence
+                      ? PlantCareColors.warning
+                      : PlantCareColors.primary,
+                ),
+                const SizedBox(width: PlantCareSpacing.sm),
+                Expanded(
+                  child: Text(
+                    record.result.condition,
+                    style: const TextStyle(fontWeight: FontWeight.w800),
+                  ),
+                ),
+                Text(
+                  '$percent%',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w800,
+                    color: lowConfidence
+                        ? PlantCareColors.warning
+                        : PlantCareColors.primary,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 6),
+            Text(
+              _formatDate(record.createdAt),
+              style: const TextStyle(
+                color: PlantCareColors.muted,
+                fontSize: 12,
+              ),
+            ),
+            const SizedBox(height: PlantCareSpacing.sm),
+            Text(
+              record.result.explanation,
+              maxLines: 3,
+              overflow: TextOverflow.ellipsis,
+            ),
+            const SizedBox(height: PlantCareSpacing.sm),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                _MetadataChip(
+                  icon: Icons.auto_awesome_outlined,
+                  label: record.result.capability,
+                ),
+                _MetadataChip(
+                  icon: Icons.memory_outlined,
+                  label: record.result.modelVersion,
+                ),
+                if (lowConfidence)
+                  const _MetadataChip(
+                    icon: Icons.support_agent_outlined,
+                    label: 'Review recommended',
+                  ),
+              ],
+            ),
+            if (alternatives.isNotEmpty) ...[
+              const SizedBox(height: PlantCareSpacing.sm),
+              const Text(
+                'Other possibilities',
+                style: TextStyle(fontWeight: FontWeight.w700),
+              ),
+              const SizedBox(height: 4),
+              for (final alternative in alternatives)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 2),
+                  child: Text(
+                    '• ${alternative.className} — '
+                    '${(alternative.confidence * 100).round()}%',
+                    style: const TextStyle(
+                      color: PlantCareColors.muted,
+                      fontSize: 12,
+                    ),
+                  ),
+                ),
+            ],
+          ],
         ),
       ),
     );
@@ -418,6 +495,41 @@ class _DiagnosisTimelineCard extends StatelessWidget {
   }
 }
 
+class _MetadataChip extends StatelessWidget {
+  final IconData icon;
+  final String label;
+
+  const _MetadataChip({
+    required this.icon,
+    required this.label,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      decoration: BoxDecoration(
+        color: PlantCareColors.surface,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: PlantCareColors.border),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 14, color: PlantCareColors.primary),
+          const SizedBox(width: 5),
+          Text(
+            label,
+            style: const TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
 class _Metric extends StatelessWidget {
   final String title;
   final String value;
