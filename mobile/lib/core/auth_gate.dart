@@ -18,7 +18,15 @@ class _AuthGateState extends State<AuthGate> {
   @override
   void initState() {
     super.initState();
-    _session = AppServices.auth.currentUser();
+    _session = _loadSession();
+  }
+
+  Future<AppUser?> _loadSession() async {
+    final user = await AppServices.auth.currentUser();
+    if (user != null) {
+      await AppServices.syncPushRegistration();
+    }
+    return user;
   }
 
   @override
