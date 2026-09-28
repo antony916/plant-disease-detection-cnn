@@ -96,7 +96,7 @@ def validate() -> dict[str, object]:
     state = load_state_dict()
     validate_architecture(len(classes), state)
 
-    classifier_weight = state["classifier.3.0.weight"] if "classifier.3.0.weight" in state else None
+    classifier_weight = state.get("classifier.3.weight")
 
     return {
         "status": "ready",
