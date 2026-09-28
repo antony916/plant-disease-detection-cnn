@@ -22,6 +22,11 @@ class SupabaseNotificationService implements NotificationService {
     if (token != null && token.isNotEmpty) {
       await registerDeviceToken(token);
     }
+
+    push.onTokenRefresh.listen((token) {
+      if (token.isEmpty) return;
+      registerDeviceToken(token).catchError((_) {});
+    });
   }
 
   @override
