@@ -111,13 +111,13 @@ class RemoteDiagnosisService implements DiagnosisService {
 
     final capabilityValue = decoded['capability'];
     final capability = capabilityValue is String &&
-            capabilityValue.trim().isNotEmpty
+        capabilityValue.trim().isNotEmpty
         ? capabilityValue.trim()
         : 'disease';
 
     final modelIdValue = decoded['model_id'];
     final modelId = modelIdValue is String &&
-            modelIdValue.trim().isNotEmpty
+        modelIdValue.trim().isNotEmpty
         ? modelIdValue.trim()
         : 'unknown';
 
