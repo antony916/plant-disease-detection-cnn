@@ -30,7 +30,7 @@ void main() {
         plantId: 'plant-1', plantName: 'Tomato', when: when);
     expect(service.scheduled, hasLength(1));
     expect(service.scheduled.single.id,
-        'watering-plant-1-\${when.millisecondsSinceEpoch}');
+        'watering-plant-1-${when.millisecondsSinceEpoch}');
     expect(service.scheduled.single.plantId, 'plant-1');
   });
 
