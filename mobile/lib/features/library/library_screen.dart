@@ -4,8 +4,16 @@ import '../../core/navigation/app_router.dart';
 import '../../core/services/plant_knowledge_service.dart';
 import '../../core/theme/app_theme.dart';
 
-class LibraryScreen extends StatelessWidget {
+class LibraryScreen extends StatefulWidget {
   const LibraryScreen({super.key});
+
+  @override
+  State<LibraryScreen> createState() => _LibraryScreenState();
+}
+
+class _LibraryScreenState extends State<LibraryScreen> {
+  final PlantKnowledgeService _knowledge = const PlantKnowledgeService();
+  String _query = '';
 
   @override
   Widget build(BuildContext context) {
@@ -51,8 +59,13 @@ class LibraryScreen extends StatelessWidget {
           const Text('Starter knowledge',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800)),
           const SizedBox(height: PlantCareSpacing.sm),
-          for (final entry in const PlantKnowledgeService().entries)
+          for (final entry in _knowledge.search(_query))
             _KnowledgeCard(entry: entry),
+          if (_knowledge.search(_query).isEmpty)
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: 32),
+              child: Center(child: Text('No matching guidance found.')),
+            ),
           const SizedBox(height: PlantCareSpacing.lg),
           FilledButton.icon(
               onPressed: () => Navigator.pushNamed(context, AppRouter.support),
