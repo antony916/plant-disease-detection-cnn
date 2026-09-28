@@ -1,6 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:plantcare_ai/core/models/care_notification.dart';
 import 'package:plantcare_ai/core/services/notification_service.dart';
 
 class FakeNotificationService implements NotificationService {
