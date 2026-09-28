@@ -46,7 +46,8 @@ abstract final class AppRouter {
       case scanner:
         return MaterialPageRoute(builder: (_) => const ScannerScreen());
       case diagnosisHistory:
-        return MaterialPageRoute(builder: (_) => const DiagnosisHistoryScreen());
+        return MaterialPageRoute(
+            builder: (_) => const DiagnosisHistoryScreen());
       case diagnosis:
         final result = settings.arguments;
         if (result is DiagnosisResult) {

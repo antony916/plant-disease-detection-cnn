@@ -110,7 +110,8 @@ class _DiagnosisHistoryScreenState extends State<DiagnosisHistoryScreen> {
             return _StateMessage(
               icon: Icons.health_and_safety_outlined,
               title: 'No diagnoses yet',
-              message: 'Your plant scans will appear here as a health timeline.',
+              message:
+                  'Your plant scans will appear here as a health timeline.',
               action: FilledButton.icon(
                 onPressed: () =>
                     Navigator.pushReplacementNamed(context, AppRouter.scanner),

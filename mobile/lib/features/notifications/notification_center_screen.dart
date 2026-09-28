@@ -28,7 +28,8 @@ class _NotificationCenterScreenState extends State<NotificationCenterScreen> {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Clear notifications?'),
-        content: const Text('This removes all notifications from your notification history.'),
+        content: const Text(
+            'This removes all notifications from your notification history.'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
