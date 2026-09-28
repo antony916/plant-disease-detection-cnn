@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../services/diagnosis_service.dart';
+import '../models/plant.dart';
 import '../../features/auth/login_screen.dart';
 import '../../features/assistant/assistant_screen.dart';
 import '../../features/diagnosis/diagnosis_screen.dart';
