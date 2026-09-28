@@ -63,6 +63,9 @@ jobs:
       - name: Run Python model-registry tests
         run: python -m unittest discover -s api -p "test_*.py"
 
+      - name: Test activation-readiness gates
+        run: python scripts/test_plantcare_activation_check.py
+
       - name: Validate model package when supplied
         shell: bash
         run: |
