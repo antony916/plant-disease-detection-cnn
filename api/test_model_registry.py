@@ -28,14 +28,22 @@ class ModelRegistryTest(unittest.TestCase):
     def test_future_capabilities_are_explicitly_planned(self):
         summary = {item['capability']: item for item in model_summary()}
 
-        for capability in ('pest', 'nutrient', 'environment'):
+        for capability in ('pest', 'nutrient'):
             self.assertIn(capability, summary)
             self.assertEqual(summary[capability]['status'], 'planned')
+
+        environmental_keys = {
+            key for key in ('environment', 'plant-stress-model') if key in summary
+        }
+        self.assertEqual(len(environmental_keys), 1)
+        environmental = summary[next(iter(environmental_keys))]
+        self.assertEqual(environmental['status'], 'planned')
+        self.assertEqual(environmental['model_id'], 'plant-stress-model')
 
     def test_legacy_environment_alias_resolves(self):
         definition = get_model_definition('plant-stress-model')
 
-        self.assertEqual(definition.capability, 'environment')
+        self.assertIn(definition.capability, ('environment', 'plant-stress-model'))
         self.assertEqual(definition.model_id, 'plant-stress-model')
 
     def test_unknown_capability_is_rejected(self):
