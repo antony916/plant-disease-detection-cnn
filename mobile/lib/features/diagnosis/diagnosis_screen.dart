@@ -126,7 +126,7 @@ class DiagnosisScreen extends StatelessWidget {
               icon: Icons.alt_route_outlined,
               items: [
                 for (final prediction in result.topPredictions.skip(1).take(3))
-                  '\${prediction.className} — \${(prediction.confidence * 100).round()}%',
+                  '${prediction.className} — ${(prediction.confidence * 100).round()}%',
               ],
             ),
           ],
