@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-import '../models/care_notification.dart';
 import 'notification_service.dart';
 import 'push_notification_service.dart';
 
