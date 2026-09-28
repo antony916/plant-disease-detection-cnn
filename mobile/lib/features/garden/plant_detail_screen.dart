@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../core/app_services.dart';
+import '../../core/navigation/app_router.dart';
 import '../../core/models/care_recommendation.dart';
 import '../../core/models/diagnosis_record.dart';
 import '../../core/models/plant.dart';
@@ -40,7 +41,39 @@ class _PlantDetailScreenState extends State<PlantDetailScreen> {
     return null;
   }
 
-  Future<void> _confirmDelete(Plant plant) async {\n    final confirmed = await showDialog<bool>(\n      context: context,\n      builder: (context) => AlertDialog(\n        title: const Text('Delete plant?'),\n        content: Text(\n          'Remove \${plant.name} from your garden? This cannot be undone.',\n        ),\n        actions: [\n          TextButton(\n            onPressed: () => Navigator.pop(context, false),\n            child: const Text('Cancel'),\n          ),\n          FilledButton(\n            onPressed: () => Navigator.pop(context, true),\n            child: const Text('Delete'),\n          ),\n        ],\n      ),\n    );\n\n    if (confirmed != true) return;\n\n    await AppServices.garden.deletePlant(plant.id);\n    if (!mounted) return;\n\n    ScaffoldMessenger.of(context).showSnackBar(\n      SnackBar(content: Text('\${plant.name} removed from your garden.')),\n    );\n    Navigator.pushReplacementNamed(context, AppRouter.dashboard);\n  }\n\n  Future<void> _markWatered(Plant plant) async {
+  Future<void> _confirmDelete(Plant plant) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Delete plant?'),
+        content: Text(
+          'Remove ${plant.name} from your garden? This cannot be undone.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancel'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Delete'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed != true) return;
+
+    await AppServices.garden.deletePlant(plant.id);
+    if (!mounted) return;
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('${plant.name} removed from your garden.')),
+    );
+    Navigator.pushReplacementNamed(context, AppRouter.dashboard);
+  }
+
+  Future<void> _markWatered(Plant plant) async {
     final now = DateTime.now();
     final updated = plant.copyWith(
       lastWateredAt: now,
