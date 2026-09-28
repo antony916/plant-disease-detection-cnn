@@ -1,6 +1,6 @@
 import unittest
 
-from api.model_registry import (
+from model_registry import (
     get_model_definition,
     model_summary,
     resolve_artifact_paths,
