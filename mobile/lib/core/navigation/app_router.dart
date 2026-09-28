@@ -63,9 +63,11 @@ abstract final class AppRouter {
       case addPlant:
         return MaterialPageRoute(builder: (_) => const AddPlantScreen());
       case notifications:
-        return MaterialPageRoute(builder: (_) => const NotificationCenterScreen());
+        return MaterialPageRoute(
+            builder: (_) => const NotificationCenterScreen());
       case notificationSettings:
-        return MaterialPageRoute(builder: (_) => const NotificationSettingsScreen());
+        return MaterialPageRoute(
+            builder: (_) => const NotificationSettingsScreen());
       case familySharing:
         return MaterialPageRoute(builder: (_) => const FamilySharingScreen());
       case familyInvites:

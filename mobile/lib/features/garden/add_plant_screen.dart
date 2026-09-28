@@ -90,8 +90,7 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
               height: 150,
               decoration: BoxDecoration(
                 color: PlantCareColors.surface,
-                borderRadius:
-                    BorderRadius.circular(PlantCareRadius.featured),
+                borderRadius: BorderRadius.circular(PlantCareRadius.featured),
                 border: Border.all(color: PlantCareColors.border),
               ),
               child: const Icon(
@@ -113,10 +112,9 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
                 labelText: 'Plant name',
                 hintText: 'e.g. Tomato',
               ),
-              validator: (value) =>
-                  value == null || value.trim().isEmpty
-                      ? 'Enter a plant name'
-                      : null,
+              validator: (value) => value == null || value.trim().isEmpty
+                  ? 'Enter a plant name'
+                  : null,
             ),
             const SizedBox(height: PlantCareSpacing.md),
             TextFormField(

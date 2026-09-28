@@ -144,8 +144,7 @@ class _PlantDetailScreenState extends State<PlantDetailScreen> {
                 height: 220,
                 decoration: BoxDecoration(
                   color: PlantCareColors.surface,
-                  borderRadius:
-                      BorderRadius.circular(PlantCareRadius.featured),
+                  borderRadius: BorderRadius.circular(PlantCareRadius.featured),
                 ),
                 child: Center(
                   child: Text(
@@ -244,10 +243,10 @@ class _PlantDetailScreenState extends State<PlantDetailScreen> {
                   final recommendation = careSnapshot.data;
                   if (recommendation == null) return const SizedBox.shrink();
 
-                  final isWater = recommendation.action ==
-                      CareRecommendationAction.water;
-                  final isWait = recommendation.action ==
-                      CareRecommendationAction.wait;
+                  final isWater =
+                      recommendation.action == CareRecommendationAction.water;
+                  final isWait =
+                      recommendation.action == CareRecommendationAction.wait;
 
                   final icon = isWater
                       ? Icons.water_drop_outlined
@@ -396,12 +395,9 @@ class _DiagnosisTimelineCard extends StatelessWidget {
     return Card(
       child: ListTile(
         leading: Icon(
-          lowConfidence
-              ? Icons.warning_amber_rounded
-              : Icons.biotech_outlined,
-          color: lowConfidence
-              ? PlantCareColors.warning
-              : PlantCareColors.primary,
+          lowConfidence ? Icons.warning_amber_rounded : Icons.biotech_outlined,
+          color:
+              lowConfidence ? PlantCareColors.warning : PlantCareColors.primary,
         ),
         title: Text(
           record.result.condition,

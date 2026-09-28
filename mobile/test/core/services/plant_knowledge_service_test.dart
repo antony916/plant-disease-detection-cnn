@@ -5,7 +5,8 @@ void main() {
   const service = PlantKnowledgeService();
   test('starter knowledge contains core gardener categories', () {
     final categories = service.entries.map((entry) => entry.category).toSet();
-    expect(categories, containsAll(['Vegetable', 'Fruit', 'Flower', 'Herb', 'Indoor']));
+    expect(categories,
+        containsAll(['Vegetable', 'Fruit', 'Flower', 'Herb', 'Indoor']));
   });
   test('knowledge search is case insensitive', () {
     final results = service.search('tomato');

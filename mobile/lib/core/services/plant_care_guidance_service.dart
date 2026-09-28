@@ -18,7 +18,8 @@ class PlantCareGuidanceService {
 
     if (key.contains('healthy')) {
       return const PlantCareGuidance(
-        summary: 'No disease is indicated by this model class. Continue normal observation and care.',
+        summary:
+            'No disease is indicated by this model class. Continue normal observation and care.',
         actions: [
           'Keep the plant in its suitable light and soil conditions.',
           'Water according to the plant schedule and check soil moisture before watering.',
@@ -33,7 +34,8 @@ class PlantCareGuidanceService {
 
     if (key.contains('spider mite')) {
       return const PlantCareGuidance(
-        summary: 'The model class is associated with spider-mite damage. Confirm the symptoms on the plant before treating.',
+        summary:
+            'The model class is associated with spider-mite damage. Confirm the symptoms on the plant before treating.',
         actions: [
           'Inspect leaf undersides and new growth for mites or fine webbing.',
           'Isolate an affected potted plant from nearby plants when practical.',
@@ -48,7 +50,8 @@ class PlantCareGuidanceService {
 
     if (key.contains('powdery mildew')) {
       return const PlantCareGuidance(
-        summary: 'Powdery mildew commonly appears as a pale, powder-like coating on leaf surfaces.',
+        summary:
+            'Powdery mildew commonly appears as a pale, powder-like coating on leaf surfaces.',
         actions: [
           'Remove severely affected leaves and dispose of them away from healthy plants.',
           'Improve airflow around the plant and avoid crowding.',
@@ -63,7 +66,8 @@ class PlantCareGuidanceService {
 
     if (key.contains('late blight')) {
       return const PlantCareGuidance(
-        summary: 'Late blight can progress quickly, so confirm the symptoms and act promptly.',
+        summary:
+            'Late blight can progress quickly, so confirm the symptoms and act promptly.',
         actions: [
           'Separate visibly affected plants from healthy plants when practical.',
           'Remove heavily affected foliage and keep infected plant debris out of the growing area.',
@@ -78,7 +82,8 @@ class PlantCareGuidanceService {
 
     if (key.contains('early blight')) {
       return const PlantCareGuidance(
-        summary: 'Early blight is associated with dark leaf lesions that can expand over time.',
+        summary:
+            'Early blight is associated with dark leaf lesions that can expand over time.',
         actions: [
           'Remove severely affected leaves and fallen infected debris.',
           'Water at soil level and avoid unnecessary foliage wetting.',
@@ -93,7 +98,8 @@ class PlantCareGuidanceService {
 
     if (key.contains('bacterial spot')) {
       return const PlantCareGuidance(
-        summary: 'Bacterial spot can cause small dark lesions on leaves or fruit. Confirm the symptoms before treatment.',
+        summary:
+            'Bacterial spot can cause small dark lesions on leaves or fruit. Confirm the symptoms before treatment.',
         actions: [
           'Remove severely affected leaves and dispose of infected debris safely.',
           'Avoid splashing water from affected foliage onto healthy plants.',
@@ -108,7 +114,8 @@ class PlantCareGuidanceService {
 
     if (key.contains('leaf mold')) {
       return const PlantCareGuidance(
-        summary: 'Leaf mold is favored by humid conditions and commonly affects tomato foliage.',
+        summary:
+            'Leaf mold is favored by humid conditions and commonly affects tomato foliage.',
         actions: [
           'Remove severely affected leaves and improve airflow.',
           'Avoid unnecessary overhead irrigation.',
@@ -123,7 +130,8 @@ class PlantCareGuidanceService {
 
     if (key.contains('septoria')) {
       return const PlantCareGuidance(
-        summary: 'Septoria leaf spot produces small lesions and can spread through infected plant debris and moisture.',
+        summary:
+            'Septoria leaf spot produces small lesions and can spread through infected plant debris and moisture.',
         actions: [
           'Remove severely affected lower leaves and fallen debris.',
           'Water at soil level rather than wetting leaves.',
@@ -138,7 +146,8 @@ class PlantCareGuidanceService {
 
     if (key.contains('target spot')) {
       return const PlantCareGuidance(
-        summary: 'Target spot can produce expanding leaf lesions. Confirm the pattern before taking treatment decisions.',
+        summary:
+            'Target spot can produce expanding leaf lesions. Confirm the pattern before taking treatment decisions.',
         actions: [
           'Remove heavily affected leaves where practical.',
           'Improve airflow and avoid prolonged leaf wetness.',
@@ -153,7 +162,8 @@ class PlantCareGuidanceService {
 
     if (key.contains('leaf scorch')) {
       return const PlantCareGuidance(
-        summary: 'Leaf scorch can have several causes, so also check watering, heat, sunlight, and root conditions.',
+        summary:
+            'Leaf scorch can have several causes, so also check watering, heat, sunlight, and root conditions.',
         actions: [
           'Check soil moisture before changing the watering schedule.',
           'Look for heat or excessive direct-sun exposure that matches the plant’s needs.',
@@ -168,7 +178,8 @@ class PlantCareGuidanceService {
 
     if (key.contains('huanglongbing') || key.contains('citrus greening')) {
       return const PlantCareGuidance(
-        summary: 'Citrus greening is a serious citrus disease. A model result should be confirmed by qualified local plant-health guidance.',
+        summary:
+            'Citrus greening is a serious citrus disease. A model result should be confirmed by qualified local plant-health guidance.',
         actions: [
           'Do not rely on a photo diagnosis alone for a management decision.',
           'Separate a suspicious plant from healthy citrus where practical.',
@@ -181,9 +192,11 @@ class PlantCareGuidanceService {
       );
     }
 
-    if (key.contains('yellow leaf curl virus') || key.contains('mosaic virus')) {
+    if (key.contains('yellow leaf curl virus') ||
+        key.contains('mosaic virus')) {
       return const PlantCareGuidance(
-        summary: 'Viral symptoms require confirmation because several stresses can look similar in photographs.',
+        summary:
+            'Viral symptoms require confirmation because several stresses can look similar in photographs.',
         actions: [
           'Separate a suspicious plant from healthy plants where practical.',
           'Inspect for insect vectors and other visible stress symptoms.',
@@ -197,7 +210,8 @@ class PlantCareGuidanceService {
     }
 
     return const PlantCareGuidance(
-      summary: 'This is a model classification, not a complete treatment diagnosis. Confirm the symptoms before taking corrective action.',
+      summary:
+          'This is a model classification, not a complete treatment diagnosis. Confirm the symptoms before taking corrective action.',
       actions: [
         'Inspect the whole plant, including new growth, leaf undersides, stems, and soil.',
         'Check watering, drainage, sunlight, temperature, and recent changes in care.',

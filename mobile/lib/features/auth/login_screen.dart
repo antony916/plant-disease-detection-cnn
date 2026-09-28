@@ -26,7 +26,9 @@ class _LoginScreenState extends State<LoginScreen> {
     } catch (error) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Google sign-in is not configured yet: ' + error.toString())),
+        SnackBar(
+            content: Text(
+                'Google sign-in is not configured yet: ' + error.toString())),
       );
     } finally {
       if (mounted) setState(() => _busy = false);

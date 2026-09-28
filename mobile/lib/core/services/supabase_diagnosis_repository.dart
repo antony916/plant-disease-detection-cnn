@@ -28,8 +28,7 @@ class SupabaseDiagnosisRepository implements DiagnosisRepository {
       plantHint: plantHint,
     );
 
-    final resolvedPlantId =
-        plantId ?? await _plantIdForName(result.plantName);
+    final resolvedPlantId = plantId ?? await _plantIdForName(result.plantName);
 
     if (resolvedPlantId != null) {
       await saveDiagnosis(
@@ -68,7 +67,8 @@ class SupabaseDiagnosisRepository implements DiagnosisRepository {
     await client.from('diagnoses').insert({
       'plant_id': record.plantId,
       'owner_id': ownerId,
-      'image_url': record.imageReference ?? (record.imagePath.isEmpty ? null : record.imagePath),
+      'image_url': record.imageReference ??
+          (record.imagePath.isEmpty ? null : record.imagePath),
       'plant_name': record.result.plantName,
       'condition': record.result.condition,
       'confidence': record.result.confidence,

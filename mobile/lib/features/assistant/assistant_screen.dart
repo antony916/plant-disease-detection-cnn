@@ -185,9 +185,8 @@ class _MessageBubble extends StatelessWidget {
         padding: const EdgeInsets.all(12),
         constraints: const BoxConstraints(maxWidth: 330),
         decoration: BoxDecoration(
-          color: message.fromUser
-              ? PlantCareColors.primary
-              : PlantCareColors.card,
+          color:
+              message.fromUser ? PlantCareColors.primary : PlantCareColors.card,
           borderRadius: BorderRadius.circular(14),
           border: message.fromUser
               ? null

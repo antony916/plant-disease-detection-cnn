@@ -74,7 +74,8 @@ class _FamilyInvitesScreenState extends State<FamilyInvitesScreen> {
               child: ListView(
                 children: const [
                   SizedBox(height: 140),
-                  Icon(Icons.mail_outline, size: 56, color: PlantCareColors.muted),
+                  Icon(Icons.mail_outline,
+                      size: 56, color: PlantCareColors.muted),
                   SizedBox(height: PlantCareSpacing.md),
                   Center(
                     child: Text(

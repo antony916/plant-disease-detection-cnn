@@ -51,8 +51,7 @@ class Plant {
       health: health ?? this.health,
       nextWatering: nextWatering ?? this.nextWatering,
       imageUrl: imageUrl ?? this.imageUrl,
-      wateringIntervalDays:
-          wateringIntervalDays ?? this.wateringIntervalDays,
+      wateringIntervalDays: wateringIntervalDays ?? this.wateringIntervalDays,
       sunlight: sunlight ?? this.sunlight,
       location: location ?? this.location,
       soilType: soilType ?? this.soilType,

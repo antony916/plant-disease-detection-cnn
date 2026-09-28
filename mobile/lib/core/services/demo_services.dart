@@ -149,14 +149,14 @@ class DemoGardenRepository implements GardenRepository {
     _tasks.add(completed);
 
     if (task.type == GardenTaskType.watering) {
-      final plantIndex = _plants.indexWhere((plant) => plant.id == task.plantId);
+      final plantIndex =
+          _plants.indexWhere((plant) => plant.id == task.plantId);
       if (plantIndex >= 0) {
         final plant = _plants[plantIndex];
         final now = DateTime.now();
         _plants[plantIndex] = plant.copyWith(
           lastWateredAt: now,
-          nextWatering:
-              now.add(Duration(days: plant.wateringIntervalDays)),
+          nextWatering: now.add(Duration(days: plant.wateringIntervalDays)),
         );
       }
     }
@@ -243,6 +243,7 @@ class DemoNotificationService implements NotificationService {
 
   @override
   Future<void> cancel(String notificationId) async {
-    scheduled.removeWhere((item) => item.scheduledAt.millisecondsSinceEpoch.toString() == notificationId);
+    scheduled.removeWhere((item) =>
+        item.scheduledAt.millisecondsSinceEpoch.toString() == notificationId);
   }
 }
