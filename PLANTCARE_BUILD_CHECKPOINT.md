@@ -820,6 +820,27 @@ NEXT BUILD TARGET:
 - Continue the production-readiness path: deploy the verified disease inference API to a configured hosting environment, verify the mobile contract with real images, then expand the inference registry with separately evaluated real-world disease/pest/nutrient/environment models. Never represent planned capabilities as available until a model is trained and evaluated.
 
 
+## 38. DEPLOYMENT CONFIGURATION — 2026-09-28
+
+Completed:
+- Pinned FastAPI inference dependencies to reproducible ranges with torch 2.11.0 and torchvision 0.26.0.
+- FastAPI Dockerfile now honors the platform PORT environment variable while defaulting to 8000 for local runs.
+- Added render.yaml for a Docker web service named plantcare-inference.
+- Render blueprint configuration uses the existing api/Dockerfile, repository root as Docker context, /health as the health check, autoDeploy disabled, and a 1c-2g compute plan so the configuration does not silently deploy or incur a service charge.
+- The Render configuration is deployment-ready but has NOT been activated; no public inference URL is claimed.
+
+Current verification boundary:
+- Previous inference-image pipeline completed successfully, including real model validation, GHCR publish, image startup and /health verification.
+- A fresh inference-image run is currently rebuilding against the pinned runtime/Dockerfile changes.
+- Latest Flutter CI before the deployment-only changes passed format, analyze and tests. A new latest-head CI run is queued/pending after deployment configuration commits.
+- CodeQL is running on the current repository head.
+
+Next target:
+- Confirm the fresh inference image build/health run.
+- Activate the configured hosting service only when a hosting account/workspace is available.
+- Set PLANTCARE_INFERENCE_URL in the mobile build to the resulting HTTPS endpoint.
+- Run a real image through /predict and then verify Flutter diagnosis persistence into Supabase and the Plant Health Timeline.
+
 ## 37. MODEL ACTIVATION + INFERENCE IMAGE PIPELINE — 2026-09-28
 
 Completed:
