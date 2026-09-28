@@ -820,6 +820,36 @@ NEXT BUILD TARGET:
 - Continue the production-readiness path: deploy the verified disease inference API to a configured hosting environment, verify the mobile contract with real images, then expand the inference registry with separately evaluated real-world disease/pest/nutrient/environment models. Never represent planned capabilities as available until a model is trained and evaluated.
 
 
+## 37. MODEL ACTIVATION + INFERENCE IMAGE PIPELINE — 2026-09-28
+
+Completed:
+- The evaluated disease model artifacts/plant_disease_mobilenetv3.pth is now committed to GitHub.
+- GitHub blob SHA exactly matches the supplied local artifact's Git blob SHA: f2743b29c262d5988037851af7b1292d69ad617a.
+- Model manifest now records repository_binary_status: committed.
+- Added .github/workflows/plantcare-inference-image.yml.
+- Inference workflow validates the real model package, builds the FastAPI Docker image, publishes to GitHub Container Registry, starts the image, and checks /health.
+- The inference workflow reached the real model validator successfully. Docker image build/publish is the current in-progress step.
+- PlantCare CI now installs PyTorch/Torchvision when the model artifact is present so repository validation is executed rather than skipped.
+- Model validator now adds the repository root to sys.path so src.model resolves correctly from CI.
+- Flutter formatter and analyzer issues found after enabling the real model package were corrected: canonical Dart formatting, CareRecommendationAction import, and non-const test setup for DateTime-backed care recommendations.
+- InferenceRuntimeConfig already supports --dart-define=PLANTCARE_INFERENCE_URL; no hardcoded inference endpoint was added.
+- CodeQL continues to run on the repository.
+
+Current verification boundary:
+- Exact model artifact is committed and hash-verified.
+- Inference model validation has passed in GitHub Actions.
+- The inference Docker image is still being built/published; /health verification is not yet confirmed.
+- Latest Flutter analyze/test run is still in progress after the analyzer fixes.
+- No public production inference URL is claimed yet.
+- Actual mobile native Android/iOS configuration and real-device E2E remain required before calling the mobile diagnosis flow live.
+
+Next target:
+- Confirm the inference container build and /health.
+- Obtain/configure the production hosting endpoint for the published image.
+- Set the mobile PLANTCARE_INFERENCE_URL at runtime.
+- Run real-photo prediction -> Flutter diagnosis -> Supabase diagnosis persistence -> Plant Health Timeline E2E.
+- Then continue production mobile/native activation (Firebase/FCM/APNs) and expanded real-world AI evaluation.
+
 ## 36. FULL CODE-SIDE PRODUCT BUILD PASS — 2026-09-28
 
 Completed in this pass:
