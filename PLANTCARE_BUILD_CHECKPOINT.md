@@ -1045,3 +1045,23 @@ NEXT PRACTICAL TASK:
 - In a Flutter-enabled environment, generate the official Android/iOS shells.
 - Activate hosting and run the real-image inference verifier.
 - Then configure the mobile runtime and complete Flutter -> inference -> Supabase diagnosis E2E.
+
+## 44. ACTIVATION GATE REGRESSION COVERAGE — 2026-09-28
+
+Completed:
+- Added `scripts/test_plantcare_activation_check.py` regression tests for activation readiness.
+- Tests verify that missing Firebase native configuration causes a non-zero activation result.
+- Tests also verify that a complete repository-side activation fixture passes the checker.
+- Added the regression test to the Python CI workflow.
+
+Commits:
+- `e1677c2a5ac9042d6fbad7c5d3da0a3ffb757c90` — `test: cover activation readiness gates`.
+- `6d5425161c41568f428527b833d84a244be8da2a` — `ci: test activation readiness gates`.
+
+Verification boundary:
+- The test is committed and scheduled through CI, but this environment has not received a published workflow result for the new HEAD.
+- This does not claim Flutter native generation, Firebase configuration, Render activation, public inference hosting, or live Supabase E2E.
+
+NEXT PRACTICAL TASK:
+- Verify the new CI run when GitHub exposes it.
+- Then perform the external native/hosting activation steps in the documented order.
