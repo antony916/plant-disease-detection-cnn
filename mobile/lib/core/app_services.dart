@@ -67,7 +67,7 @@ class AppServices {
       _notificationCenter;
 
   static NotificationCoordinator get notificationCoordinator =>
-      NotificationCoordinator(_notificationCenter);
+      NotificationCoordinator(_notificationCenter, care);
 
   static final location = SelectedLocationService();
   static final weather = OpenMeteoWeatherService(
