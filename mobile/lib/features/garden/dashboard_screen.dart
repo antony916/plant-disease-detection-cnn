@@ -85,7 +85,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             tooltip: 'Notification settings',
             onPressed: () =>
                 Navigator.pushNamed(context, AppRouter.notificationSettings),
-            icon: const Icon(Icons.account_circle_outlined),
+            icon: const Icon(Icons.settings_outlined),
           ),
           IconButton(
             tooltip: 'Family sharing',
