@@ -5,6 +5,7 @@ import '../models/plant.dart';
 import '../../features/auth/login_screen.dart';
 import '../../features/assistant/assistant_screen.dart';
 import '../../features/diagnosis/diagnosis_screen.dart';
+import '../../features/diagnosis/diagnosis_history_screen.dart';
 import '../../features/garden/add_plant_screen.dart';
 import '../../features/garden/edit_plant_screen.dart';
 import '../../features/garden/dashboard_screen.dart';
@@ -23,6 +24,7 @@ abstract final class AppRouter {
   static const dashboard = '/dashboard';
   static const scanner = '/scanner';
   static const diagnosis = '/diagnosis';
+  static const diagnosisHistory = '/diagnosis-history';
   static const plant = '/plant';
   static const assistant = '/assistant';
   static const library = '/library';
@@ -43,6 +45,8 @@ abstract final class AppRouter {
         return MaterialPageRoute(builder: (_) => const DashboardScreen());
       case scanner:
         return MaterialPageRoute(builder: (_) => const ScannerScreen());
+      case diagnosisHistory:
+        return MaterialPageRoute(builder: (_) => const DiagnosisHistoryScreen());
       case diagnosis:
         final result = settings.arguments;
         if (result is DiagnosisResult) {
