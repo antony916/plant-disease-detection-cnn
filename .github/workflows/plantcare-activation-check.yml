@@ -50,12 +50,16 @@ jobs:
         run: python scripts/verify_inference_endpoint.py --help
   hosted-smoke-check:
     name: Hosted inference smoke check
-    if: ${{ secrets.PLANTCARE_INFERENCE_URL != '' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Verify deployed inference contract
+      - name: Verify deployed inference contract when configured
         env:
           PLANTCARE_INFERENCE_URL: ${{ secrets.PLANTCARE_INFERENCE_URL }}
-        run: python scripts/verify_inference_endpoint.py --base-url "$PLANTCARE_INFERENCE_URL"
+        run: |
+          if [ -z "$PLANTCARE_INFERENCE_URL" ]; then
+            echo "[SKIP] PLANTCARE_INFERENCE_URL is not configured yet."
+            exit 0
+          fi
+          python scripts/verify_inference_endpoint.py --base-url "$PLANTCARE_INFERENCE_URL"
