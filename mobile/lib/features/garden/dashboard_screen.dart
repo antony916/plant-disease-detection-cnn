@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 import '../../core/app_services.dart';
-import '../../core/models/plant.dart';
 import '../../core/models/garden.dart';
 import '../../core/models/garden_task.dart';
+import '../../core/models/plant.dart';
 import '../../core/navigation/app_router.dart';
 import '../../core/theme/app_theme.dart';
 
@@ -22,19 +22,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   void initState() {
     super.initState();
-    _gardenFuture = AppServices.garden.getGarden();
-    _plantsFuture = AppServices.garden.getPlants();
-    _tasksFuture = AppServices.garden.getTodayTasks();
+    _load();
     _syncNotifications();
   }
 
-  void _refresh() {
-    setState(() {
-      _gardenFuture = AppServices.garden.getGarden();
-      _plantsFuture = AppServices.garden.getPlants();
-      _tasksFuture = AppServices.garden.getTodayTasks();
-    });
-    _syncNotifications();
+  void _load() {
+    _gardenFuture = AppServices.garden.getGarden();
+    _plantsFuture = AppServices.garden.getPlants();
+    _tasksFuture = AppServices.garden.getTodayTasks();
+  }
+
+  Future<void> _refresh() async {
+    setState(_load);
+    await _syncNotifications();
   }
 
   Future<void> _syncNotifications() async {
@@ -56,99 +56,110 @@ class _DashboardScreenState extends State<DashboardScreen> {
             future: _plantsFuture,
             builder: (context, snapshot) {
               final plants = snapshot.data ?? const <Plant>[];
+
               return CustomScrollView(
                 physics: const AlwaysScrollableScrollPhysics(),
                 slivers: [
-                  SliverToBoxAdapter(
-                      child: _DashboardHeader(gardenFuture: _gardenFuture)),
+                  SliverToBoxAdapter(child: _Header(gardenFuture: _gardenFuture)),
                   SliverPadding(
-                    padding: const EdgeInsets.fromLTRB(16, 8, 16, 32),
+                    padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
                     sliver: SliverList(
                       delegate: SliverChildListDelegate([
-                        _GardenHero(
-                          hasPlants: plants.isNotEmpty,
-                          onScan: () =>
-                              Navigator.pushNamed(context, AppRouter.scanner),
-                          onAdd: () =>
-                              Navigator.pushNamed(context, AppRouter.addPlant),
-                        ),
-                        const SizedBox(height: 24),
-                        if (plants.isNotEmpty) ...[
-                          _SectionHeading(
-                            title: 'Your garden',
-                            action: 'See all',
-                            onTap: () {},
+                        _SearchBar(
+                          onTap: () => Navigator.pushNamed(
+                            context,
+                            AppRouter.library,
                           ),
-                          const SizedBox(height: 10),
-                          SizedBox(
-                            height: 228,
-                            child: ListView.separated(
-                              scrollDirection: Axis.horizontal,
-                              itemCount: plants.length,
-                              separatorBuilder: (_, __) =>
-                                  const SizedBox(width: 10),
-                              itemBuilder: (context, index) {
-                                final plant = plants[index];
-                                return _PremiumPlantCard(
-                                  plant: plant,
-                                  onTap: () => Navigator.pushNamed(
-                                    context,
-                                    AppRouter.plant,
-                                    arguments: plant.name,
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
-                          const SizedBox(height: 24),
-                        ],
-                        _SectionHeading(
-                          title: 'Today',
-                          action: 'Care plan',
-                          onTap: () =>
-                              Navigator.pushNamed(context, AppRouter.library),
                         ),
+                        const SizedBox(height: 16),
+                        _ScanBanner(
+                          onScan: () => Navigator.pushNamed(
+                            context,
+                            AppRouter.scanner,
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        const _SectionTitle(title: 'Quick actions'),
                         const SizedBox(height: 10),
+                        _QuickActions(
+                          onScan: () => Navigator.pushNamed(
+                            context,
+                            AppRouter.scanner,
+                          ),
+                          onGarden: () {},
+                          onHealth: () => Navigator.pushNamed(
+                            context,
+                            AppRouter.diagnosisHistory,
+                          ),
+                          onLibrary: () => Navigator.pushNamed(
+                            context,
+                            AppRouter.library,
+                          ),
+                        ),
+                        const SizedBox(height: 20),
                         FutureBuilder<List<GardenTask>>(
                           future: _tasksFuture,
                           builder: (context, taskSnapshot) {
                             if (taskSnapshot.connectionState ==
                                 ConnectionState.waiting) {
-                              return const _DashboardLoading();
+                              return const _SectionSkeleton();
                             }
+
                             final tasks =
                                 taskSnapshot.data ?? const <GardenTask>[];
-                            if (tasks.isEmpty) return const _NoTasksCard();
-                            return Column(
-                              children: [
-                                for (var i = 0; i < tasks.length; i++) ...[
-                                  if (i > 0) const SizedBox(height: 8),
-                                  _TaskCard(
-                                    task: tasks[i],
-                                    onComplete: tasks[i].completed
-                                        ? null
-                                        : () async {
-                                            await AppServices.garden
-                                                .completeTask(tasks[i].id);
-                                            await _refresh();
-                                          },
-                                  ),
-                                ],
-                              ],
+                            return _NeedsAttention(
+                              tasks: tasks,
+                              onComplete: (task) async {
+                                await AppServices.garden.completeTask(task.id);
+                                await _refresh();
+                              },
                             );
                           },
                         ),
-                        const SizedBox(height: 24),
-                        const _ExploreCards(),
-                        if (plants.isEmpty) ...[
-                          const SizedBox(height: 24),
+                        const SizedBox(height: 20),
+                        _SectionTitle(
+                          title: 'Recommended for you',
+                          action: 'See all',
+                          onAction: () => Navigator.pushNamed(
+                            context,
+                            AppRouter.library,
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        _Recommendations(
+                          onTap: () => Navigator.pushNamed(
+                            context,
+                            AppRouter.library,
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        _SectionTitle(
+                          title: 'Your garden',
+                          action: plants.isEmpty ? null : 'See all',
+                          onAction: () {},
+                        ),
+                        const SizedBox(height: 10),
+                        if (plants.isEmpty)
                           _EmptyGarden(
                             onAdd: () => Navigator.pushNamed(
-                                context, AppRouter.addPlant),
-                            onScan: () =>
-                                Navigator.pushNamed(context, AppRouter.scanner),
+                              context,
+                              AppRouter.addPlant,
+                            ),
+                            onScan: () => Navigator.pushNamed(
+                              context,
+                              AppRouter.scanner,
+                            ),
+                          )
+                        else
+                          _GardenList(
+                            plants: plants,
+                            onPlant: (plant) => Navigator.pushNamed(
+                              context,
+                              AppRouter.plant,
+                              arguments: plant.name,
+                            ),
                           ),
-                        ],
+                        const SizedBox(height: 12),
                       ]),
                     ),
                   ),
@@ -163,51 +174,63 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 }
 
-class _DashboardHeader extends StatelessWidget {
+class _Header extends StatelessWidget {
   final Future<Garden> gardenFuture;
-  const _DashboardHeader({required this.gardenFuture});
+
+  const _Header({required this.gardenFuture});
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
+      padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
       child: Row(
         children: [
           Expanded(
             child: FutureBuilder<Garden>(
               future: gardenFuture,
-              builder: (context, snapshot) => Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'Good morning 👋',
-                    style: TextStyle(
-                        color: PlantCareColors.muted,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600),
-                  ),
-                  const SizedBox(height: 3),
-                  Text(
-                    snapshot.data?.name ?? 'My Garden',
-                    style: const TextStyle(
-                        fontSize: 28,
+              builder: (context, snapshot) {
+                final name = snapshot.data?.name ?? 'My Garden';
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'PlantCare AI',
+                      style: TextStyle(
+                        color: PlantCareColors.primary,
+                        fontSize: 20,
                         fontWeight: FontWeight.w900,
-                        letterSpacing: -0.7),
-                  ),
-                ],
-              ),
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      name,
+                      style: const TextStyle(
+                        color: PlantCareColors.muted,
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                );
+              },
             ),
           ),
-          _CircleAction(
+          _HeaderAction(
             icon: Icons.notifications_none_rounded,
             tooltip: 'Notifications',
-            onTap: () => Navigator.pushNamed(context, AppRouter.notifications),
+            onTap: () => Navigator.pushNamed(
+              context,
+              AppRouter.notifications,
+            ),
           ),
           const SizedBox(width: 8),
-          _CircleAction(
+          _HeaderAction(
             icon: Icons.person_outline_rounded,
             tooltip: 'Profile',
-            onTap: () => Navigator.pushNamed(context, AppRouter.profile),
+            onTap: () => Navigator.pushNamed(
+              context,
+              AppRouter.profile,
+            ),
           ),
         ],
       ),
@@ -215,260 +238,33 @@ class _DashboardHeader extends StatelessWidget {
   }
 }
 
-class _CircleAction extends StatelessWidget {
+class _HeaderAction extends StatelessWidget {
   final IconData icon;
   final String tooltip;
   final VoidCallback onTap;
-  const _CircleAction(
-      {required this.icon, required this.tooltip, required this.onTap});
 
-  @override
-  Widget build(BuildContext context) => Tooltip(
-        message: tooltip,
-        child: Material(
-          color: PlantCareColors.card,
-          shape: const CircleBorder(
-              side: BorderSide(color: PlantCareColors.border)),
-          child: InkWell(
-            customBorder: const CircleBorder(),
-            onTap: onTap,
-            child: SizedBox(width: 46, height: 46, child: Icon(icon)),
-          ),
-        ),
-      );
-}
-
-class _GardenHero extends StatelessWidget {
-  final bool hasPlants;
-  final VoidCallback onScan;
-  final VoidCallback onAdd;
-  const _GardenHero(
-      {required this.hasPlants, required this.onScan, required this.onAdd});
-
-  @override
-  Widget build(BuildContext context) => TweenAnimationBuilder<double>(
-        tween: Tween(begin: .96, end: 1),
-        duration: const Duration(milliseconds: 450),
-        curve: Curves.easeOutCubic,
-        builder: (_, scale, child) =>
-            Transform.scale(scale: scale, child: child),
-        child: Container(
-          constraints: const BoxConstraints(minHeight: 238),
-          padding: const EdgeInsets.all(24),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(28),
-            gradient: const LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                PlantCareColors.primaryDark,
-                PlantCareColors.primary,
-                Color(0xFF3D805A)
-              ],
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: PlantCareColors.primary.withValues(alpha: .18),
-                blurRadius: 28,
-                offset: const Offset(0, 14),
-              ),
-            ],
-          ),
-          child: Stack(
-            children: [
-              const Positioned(
-                  right: -20,
-                  top: -28,
-                  child: Text('🌿', style: TextStyle(fontSize: 145))),
-              const Positioned(
-                  right: 30,
-                  bottom: -35,
-                  child: Text('🍃', style: TextStyle(fontSize: 90))),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                    decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: .12),
-                        borderRadius: BorderRadius.circular(999)),
-                    child: const Text('PLANTCARE AI',
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 11,
-                            fontWeight: FontWeight.w800,
-                            letterSpacing: 1.2)),
-                  ),
-                  const SizedBox(height: 14),
-                  Text(
-                    hasPlants
-                        ? 'Keep your garden\none step ahead.'
-                        : 'Your garden\nstarts here.',
-                    style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 30,
-                        height: 1.04,
-                        fontWeight: FontWeight.w900,
-                        letterSpacing: -.8),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    hasPlants
-                        ? 'Scan a leaf, understand its health, and take action.'
-                        : 'Add a plant or scan one to start your AI garden.',
-                    style: const TextStyle(
-                        color: Colors.white70, height: 1.35, fontSize: 14),
-                  ),
-                  const Spacer(),
-                  Row(
-                    children: [
-                      FilledButton.icon(
-                        onPressed: onScan,
-                        icon: const Icon(Icons.center_focus_strong_rounded),
-                        label: const Text('Scan plant'),
-                        style: FilledButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          foregroundColor: PlantCareColors.primaryDark,
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 16, vertical: 13),
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      IconButton(
-                        tooltip: 'Add plant',
-                        onPressed: onAdd,
-                        style: IconButton.styleFrom(
-                            backgroundColor:
-                                Colors.white.withValues(alpha: .14),
-                            foregroundColor: Colors.white),
-                        icon: const Icon(Icons.add_rounded),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      );
-}
-
-class _SectionHeading extends StatelessWidget {
-  final String title;
-  final String action;
-  final VoidCallback onTap;
-  const _SectionHeading(
-      {required this.title, required this.action, required this.onTap});
-
-  @override
-  Widget build(BuildContext context) => Row(
-        children: [
-          Expanded(
-              child: Text(title,
-                  style: const TextStyle(
-                      fontSize: 21,
-                      fontWeight: FontWeight.w900,
-                      letterSpacing: -.3))),
-          TextButton(onPressed: onTap, child: Text(action)),
-        ],
-      );
-}
-
-class _PremiumPlantCard extends StatefulWidget {
-  final Plant plant;
-  final VoidCallback onTap;
-  const _PremiumPlantCard({required this.plant, required this.onTap});
-
-  @override
-  State<_PremiumPlantCard> createState() => _PremiumPlantCardState();
-}
-
-class _PremiumPlantCardState extends State<_PremiumPlantCard> {
-  bool pressed = false;
+  const _HeaderAction({
+    required this.icon,
+    required this.tooltip,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final healthy = widget.plant.health.toLowerCase().contains('healthy');
-    final status = healthy ? PlantCareColors.success : PlantCareColors.warning;
-    return GestureDetector(
-      onTapDown: (_) => setState(() => pressed = true),
-      onTapCancel: () => setState(() => pressed = false),
-      onTapUp: (_) {
-        setState(() => pressed = false);
-        widget.onTap();
-      },
-      child: AnimatedScale(
-        scale: pressed ? .97 : 1,
-        duration: const Duration(milliseconds: 120),
-        child: SizedBox(
-          width: 190,
-          child: DecoratedBox(
-            decoration: BoxDecoration(
-              color: PlantCareColors.card,
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: PlantCareColors.border),
-              boxShadow: [
-                BoxShadow(
-                    color: Colors.black.withValues(alpha: .04),
-                    blurRadius: 18,
-                    offset: const Offset(0, 8))
-              ],
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: Container(
-                      decoration: const BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                          colors: [Color(0xFFE3F0E5), Color(0xFFBFDCC5)],
-                        ),
-                      ),
-                      child: Center(
-                          child: Text(_plantEmoji(widget.plant.name),
-                              style: const TextStyle(fontSize: 76))),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(14, 12, 14, 14),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(widget.plant.name,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
-                                fontWeight: FontWeight.w900, fontSize: 16)),
-                        const SizedBox(height: 5),
-                        Row(
-                          children: [
-                            Container(
-                                width: 7,
-                                height: 7,
-                                decoration: BoxDecoration(
-                                    color: status, shape: BoxShape.circle)),
-                            const SizedBox(width: 6),
-                            Expanded(
-                                child: Text(widget.plant.health,
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: const TextStyle(
-                                        color: PlantCareColors.muted,
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w600))),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
+    return Material(
+      color: Colors.white,
+      shape: const CircleBorder(
+        side: BorderSide(color: PlantCareColors.border),
+      ),
+      child: InkWell(
+        customBorder: const CircleBorder(),
+        onTap: onTap,
+        child: Tooltip(
+          message: tooltip,
+          child: const SizedBox(
+            width: 44,
+            height: 44,
+            child: Icon(Icons.notifications_none_rounded),
           ),
         ),
       ),
@@ -476,79 +272,444 @@ class _PremiumPlantCardState extends State<_PremiumPlantCard> {
   }
 }
 
-class _DashboardLoading extends StatelessWidget {
-  const _DashboardLoading();
-  @override
-  Widget build(BuildContext context) => const Card(
-      child: Padding(
-          padding: EdgeInsets.all(24),
-          child: Center(child: CircularProgressIndicator())));
-}
+class _SearchBar extends StatelessWidget {
+  final VoidCallback onTap;
 
-class _NoTasksCard extends StatelessWidget {
-  const _NoTasksCard();
+  const _SearchBar({required this.onTap});
+
   @override
-  Widget build(BuildContext context) => const Card(
-        child: Padding(
-          padding: EdgeInsets.all(16),
-          child: Row(
+  Widget build(BuildContext context) {
+    return Material(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(14),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(14),
+        child: Container(
+          height: 52,
+          padding: const EdgeInsets.symmetric(horizontal: 14),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(14),
+            border: Border.all(color: PlantCareColors.border),
+          ),
+          child: const Row(
             children: [
-              Icon(Icons.check_circle_outline, color: PlantCareColors.success),
-              SizedBox(width: 8),
+              Icon(Icons.search_rounded, color: PlantCareColors.text),
+              SizedBox(width: 12),
               Expanded(
-                  child: Text('Nothing urgent today. Your garden is on track.',
-                      style: TextStyle(fontWeight: FontWeight.w600))),
+                child: Text(
+                  'Search plants, diseases, care tips...',
+                  style: TextStyle(color: PlantCareColors.muted),
+                ),
+              ),
+              Icon(
+                Icons.auto_awesome,
+                size: 18,
+                color: PlantCareColors.primary,
+              ),
             ],
           ),
         ),
-      );
+      ),
+    );
+  }
 }
 
-class _ExploreCards extends StatelessWidget {
-  const _ExploreCards();
+class _ScanBanner extends StatelessWidget {
+  final VoidCallback onScan;
+
+  const _ScanBanner({required this.onScan});
+
   @override
   Widget build(BuildContext context) {
-    const items = [
-      ('🩺', 'Plant diseases', 'Spot symptoms early'),
-      ('🐛', 'Pest guide', 'Know what to look for'),
-      ('💧', 'Smart watering', 'Build better routines'),
+    return Container(
+      padding: const EdgeInsets.fromLTRB(16, 16, 12, 16),
+      decoration: BoxDecoration(
+        color: PlantCareColors.primary,
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Row(
+        children: [
+          const Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'SMART PLANT CARE',
+                  style: TextStyle(
+                    color: Colors.white70,
+                    fontSize: 10,
+                    fontWeight: FontWeight.w900,
+                    letterSpacing: .8,
+                  ),
+                ),
+                SizedBox(height: 6),
+                Text(
+                  'Scan. Diagnose.\nCare with confidence.',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 21,
+                    height: 1.08,
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
+                SizedBox(height: 5),
+                Text(
+                  'AI-powered plant health in seconds.',
+                  style: TextStyle(
+                    color: Colors.white70,
+                    fontSize: 12,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: 8),
+          FilledButton(
+            onPressed: onScan,
+            style: FilledButton.styleFrom(
+              backgroundColor: PlantCareColors.accent,
+              foregroundColor: PlantCareColors.primaryDark,
+              minimumSize: const Size(96, 44),
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+            ),
+            child: const Text('Scan plant'),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _QuickActions extends StatelessWidget {
+  final VoidCallback onScan;
+  final VoidCallback onGarden;
+  final VoidCallback onHealth;
+  final VoidCallback onLibrary;
+
+  const _QuickActions({
+    required this.onScan,
+    required this.onGarden,
+    required this.onHealth,
+    required this.onLibrary,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final actions = [
+      (Icons.center_focus_strong_rounded, 'Scan', onScan),
+      (Icons.eco_rounded, 'My Garden', onGarden),
+      (Icons.health_and_safety_outlined, 'Health', onHealth),
+      (Icons.auto_awesome_mosaic_outlined, 'Library', onLibrary),
     ];
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+
+    return Row(
       children: [
-        const Text('Explore',
-            style: TextStyle(
-                fontSize: 21, fontWeight: FontWeight.w900, letterSpacing: -.3)),
-        const SizedBox(height: 10),
-        SizedBox(
-          height: 124,
-          child: ListView.separated(
-            scrollDirection: Axis.horizontal,
-            itemCount: items.length,
-            separatorBuilder: (_, __) => const SizedBox(width: 8),
-            itemBuilder: (_, i) => Container(
+        for (var i = 0; i < actions.length; i++) ...[
+          if (i > 0) const SizedBox(width: 8),
+          Expanded(
+            child: _ActionTile(
+              icon: actions[i].$1,
+              label: actions[i].$2,
+              onTap: actions[i].$3,
+            ),
+          ),
+        ],
+      ],
+    );
+  }
+}
+
+class _ActionTile extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final VoidCallback onTap;
+
+  const _ActionTile({
+    required this.icon,
+    required this.label,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(14),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(14),
+        child: Container(
+          height: 72,
+          padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(14),
+            border: Border.all(color: PlantCareColors.border),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(icon, size: 22, color: PlantCareColors.primary),
+              const SizedBox(height: 6),
+              Text(
+                label,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                  fontSize: 10,
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _NeedsAttention extends StatelessWidget {
+  final List<GardenTask> tasks;
+  final Future<void> Function(GardenTask) onComplete;
+
+  const _NeedsAttention({
+    required this.tasks,
+    required this.onComplete,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    if (tasks.isEmpty) {
+      return Container(
+        padding: const EdgeInsets.fromLTRB(14, 13, 12, 13),
+        decoration: BoxDecoration(
+          color: PlantCareColors.warm,
+          borderRadius: BorderRadius.circular(14),
+        ),
+        child: const Row(
+          children: [
+            Icon(Icons.check_circle_outline, color: PlantCareColors.success),
+            SizedBox(width: 10),
+            Expanded(
+              child: Text(
+                'All caught up. Your garden is on track today.',
+                style: TextStyle(fontWeight: FontWeight.w700),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    final task = tasks.first;
+    return Container(
+      padding: const EdgeInsets.fromLTRB(14, 12, 10, 12),
+      decoration: BoxDecoration(
+        color: PlantCareColors.warm,
+        borderRadius: BorderRadius.circular(14),
+      ),
+      child: Row(
+        children: [
+          const Icon(Icons.notifications_active_outlined, color: PlantCareColors.warning),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'NEEDS ATTENTION',
+                  style: TextStyle(
+                    color: PlantCareColors.warning,
+                    fontSize: 9,
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
+                const SizedBox(height: 3),
+                Text(
+                  task.title,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(fontWeight: FontWeight.w900),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  task.subtitle,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    color: PlantCareColors.muted,
+                    fontSize: 11,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: 8),
+          FilledButton(
+            onPressed: () => onComplete(task),
+            style: FilledButton.styleFrom(
+              minimumSize: const Size(58, 38),
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+            ),
+            child: const Text('Done'),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _Recommendations extends StatelessWidget {
+  final VoidCallback onTap;
+
+  const _Recommendations({required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    const cards = [
+      ('🌿', 'Leaf health guide', 'Spot common warning signs', PlantCareColors.softGreen),
+      ('🐛', 'Pest warning signs', 'Know what to check early', PlantCareColors.softBlue),
+    ];
+
+    return SizedBox(
+      height: 126,
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        itemCount: cards.length,
+        separatorBuilder: (_, __) => const SizedBox(width: 10),
+        itemBuilder: (context, index) {
+          final card = cards[index];
+          return InkWell(
+            onTap: onTap,
+            borderRadius: BorderRadius.circular(14),
+            child: Container(
               width: 190,
-              padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: PlantCareColors.card,
-                borderRadius: BorderRadius.circular(20),
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(14),
                 border: Border.all(color: PlantCareColors.border),
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(items[i].$1, style: const TextStyle(fontSize: 26)),
-                  const Spacer(),
-                  Text(items[i].$2,
-                      style: const TextStyle(fontWeight: FontWeight.w800)),
-                  Text(items[i].$3,
-                      style: const TextStyle(
-                          color: PlantCareColors.muted, fontSize: 11)),
-                ],
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(14),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      height: 66,
+                      width: double.infinity,
+                      color: card.$3,
+                      alignment: Alignment.center,
+                      child: Text(card.$1, style: const TextStyle(fontSize: 30)),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(10, 8, 10, 6),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            card.$2,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w800,
+                              fontSize: 12,
+                            ),
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            card.$3 == PlantCareColors.softGreen
+                                ? 'Spot common warning signs'
+                                : 'Know what to check early',
+                            style: const TextStyle(
+                              color: PlantCareColors.muted,
+                              fontSize: 9,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+
+class _GardenList extends StatelessWidget {
+  final List<Plant> plants;
+  final ValueChanged<Plant> onPlant;
+
+  const _GardenList({
+    required this.plants,
+    required this.onPlant,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        for (var i = 0; i < plants.length; i++) ...[
+          if (i > 0) const SizedBox(height: 8),
+          Material(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(14),
+            child: InkWell(
+              onTap: () => onPlant(plants[i]),
+              borderRadius: BorderRadius.circular(14),
+              child: Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(14),
+                  border: Border.all(color: PlantCareColors.border),
+                ),
+                child: Row(
+                  children: [
+                    Container(
+                      width: 48,
+                      height: 48,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        color: PlantCareColors.softGreen,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Text(
+                        _plantEmoji(plants[i].name),
+                        style: const TextStyle(fontSize: 25),
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            plants[i].name,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(fontWeight: FontWeight.w900),
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            plants[i].health,
+                            style: const TextStyle(
+                              color: PlantCareColors.muted,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const Icon(Icons.chevron_right_rounded),
+                  ],
+                ),
               ),
             ),
           ),
-        ),
+        ],
       ],
     );
   }
@@ -557,41 +718,114 @@ class _ExploreCards extends StatelessWidget {
 class _EmptyGarden extends StatelessWidget {
   final VoidCallback onAdd;
   final VoidCallback onScan;
-  const _EmptyGarden({required this.onAdd, required this.onScan});
+
+  const _EmptyGarden({
+    required this.onAdd,
+    required this.onScan,
+  });
 
   @override
-  Widget build(BuildContext context) => Container(
-        padding: const EdgeInsets.all(24),
-        decoration: BoxDecoration(
-          color: PlantCareColors.card,
-          borderRadius: BorderRadius.circular(28),
-          border: Border.all(color: PlantCareColors.border),
-        ),
-        child: Column(
-          children: [
-            const Text('🌱', style: TextStyle(fontSize: 54)),
-            const SizedBox(height: 8),
-            const Text('Build your garden',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900)),
-            const SizedBox(height: 4),
-            const Text('Add your first plant or scan one with AI.',
-                textAlign: TextAlign.center,
-                style: TextStyle(color: PlantCareColors.muted)),
-            const SizedBox(height: 16),
-            Row(
-              children: [
-                Expanded(
-                    child: FilledButton(
-                        onPressed: onAdd, child: const Text('Add plant'))),
-                const SizedBox(width: 8),
-                Expanded(
-                    child: OutlinedButton(
-                        onPressed: onScan, child: const Text('Scan'))),
-              ],
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: PlantCareColors.border),
+      ),
+      child: Column(
+        children: [
+          const Text('🌱', style: TextStyle(fontSize: 42)),
+          const SizedBox(height: 6),
+          const Text(
+            'Start your garden',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w900),
+          ),
+          const SizedBox(height: 4),
+          const Text(
+            'Add a plant or scan one with AI.',
+            textAlign: TextAlign.center,
+            style: TextStyle(color: PlantCareColors.muted),
+          ),
+          const SizedBox(height: 12),
+          Row(
+            children: [
+              Expanded(
+                child: FilledButton(
+                  onPressed: onAdd,
+                  child: const Text('Add plant'),
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: OutlinedButton(
+                  onPressed: onScan,
+                  child: const Text('Scan'),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _SectionTitle extends StatelessWidget {
+  final String title;
+  final String? action;
+  final VoidCallback? onAction;
+
+  const _SectionTitle({
+    required this.title,
+    this.action,
+    this.onAction,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+          child: Text(
+            title,
+            style: const TextStyle(
+              fontSize: 19,
+              fontWeight: FontWeight.w900,
+              letterSpacing: -.2,
             ),
-          ],
+          ),
         ),
-      );
+        if (action != null)
+          TextButton(
+            onPressed: onAction,
+            child: Text(action!),
+          ),
+      ],
+    );
+  }
+}
+
+class _SectionSkeleton extends StatelessWidget {
+  const _SectionSkeleton();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 76,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: PlantCareColors.border),
+      ),
+      alignment: Alignment.center,
+      child: const SizedBox(
+        width: 22,
+        height: 22,
+        child: CircularProgressIndicator(strokeWidth: 2),
+      ),
+    );
+  }
 }
 
 String _plantEmoji(String name) {
@@ -604,168 +838,4 @@ String _plantEmoji(String name) {
   if (value.contains('potato')) return '🥔';
   if (value.contains('pepper')) return '🌶️';
   return '🌿';
-}
-
-class _TaskCard extends StatelessWidget {
-  final GardenTask task;
-  final VoidCallback? onComplete;
-
-  const _TaskCard({required this.task, required this.onComplete});
-
-  @override
-  Widget build(BuildContext context) {
-    final icon = switch (task.type) {
-      GardenTaskType.watering => Icons.water_drop_outlined,
-      GardenTaskType.sunlight => Icons.wb_sunny_outlined,
-      GardenTaskType.care => Icons.eco_outlined,
-      GardenTaskType.diagnosis => Icons.health_and_safety_outlined,
-    };
-
-    return Card(
-      child: ListTile(
-        leading: CircleAvatar(
-          backgroundColor: PlantCareColors.surface,
-          child: Icon(icon, color: PlantCareColors.primary),
-        ),
-        title: Text(
-          task.title,
-          style: TextStyle(
-            fontWeight: FontWeight.w700,
-            decoration: task.completed ? TextDecoration.lineThrough : null,
-          ),
-        ),
-        subtitle: Text(task.subtitle),
-        trailing: task.completed
-            ? const Icon(Icons.check_circle, color: PlantCareColors.success)
-            : TextButton(
-                onPressed: onComplete,
-                child: Text(
-                  task.type == GardenTaskType.watering ? 'Watered' : 'Done',
-                ),
-              ),
-      ),
-    );
-  }
-}
-
-class _QuickAction extends StatelessWidget {
-  final IconData icon;
-  final String title;
-  final VoidCallback onTap;
-
-  const _QuickAction({
-    required this.icon,
-    required this.title,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return OutlinedButton.icon(
-      onPressed: onTap,
-      icon: Icon(icon),
-      label: Text(title),
-      style: OutlinedButton.styleFrom(
-        padding: const EdgeInsets.symmetric(vertical: 15),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(14),
-        ),
-      ),
-    );
-  }
-}
-
-class _PlantCard extends StatelessWidget {
-  final Plant plant;
-  final VoidCallback onTap;
-
-  const _PlantCard({required this.plant, required this.onTap});
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      child: InkWell(
-        borderRadius: BorderRadius.circular(PlantCareRadius.card),
-        onTap: onTap,
-        child: Padding(
-          padding: const EdgeInsets.all(PlantCareSpacing.md),
-          child: Row(
-            children: [
-              Container(
-                width: 56,
-                height: 56,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  color: PlantCareColors.surface,
-                  borderRadius: BorderRadius.circular(14),
-                ),
-                child: Text(
-                  plant.name.toLowerCase().contains('tomato') ? '🍅' : '🌿',
-                  style: const TextStyle(fontSize: 28),
-                ),
-              ),
-              const SizedBox(width: PlantCareSpacing.md),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      plant.name,
-                      style: const TextStyle(fontWeight: FontWeight.w800),
-                    ),
-                    const SizedBox(height: 3),
-                    Text(
-                      plant.health,
-                      style: const TextStyle(
-                        color: PlantCareColors.muted,
-                        fontSize: 13,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const Icon(Icons.chevron_right),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _EmptyState extends StatelessWidget {
-  final String message;
-  final String? action;
-  final VoidCallback? onPressed;
-
-  const _EmptyState({
-    required this.message,
-    this.action,
-    this.onPressed,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(PlantCareSpacing.lg),
-        child: Column(
-          children: [
-            Text(
-              message,
-              textAlign: TextAlign.center,
-              style: const TextStyle(color: PlantCareColors.muted),
-            ),
-            if (action != null) ...[
-              const SizedBox(height: PlantCareSpacing.sm),
-              TextButton(
-                onPressed: onPressed,
-                child: Text(action!),
-              ),
-            ],
-          ],
-        ),
-      ),
-    );
-  }
 }
