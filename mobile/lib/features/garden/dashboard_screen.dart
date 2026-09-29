@@ -609,7 +609,7 @@ class _Recommendations extends StatelessWidget {
                     Container(
                       height: 66,
                       width: double.infinity,
-                      color: card.$3,
+                      color: card.$4,
                       alignment: Alignment.center,
                       child:
                           Text(card.$1, style: const TextStyle(fontSize: 30)),
