@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 
 abstract final class PlantCareColors {
   static const primary = Color(0xFF176B45);
-  static const primaryDark = Color(0xFF0E4B31);
+  static const primaryDark = Color(0xFF0B3525);
   static const secondary = Color(0xFF6FAE82);
   static const accent = Color(0xFFE6A23C);
-  static const surface = Color(0xFFF7F8F4);
+  static const surface = Color(0xFFF5F7F1);
   static const card = Color(0xFFFFFFFF);
   static const text = Color(0xFF18211C);
   static const muted = Color(0xFF66736A);
-  static const border = Color(0xFFDCE3DD);
+  static const border = Color(0xFFE0E6DF);
   static const danger = Color(0xFFC84C4C);
   static const warning = Color(0xFFC68A25);
   static const success = Color(0xFF2D8A58);
@@ -24,8 +24,8 @@ abstract final class PlantCareSpacing {
 }
 
 abstract final class PlantCareRadius {
-  static const card = 16.0;
-  static const featured = 20.0;
+  static const card = 20.0;
+  static const featured = 28.0;
   static const pill = 999.0;
 }
 
@@ -47,7 +47,7 @@ class AppTheme {
       scaffoldBackgroundColor: PlantCareColors.surface,
       fontFamily: 'Roboto',
       appBarTheme: const AppBarTheme(
-        backgroundColor: PlantCareColors.surface,
+        backgroundColor: Colors.transparent,
         foregroundColor: PlantCareColors.text,
         elevation: 0,
         centerTitle: false,
@@ -65,7 +65,7 @@ class AppTheme {
         filled: true,
         fillColor: PlantCareColors.card,
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(14),
+          borderRadius: BorderRadius.circular(16),
           borderSide: const BorderSide(color: PlantCareColors.border),
         ),
         enabledBorder: OutlineInputBorder(
