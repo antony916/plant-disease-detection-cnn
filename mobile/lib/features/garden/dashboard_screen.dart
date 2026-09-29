@@ -59,15 +59,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
               return CustomScrollView(
                 physics: const AlwaysScrollableScrollPhysics(),
                 slivers: [
-                  SliverToBoxAdapter(child: _DashboardHeader(gardenFuture: _gardenFuture)),
+                  SliverToBoxAdapter(
+                      child: _DashboardHeader(gardenFuture: _gardenFuture)),
                   SliverPadding(
                     padding: const EdgeInsets.fromLTRB(16, 8, 16, 32),
                     sliver: SliverList(
                       delegate: SliverChildListDelegate([
                         _GardenHero(
                           hasPlants: plants.isNotEmpty,
-                          onScan: () => Navigator.pushNamed(context, AppRouter.scanner),
-                          onAdd: () => Navigator.pushNamed(context, AppRouter.addPlant),
+                          onScan: () =>
+                              Navigator.pushNamed(context, AppRouter.scanner),
+                          onAdd: () =>
+                              Navigator.pushNamed(context, AppRouter.addPlant),
                         ),
                         const SizedBox(height: 24),
                         if (plants.isNotEmpty) ...[
@@ -82,7 +85,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             child: ListView.separated(
                               scrollDirection: Axis.horizontal,
                               itemCount: plants.length,
-                              separatorBuilder: (_, __) => const SizedBox(width: 10),
+                              separatorBuilder: (_, __) =>
+                                  const SizedBox(width: 10),
                               itemBuilder: (context, index) {
                                 final plant = plants[index];
                                 return _PremiumPlantCard(
@@ -101,16 +105,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         _SectionHeading(
                           title: 'Today',
                           action: 'Care plan',
-                          onTap: () => Navigator.pushNamed(context, AppRouter.library),
+                          onTap: () =>
+                              Navigator.pushNamed(context, AppRouter.library),
                         ),
                         const SizedBox(height: 10),
                         FutureBuilder<List<GardenTask>>(
                           future: _tasksFuture,
                           builder: (context, taskSnapshot) {
-                            if (taskSnapshot.connectionState == ConnectionState.waiting) {
+                            if (taskSnapshot.connectionState ==
+                                ConnectionState.waiting) {
                               return const _DashboardLoading();
                             }
-                            final tasks = taskSnapshot.data ?? const <GardenTask>[];
+                            final tasks =
+                                taskSnapshot.data ?? const <GardenTask>[];
                             if (tasks.isEmpty) return const _NoTasksCard();
                             return Column(
                               children: [
@@ -121,7 +128,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     onComplete: tasks[i].completed
                                         ? null
                                         : () async {
-                                            await AppServices.garden.completeTask(tasks[i].id);
+                                            await AppServices.garden
+                                                .completeTask(tasks[i].id);
                                             await _refresh();
                                           },
                                   ),
@@ -135,8 +143,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         if (plants.isEmpty) ...[
                           const SizedBox(height: 24),
                           _EmptyGarden(
-                            onAdd: () => Navigator.pushNamed(context, AppRouter.addPlant),
-                            onScan: () => Navigator.pushNamed(context, AppRouter.scanner),
+                            onAdd: () => Navigator.pushNamed(
+                                context, AppRouter.addPlant),
+                            onScan: () =>
+                                Navigator.pushNamed(context, AppRouter.scanner),
                           ),
                         ],
                       ]),
@@ -171,12 +181,18 @@ class _DashboardHeader extends StatelessWidget {
                 children: [
                   const Text(
                     'Good morning 👋',
-                    style: TextStyle(color: PlantCareColors.muted, fontSize: 14, fontWeight: FontWeight.w600),
+                    style: TextStyle(
+                        color: PlantCareColors.muted,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600),
                   ),
                   const SizedBox(height: 3),
                   Text(
                     snapshot.data?.name ?? 'My Garden',
-                    style: const TextStyle(fontSize: 28, fontWeight: FontWeight.w900, letterSpacing: -0.7),
+                    style: const TextStyle(
+                        fontSize: 28,
+                        fontWeight: FontWeight.w900,
+                        letterSpacing: -0.7),
                   ),
                 ],
               ),
@@ -203,14 +219,16 @@ class _CircleAction extends StatelessWidget {
   final IconData icon;
   final String tooltip;
   final VoidCallback onTap;
-  const _CircleAction({required this.icon, required this.tooltip, required this.onTap});
+  const _CircleAction(
+      {required this.icon, required this.tooltip, required this.onTap});
 
   @override
   Widget build(BuildContext context) => Tooltip(
         message: tooltip,
         child: Material(
           color: PlantCareColors.card,
-          shape: const CircleBorder(side: BorderSide(color: PlantCareColors.border)),
+          shape: const CircleBorder(
+              side: BorderSide(color: PlantCareColors.border)),
           child: InkWell(
             customBorder: const CircleBorder(),
             onTap: onTap,
@@ -224,14 +242,16 @@ class _GardenHero extends StatelessWidget {
   final bool hasPlants;
   final VoidCallback onScan;
   final VoidCallback onAdd;
-  const _GardenHero({required this.hasPlants, required this.onScan, required this.onAdd});
+  const _GardenHero(
+      {required this.hasPlants, required this.onScan, required this.onAdd});
 
   @override
   Widget build(BuildContext context) => TweenAnimationBuilder<double>(
         tween: Tween(begin: .96, end: 1),
         duration: const Duration(milliseconds: 450),
         curve: Curves.easeOutCubic,
-        builder: (_, scale, child) => Transform.scale(scale: scale, child: child),
+        builder: (_, scale, child) =>
+            Transform.scale(scale: scale, child: child),
         child: Container(
           constraints: const BoxConstraints(minHeight: 238),
           padding: const EdgeInsets.all(24),
@@ -240,7 +260,11 @@ class _GardenHero extends StatelessWidget {
             gradient: const LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
-              colors: [PlantCareColors.primaryDark, PlantCareColors.primary, Color(0xFF3D805A)],
+              colors: [
+                PlantCareColors.primaryDark,
+                PlantCareColors.primary,
+                Color(0xFF3D805A)
+              ],
             ),
             boxShadow: [
               BoxShadow(
@@ -252,25 +276,49 @@ class _GardenHero extends StatelessWidget {
           ),
           child: Stack(
             children: [
-              const Positioned(right: -20, top: -28, child: Text('🌿', style: TextStyle(fontSize: 145))),
-              const Positioned(right: 30, bottom: -35, child: Text('🍃', style: TextStyle(fontSize: 90))),
+              const Positioned(
+                  right: -20,
+                  top: -28,
+                  child: Text('🌿', style: TextStyle(fontSize: 145))),
+              const Positioned(
+                  right: 30,
+                  bottom: -35,
+                  child: Text('🍃', style: TextStyle(fontSize: 90))),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                    decoration: BoxDecoration(color: Colors.white.withValues(alpha: .12), borderRadius: BorderRadius.circular(999)),
-                    child: const Text('PLANTCARE AI', style: TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.w800, letterSpacing: 1.2)),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                    decoration: BoxDecoration(
+                        color: Colors.white.withValues(alpha: .12),
+                        borderRadius: BorderRadius.circular(999)),
+                    child: const Text('PLANTCARE AI',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 11,
+                            fontWeight: FontWeight.w800,
+                            letterSpacing: 1.2)),
                   ),
                   const SizedBox(height: 14),
                   Text(
-                    hasPlants ? 'Keep your garden\none step ahead.' : 'Your garden\nstarts here.',
-                    style: const TextStyle(color: Colors.white, fontSize: 30, height: 1.04, fontWeight: FontWeight.w900, letterSpacing: -.8),
+                    hasPlants
+                        ? 'Keep your garden\none step ahead.'
+                        : 'Your garden\nstarts here.',
+                    style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 30,
+                        height: 1.04,
+                        fontWeight: FontWeight.w900,
+                        letterSpacing: -.8),
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    hasPlants ? 'Scan a leaf, understand its health, and take action.' : 'Add a plant or scan one to start your AI garden.',
-                    style: const TextStyle(color: Colors.white70, height: 1.35, fontSize: 14),
+                    hasPlants
+                        ? 'Scan a leaf, understand its health, and take action.'
+                        : 'Add a plant or scan one to start your AI garden.',
+                    style: const TextStyle(
+                        color: Colors.white70, height: 1.35, fontSize: 14),
                   ),
                   const Spacer(),
                   Row(
@@ -282,14 +330,18 @@ class _GardenHero extends StatelessWidget {
                         style: FilledButton.styleFrom(
                           backgroundColor: Colors.white,
                           foregroundColor: PlantCareColors.primaryDark,
-                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 13),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 13),
                         ),
                       ),
                       const SizedBox(width: 8),
                       IconButton(
                         tooltip: 'Add plant',
                         onPressed: onAdd,
-                        style: IconButton.styleFrom(backgroundColor: Colors.white.withValues(alpha: .14), foregroundColor: Colors.white),
+                        style: IconButton.styleFrom(
+                            backgroundColor:
+                                Colors.white.withValues(alpha: .14),
+                            foregroundColor: Colors.white),
                         icon: const Icon(Icons.add_rounded),
                       ),
                     ],
@@ -306,12 +358,18 @@ class _SectionHeading extends StatelessWidget {
   final String title;
   final String action;
   final VoidCallback onTap;
-  const _SectionHeading({required this.title, required this.action, required this.onTap});
+  const _SectionHeading(
+      {required this.title, required this.action, required this.onTap});
 
   @override
   Widget build(BuildContext context) => Row(
         children: [
-          Expanded(child: Text(title, style: const TextStyle(fontSize: 21, fontWeight: FontWeight.w900, letterSpacing: -.3))),
+          Expanded(
+              child: Text(title,
+                  style: const TextStyle(
+                      fontSize: 21,
+                      fontWeight: FontWeight.w900,
+                      letterSpacing: -.3))),
           TextButton(onPressed: onTap, child: Text(action)),
         ],
       );
@@ -336,7 +394,10 @@ class _PremiumPlantCardState extends State<_PremiumPlantCard> {
     return GestureDetector(
       onTapDown: (_) => setState(() => pressed = true),
       onTapCancel: () => setState(() => pressed = false),
-      onTapUp: (_) { setState(() => pressed = false); widget.onTap(); },
+      onTapUp: (_) {
+        setState(() => pressed = false);
+        widget.onTap();
+      },
       child: AnimatedScale(
         scale: pressed ? .97 : 1,
         duration: const Duration(milliseconds: 120),
@@ -347,7 +408,12 @@ class _PremiumPlantCardState extends State<_PremiumPlantCard> {
               color: PlantCareColors.card,
               borderRadius: BorderRadius.circular(20),
               border: Border.all(color: PlantCareColors.border),
-              boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: .04), blurRadius: 18, offset: const Offset(0, 8))],
+              boxShadow: [
+                BoxShadow(
+                    color: Colors.black.withValues(alpha: .04),
+                    blurRadius: 18,
+                    offset: const Offset(0, 8))
+              ],
             ),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(20),
@@ -363,7 +429,9 @@ class _PremiumPlantCardState extends State<_PremiumPlantCard> {
                           colors: [Color(0xFFE3F0E5), Color(0xFFBFDCC5)],
                         ),
                       ),
-                      child: Center(child: Text(_plantEmoji(widget.plant.name), style: const TextStyle(fontSize: 76))),
+                      child: Center(
+                          child: Text(_plantEmoji(widget.plant.name),
+                              style: const TextStyle(fontSize: 76))),
                     ),
                   ),
                   Padding(
@@ -371,13 +439,28 @@ class _PremiumPlantCardState extends State<_PremiumPlantCard> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(widget.plant.name, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 16)),
+                        Text(widget.plant.name,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                                fontWeight: FontWeight.w900, fontSize: 16)),
                         const SizedBox(height: 5),
                         Row(
                           children: [
-                            Container(width: 7, height: 7, decoration: BoxDecoration(color: status, shape: BoxShape.circle)),
+                            Container(
+                                width: 7,
+                                height: 7,
+                                decoration: BoxDecoration(
+                                    color: status, shape: BoxShape.circle)),
                             const SizedBox(width: 6),
-                            Expanded(child: Text(widget.plant.health, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(color: PlantCareColors.muted, fontSize: 12, fontWeight: FontWeight.w600))),
+                            Expanded(
+                                child: Text(widget.plant.health,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: const TextStyle(
+                                        color: PlantCareColors.muted,
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w600))),
                           ],
                         ),
                       ],
@@ -396,7 +479,10 @@ class _PremiumPlantCardState extends State<_PremiumPlantCard> {
 class _DashboardLoading extends StatelessWidget {
   const _DashboardLoading();
   @override
-  Widget build(BuildContext context) => const Card(child: Padding(padding: EdgeInsets.all(24), child: Center(child: CircularProgressIndicator())));
+  Widget build(BuildContext context) => const Card(
+      child: Padding(
+          padding: EdgeInsets.all(24),
+          child: Center(child: CircularProgressIndicator())));
 }
 
 class _NoTasksCard extends StatelessWidget {
@@ -409,7 +495,9 @@ class _NoTasksCard extends StatelessWidget {
             children: [
               Icon(Icons.check_circle_outline, color: PlantCareColors.success),
               SizedBox(width: 8),
-              Expanded(child: Text('Nothing urgent today. Your garden is on track.', style: TextStyle(fontWeight: FontWeight.w600))),
+              Expanded(
+                  child: Text('Nothing urgent today. Your garden is on track.',
+                      style: TextStyle(fontWeight: FontWeight.w600))),
             ],
           ),
         ),
@@ -428,7 +516,9 @@ class _ExploreCards extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('Explore', style: TextStyle(fontSize: 21, fontWeight: FontWeight.w900, letterSpacing: -.3)),
+        const Text('Explore',
+            style: TextStyle(
+                fontSize: 21, fontWeight: FontWeight.w900, letterSpacing: -.3)),
         const SizedBox(height: 10),
         SizedBox(
           height: 124,
@@ -449,8 +539,11 @@ class _ExploreCards extends StatelessWidget {
                 children: [
                   Text(items[i].$1, style: const TextStyle(fontSize: 26)),
                   const Spacer(),
-                  Text(items[i].$2, style: const TextStyle(fontWeight: FontWeight.w800)),
-                  Text(items[i].$3, style: const TextStyle(color: PlantCareColors.muted, fontSize: 11)),
+                  Text(items[i].$2,
+                      style: const TextStyle(fontWeight: FontWeight.w800)),
+                  Text(items[i].$3,
+                      style: const TextStyle(
+                          color: PlantCareColors.muted, fontSize: 11)),
                 ],
               ),
             ),
@@ -478,15 +571,22 @@ class _EmptyGarden extends StatelessWidget {
           children: [
             const Text('🌱', style: TextStyle(fontSize: 54)),
             const SizedBox(height: 8),
-            const Text('Build your garden', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900)),
+            const Text('Build your garden',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900)),
             const SizedBox(height: 4),
-            const Text('Add your first plant or scan one with AI.', textAlign: TextAlign.center, style: TextStyle(color: PlantCareColors.muted)),
+            const Text('Add your first plant or scan one with AI.',
+                textAlign: TextAlign.center,
+                style: TextStyle(color: PlantCareColors.muted)),
             const SizedBox(height: 16),
             Row(
               children: [
-                Expanded(child: FilledButton(onPressed: onAdd, child: const Text('Add plant'))),
+                Expanded(
+                    child: FilledButton(
+                        onPressed: onAdd, child: const Text('Add plant'))),
                 const SizedBox(width: 8),
-                Expanded(child: OutlinedButton(onPressed: onScan, child: const Text('Scan'))),
+                Expanded(
+                    child: OutlinedButton(
+                        onPressed: onScan, child: const Text('Scan'))),
               ],
             ),
           ],
