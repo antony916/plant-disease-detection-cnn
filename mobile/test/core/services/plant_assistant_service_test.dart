@@ -11,7 +11,7 @@ class _WeatherStub implements WeatherService {
 }
 
 void main() {
-  final now = DateTime(2026, 9, 28);
+  final now = DateTime.now();
   final plants = [
     Plant(
         id: 'p1',
