@@ -34,42 +34,53 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Profile',
-          style: TextStyle(fontWeight: FontWeight.w800),
-        ),
-      ),
-      body: FutureBuilder<AppUser?>(
-        future: _userFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState != ConnectionState.done) {
-            return const Center(child: CircularProgressIndicator());
-          }
+      body: SafeArea(
+        child: FutureBuilder<AppUser?>(
+          future: _userFuture,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState != ConnectionState.done) {
+              return const Center(child: CircularProgressIndicator());
+            }
 
-          final user = snapshot.data;
+            final user = snapshot.data;
 
-          return ListView(
-            padding: const EdgeInsets.all(PlantCareSpacing.lg),
-            children: [
-              Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(PlantCareSpacing.md),
+            return ListView(
+              padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
+              children: [
+                const Text(
+                  'Profile',
+                  style: TextStyle(
+                    fontSize: 25,
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
+                const SizedBox(height: 3),
+                const Text(
+                  'Account, garden access and preferences.',
+                  style: TextStyle(color: PlantCareColors.muted),
+                ),
+                const SizedBox(height: 16),
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: PlantCareColors.primary,
+                    borderRadius: BorderRadius.circular(16),
+                  ),
                   child: Row(
                     children: [
                       CircleAvatar(
-                        radius: 30,
-                        backgroundColor: PlantCareColors.primary,
+                        radius: 28,
+                        backgroundColor: PlantCareColors.accent,
+                        foregroundColor: PlantCareColors.primaryDark,
                         child: Text(
                           _initials(user),
                           style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w800,
-                            fontSize: 20,
+                            fontWeight: FontWeight.w900,
+                            fontSize: 19,
                           ),
                         ),
                       ),
-                      const SizedBox(width: PlantCareSpacing.md),
+                      const SizedBox(width: 12),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -79,15 +90,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   ? user!.displayName!
                                   : 'PlantCare Gardener',
                               style: const TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w800,
+                                color: Colors.white,
+                                fontSize: 17,
+                                fontWeight: FontWeight.w900,
                               ),
                             ),
-                            const SizedBox(height: 4),
+                            const SizedBox(height: 3),
                             Text(
                               user?.email ?? 'No account session',
                               style: const TextStyle(
-                                color: PlantCareColors.muted,
+                                color: Colors.white70,
+                                fontSize: 12,
                               ),
                             ),
                           ],
@@ -96,97 +109,84 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ],
                   ),
                 ),
-              ),
-              const SizedBox(height: PlantCareSpacing.lg),
-              const Text(
-                'Garden',
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w800,
-                  color: PlantCareColors.muted,
+                const SizedBox(height: 20),
+                const Text(
+                  'Garden & sharing',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w900,
+                  ),
                 ),
-              ),
-              const SizedBox(height: PlantCareSpacing.sm),
-              Card(
-                child: ListTile(
-                  leading: const Icon(
-                    Icons.people_outline,
-                    color: PlantCareColors.primary,
-                  ),
-                  title: const Text(
-                    'Family Sharing',
-                    style: TextStyle(fontWeight: FontWeight.w700),
-                  ),
-                  subtitle: const Text(
-                    'Manage people who can access your garden',
-                  ),
-                  trailing: const Icon(Icons.chevron_right),
+                const SizedBox(height: 8),
+                _SettingsTile(
+                  icon: Icons.people_outline,
+                  title: 'Family Sharing',
+                  subtitle: 'Manage people who can access your garden',
                   onTap: () => Navigator.pushNamed(
                     context,
                     AppRouter.familySharing,
                   ),
                 ),
-              ),
-              const SizedBox(height: PlantCareSpacing.sm),
-              Card(
-                child: ListTile(
-                  leading: const Icon(
-                    Icons.mail_outline,
-                    color: PlantCareColors.primary,
-                  ),
-                  title: const Text(
-                    'Garden Invitations',
-                    style: TextStyle(fontWeight: FontWeight.w700),
-                  ),
-                  subtitle: const Text(
-                    'Accept invitations to shared gardens',
-                  ),
-                  trailing: const Icon(Icons.chevron_right),
+                const SizedBox(height: 8),
+                _SettingsTile(
+                  icon: Icons.mail_outline,
+                  title: 'Garden Invitations',
+                  subtitle: 'Accept invitations to shared gardens',
                   onTap: () => Navigator.pushNamed(
                     context,
                     AppRouter.familyInvites,
                   ),
                 ),
-              ),
-              const SizedBox(height: PlantCareSpacing.sm),
-              Card(
-                child: ListTile(
-                  leading: const Icon(
-                    Icons.notifications_outlined,
-                    color: PlantCareColors.primary,
+                const SizedBox(height: 20),
+                const Text(
+                  'Preferences',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w900,
                   ),
-                  title: const Text(
-                    'Notification Settings',
-                    style: TextStyle(fontWeight: FontWeight.w700),
-                  ),
-                  subtitle: const Text(
-                    'Reminders, care alerts and quiet hours',
-                  ),
-                  trailing: const Icon(Icons.chevron_right),
+                ),
+                const SizedBox(height: 8),
+                _SettingsTile(
+                  icon: Icons.notifications_outlined,
+                  title: 'Notification Settings',
+                  subtitle: 'Reminders, care alerts and quiet hours',
                   onTap: () => Navigator.pushNamed(
                     context,
                     AppRouter.notificationSettings,
                   ),
                 ),
-              ),
-              const SizedBox(height: PlantCareSpacing.lg),
-              OutlinedButton.icon(
-                onPressed: user == null ? null : _signOut,
-                icon: const Icon(Icons.logout),
-                label: const Text('Sign out'),
-              ),
-              const SizedBox(height: PlantCareSpacing.md),
-              const Text(
-                'PlantCare AI keeps location optional. Cloud features use your signed-in account when Supabase is configured.',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: PlantCareColors.muted,
-                  fontSize: 12,
+                const SizedBox(height: 8),
+                _SettingsTile(
+                  icon: Icons.history_rounded,
+                  title: 'Health Timeline',
+                  subtitle: 'Review previous AI diagnosis results',
+                  onTap: () => Navigator.pushNamed(
+                    context,
+                    AppRouter.diagnosisHistory,
+                  ),
                 ),
-              ),
-            ],
-          );
-        },
+                const SizedBox(height: 20),
+                SizedBox(
+                  width: double.infinity,
+                  child: OutlinedButton.icon(
+                    onPressed: user == null ? null : _signOut,
+                    icon: const Icon(Icons.logout),
+                    label: const Text('Sign out'),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                const Text(
+                  'PlantCare AI keeps location optional. Cloud features use your signed-in account when Supabase is configured.',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: PlantCareColors.muted,
+                    fontSize: 11,
+                  ),
+                ),
+              ],
+            );
+          },
+        ),
       ),
       bottomNavigationBar: const AppBottomNav(selectedIndex: 3),
     );
@@ -201,5 +201,73 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     final email = user?.email.trim() ?? '';
     return email.isNotEmpty ? email[0].toUpperCase() : 'P';
+  }
+}
+
+class _SettingsTile extends StatelessWidget {
+  final IconData icon;
+  final String title;
+  final String subtitle;
+  final VoidCallback onTap;
+
+  const _SettingsTile({
+    required this.icon,
+    required this.title,
+    required this.subtitle,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(14),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(14),
+        child: Container(
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(14),
+            border: Border.all(color: PlantCareColors.border),
+          ),
+          child: Row(
+            children: [
+              Container(
+                width: 42,
+                height: 42,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: PlantCareColors.softGreen,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(icon, color: PlantCareColors.primary),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: const TextStyle(fontWeight: FontWeight.w800),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      subtitle,
+                      style: const TextStyle(
+                        color: PlantCareColors.muted,
+                        fontSize: 11,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const Icon(Icons.chevron_right_rounded),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
