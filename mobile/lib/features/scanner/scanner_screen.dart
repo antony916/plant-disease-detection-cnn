@@ -350,7 +350,7 @@ class _ScannerScreenState extends State<ScannerScreen> {
           },
         ),
       ),
-      bottomNavigationBar: const AppBottomNav(selectedIndex: 1),
+      bottomNavigationBar: const AppBottomNav(selectedIndex: 2),
     );
   }
 }
