@@ -161,10 +161,7 @@ class _PlantDetailScreenState extends State<PlantDetailScreen> {
                   borderRadius: BorderRadius.circular(PlantCareRadius.featured),
                 ),
                 child: Center(
-                  child: Text(
-                    plant.name.toLowerCase().contains('tomato') ? '🍅' : '🌿',
-                    style: const TextStyle(fontSize: 86),
-                  ),
+                  child: Icon(Icons.eco_rounded, size: 82, color: PlantCareColors.primary),
                 ),
               ),
               const SizedBox(height: PlantCareSpacing.lg),
