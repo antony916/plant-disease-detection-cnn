@@ -15,6 +15,7 @@ abstract interface class PushNotificationService {
 }
 
 class DemoPushNotificationService implements PushNotificationService {
+  const DemoPushNotificationService();
   @override
   Future<void> initialize() async {}
 
