@@ -6,7 +6,6 @@ import 'package:image_picker/image_picker.dart';
 import '../../core/app_services.dart';
 import '../../core/models/plant.dart';
 import '../../core/navigation/app_router.dart';
-import '../../core/services/diagnosis_service.dart';
 import '../../core/theme/app_theme.dart';
 
 class ScannerScreen extends StatefulWidget {
