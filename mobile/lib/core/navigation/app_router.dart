@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../theme/app_theme.dart';
+
 import '../services/diagnosis_service.dart';
 import '../models/plant.dart';
 import '../../features/auth/login_screen.dart';
@@ -117,31 +119,50 @@ class AppBottomNav extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return NavigationBar(
-      selectedIndex: selectedIndex,
-      onDestinationSelected: (index) => _go(context, index),
-      destinations: const [
-        NavigationDestination(
-          icon: Icon(Icons.home_outlined),
-          selectedIcon: Icon(Icons.home),
-          label: 'Garden',
-        ),
-        NavigationDestination(
-          icon: Icon(Icons.camera_alt_outlined),
-          selectedIcon: Icon(Icons.camera_alt),
-          label: 'Scan',
-        ),
-        NavigationDestination(
-          icon: Icon(Icons.grid_view_outlined),
-          selectedIcon: Icon(Icons.grid_view),
-          label: 'Library',
-        ),
-        NavigationDestination(
-          icon: Icon(Icons.person_outline),
-          selectedIcon: Icon(Icons.person),
-          label: 'Profile',
-        ),
-      ],
+    return Container(
+      margin: const EdgeInsets.fromLTRB(12, 0, 12, 12),
+      decoration: BoxDecoration(
+        color: PlantCareColors.card,
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: PlantCareColors.border),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.07),
+            blurRadius: 24,
+            offset: const Offset(0, 10),
+          ),
+        ],
+      ),
+      child: NavigationBar(
+        selectedIndex: selectedIndex,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        indicatorColor: PlantCareColors.primary.withValues(alpha: 0.12),
+        labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
+        onDestinationSelected: (index) => _go(context, index),
+        destinations: const [
+          NavigationDestination(
+            icon: Icon(Icons.home_outlined),
+            selectedIcon: Icon(Icons.home_rounded),
+            label: 'Garden',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.center_focus_strong_outlined),
+            selectedIcon: Icon(Icons.center_focus_strong_rounded),
+            label: 'Scan',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.auto_awesome_mosaic_outlined),
+            selectedIcon: Icon(Icons.auto_awesome_mosaic_rounded),
+            label: 'Library',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.person_outline_rounded),
+            selectedIcon: Icon(Icons.person_rounded),
+            label: 'Profile',
+          ),
+        ],
+      ),
     );
   }
 }
