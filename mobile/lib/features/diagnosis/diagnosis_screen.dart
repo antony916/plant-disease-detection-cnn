@@ -13,8 +13,7 @@ class DiagnosisScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final percent = (result.confidence * 100).round();
-    final lowConfidence =
-        result.needsExpertReview || result.confidence < 0.70;
+    final lowConfidence = result.needsExpertReview || result.confidence < 0.70;
     final guidance =
         const PlantCareGuidanceService().forCondition(result.condition);
 
@@ -318,8 +317,7 @@ class _GuidanceCard extends StatelessWidget {
       child: Column(
         children: [
           for (var i = 0; i < items.length; i++) ...[
-            if (i > 0)
-              const Divider(height: 18, color: PlantCareColors.border),
+            if (i > 0) const Divider(height: 18, color: PlantCareColors.border),
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
