@@ -120,16 +120,16 @@ class AppBottomNav extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.fromLTRB(12, 0, 12, 12),
+      margin: const EdgeInsets.fromLTRB(12, 0, 12, 10),
       decoration: BoxDecoration(
-        color: PlantCareColors.card,
-        borderRadius: BorderRadius.circular(24),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(18),
         border: Border.all(color: PlantCareColors.border),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.07),
-            blurRadius: 24,
-            offset: const Offset(0, 10),
+            color: Colors.black.withValues(alpha: 0.06),
+            blurRadius: 18,
+            offset: const Offset(0, 6),
           ),
         ],
       ),
@@ -137,10 +137,10 @@ class AppBottomNav extends StatelessWidget {
         selectedIndex: selectedIndex,
         backgroundColor: Colors.transparent,
         elevation: 0,
-        indicatorColor: PlantCareColors.primary.withValues(alpha: 0.12),
+        indicatorColor: PlantCareColors.softGreen,
         labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
         onDestinationSelected: (index) => _go(context, index),
-        destinations: const [
+        destinations: [
           NavigationDestination(
             icon: Icon(Icons.home_outlined),
             selectedIcon: Icon(Icons.home_rounded),
