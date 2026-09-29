@@ -80,9 +80,11 @@ class AppTheme {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
-          borderSide: const BorderSide(color: PlantCareColors.primary, width: 1.5),
+          borderSide:
+              const BorderSide(color: PlantCareColors.primary, width: 1.5),
         ),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
       ),
       filledButtonTheme: FilledButtonThemeData(
         style: FilledButton.styleFrom(
@@ -90,7 +92,8 @@ class AppTheme {
           foregroundColor: Colors.white,
           minimumSize: const Size(0, 48),
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           textStyle: const TextStyle(fontWeight: FontWeight.w800),
         ),
       ),
@@ -100,7 +103,8 @@ class AppTheme {
           minimumSize: const Size(0, 48),
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           side: const BorderSide(color: PlantCareColors.border),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           textStyle: const TextStyle(fontWeight: FontWeight.w700),
         ),
       ),
@@ -118,7 +122,10 @@ class AppTheme {
         height: 72,
         indicatorColor: PlantCareColors.softGreen,
         labelTextStyle: WidgetStatePropertyAll(
-          TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: PlantCareColors.text),
+          TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w700,
+              color: PlantCareColors.text),
         ),
         iconTheme: WidgetStatePropertyAll(
           IconThemeData(color: PlantCareColors.muted, size: 22),

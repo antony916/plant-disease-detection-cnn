@@ -60,7 +60,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
               return CustomScrollView(
                 physics: const AlwaysScrollableScrollPhysics(),
                 slivers: [
-                  SliverToBoxAdapter(child: _Header(gardenFuture: _gardenFuture)),
+                  SliverToBoxAdapter(
+                      child: _Header(gardenFuture: _gardenFuture)),
                   SliverPadding(
                     padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
                     sliver: SliverList(
@@ -510,7 +511,8 @@ class _NeedsAttention extends StatelessWidget {
       ),
       child: Row(
         children: [
-          const Icon(Icons.notifications_active_outlined, color: PlantCareColors.warning),
+          const Icon(Icons.notifications_active_outlined,
+              color: PlantCareColors.warning),
           const SizedBox(width: 10),
           Expanded(
             child: Column(
@@ -567,8 +569,18 @@ class _Recommendations extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const cards = [
-      ('🌿', 'Leaf health guide', 'Spot common warning signs', PlantCareColors.softGreen),
-      ('🐛', 'Pest warning signs', 'Know what to check early', PlantCareColors.softBlue),
+      (
+        '🌿',
+        'Leaf health guide',
+        'Spot common warning signs',
+        PlantCareColors.softGreen
+      ),
+      (
+        '🐛',
+        'Pest warning signs',
+        'Know what to check early',
+        PlantCareColors.softBlue
+      ),
     ];
 
     return SizedBox(
@@ -599,7 +611,8 @@ class _Recommendations extends StatelessWidget {
                       width: double.infinity,
                       color: card.$3,
                       alignment: Alignment.center,
-                      child: Text(card.$1, style: const TextStyle(fontSize: 30)),
+                      child:
+                          Text(card.$1, style: const TextStyle(fontSize: 30)),
                     ),
                     Padding(
                       padding: const EdgeInsets.fromLTRB(10, 8, 10, 6),

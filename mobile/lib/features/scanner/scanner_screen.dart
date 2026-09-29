@@ -76,7 +76,8 @@ class _ScannerScreenState extends State<ScannerScreen> {
     final plant = _selectedPlant(plants);
     if (plant == null) {
       setState(
-        () => _error = 'Add a plant to your garden before starting a diagnosis.',
+        () =>
+            _error = 'Add a plant to your garden before starting a diagnosis.',
       );
       return;
     }
@@ -111,7 +112,8 @@ class _ScannerScreenState extends State<ScannerScreen> {
     } catch (_) {
       if (!mounted) return;
       setState(
-        () => _error = 'We could not analyze this image. Please try another photo.',
+        () => _error =
+            'We could not analyze this image. Please try another photo.',
       );
     } finally {
       if (mounted) setState(() => _isAnalyzing = false);
