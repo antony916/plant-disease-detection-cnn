@@ -46,7 +46,7 @@ class _ScannerScreenState extends State<ScannerScreen> {
     return null;
   }
 
-  Future<void> _pickAndAnalyze(ImageSource source) async {
+  Future<void> _pick(ImageSource source) async {
     if (_isAnalyzing) return;
 
     final picked = await _picker.pickImage(
@@ -61,8 +61,6 @@ class _ScannerScreenState extends State<ScannerScreen> {
       _selectedImagePath = picked.path;
       _error = null;
     });
-
-    // Let the user review the selected image before analysis.
   }
 
   Future<void> _analyze() async {
@@ -70,19 +68,16 @@ class _ScannerScreenState extends State<ScannerScreen> {
 
     final imagePath = _selectedImagePath;
     if (imagePath == null || imagePath.isEmpty) {
-      setState(() {
-        _error = 'Choose or capture a plant photo first.';
-      });
+      setState(() => _error = 'Choose or capture a plant photo first.');
       return;
     }
 
     final plants = await _plantsFuture;
     final plant = _selectedPlant(plants);
-
     if (plant == null) {
-      setState(() {
-        _error = 'Add a plant to your garden before starting a diagnosis.';
-      });
+      setState(
+        () => _error = 'Add a plant to your garden before starting a diagnosis.',
+      );
       return;
     }
 
@@ -93,16 +88,14 @@ class _ScannerScreenState extends State<ScannerScreen> {
 
     try {
       final user = await AppServices.auth.currentUser();
-      if (user == null) {
-        throw StateError('Sign in required.');
-      }
+      if (user == null) throw StateError('Sign in required.');
 
       final storedImage = await AppServices.imageStorage.uploadPlantImage(
         filePath: imagePath,
         userId: user.id,
       );
 
-      final DiagnosisResult result = await AppServices.diagnosis.diagnose(
+      final result = await AppServices.diagnosis.diagnose(
         imagePath: imagePath,
         imageReference: storedImage,
         plantId: plant.id,
@@ -117,13 +110,11 @@ class _ScannerScreenState extends State<ScannerScreen> {
       );
     } catch (_) {
       if (!mounted) return;
-      setState(() {
-        _error = 'We could not analyze this image. Please try another photo.';
-      });
+      setState(
+        () => _error = 'We could not analyze this image. Please try another photo.',
+      );
     } finally {
-      if (mounted) {
-        setState(() => _isAnalyzing = false);
-      }
+      if (mounted) setState(() => _isAnalyzing = false);
     }
   }
 
@@ -132,30 +123,29 @@ class _ScannerScreenState extends State<ScannerScreen> {
     return Scaffold(
       body: SafeArea(
         child: FutureBuilder<List<Plant>>(
-        future: _plantsFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
+          future: _plantsFuture,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            }
 
-          if (snapshot.hasError) {
-            return const Center(
-              child: Padding(
-                padding: EdgeInsets.all(24),
-                child: Text(
-                  'We could not load your garden. Please try again.',
-                  textAlign: TextAlign.center,
+            if (snapshot.hasError) {
+              return const Center(
+                child: Padding(
+                  padding: EdgeInsets.all(24),
+                  child: Text(
+                    'We could not load your garden. Please try again.',
+                    textAlign: TextAlign.center,
+                  ),
                 ),
-              ),
-            );
-          }
+              );
+            }
 
-          final plants = snapshot.data ?? const <Plant>[];
-          final selected = _selectedPlant(plants);
+            final plants = snapshot.data ?? const <Plant>[];
+            final selected = _selectedPlant(plants);
 
-          return Padding(
-            padding: const EdgeInsets.fromLTRB(16, 10, 16, 8),
-            child: Column(
+            return ListView(
+              padding: const EdgeInsets.fromLTRB(16, 12, 16, 20),
               children: [
                 Row(
                   children: [
@@ -164,23 +154,23 @@ class _ScannerScreenState extends State<ScannerScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'AI Scanner',
+                            'Scan a plant',
                             style: TextStyle(
-                              fontSize: 28,
+                              fontSize: 25,
                               fontWeight: FontWeight.w900,
-                              letterSpacing: -0.7,
+                              letterSpacing: -.5,
                             ),
                           ),
                           SizedBox(height: 3),
                           Text(
-                            'See what your plant is telling you.',
+                            'Photo in. Plant health out.',
                             style: TextStyle(color: PlantCareColors.muted),
                           ),
                         ],
                       ),
                     ),
-                    IconButton.filledTonal(
-                      tooltip: 'Scan history',
+                    IconButton(
+                      tooltip: 'Diagnosis history',
                       onPressed: () => Navigator.pushNamed(
                         context,
                         AppRouter.diagnosisHistory,
@@ -189,33 +179,48 @@ class _ScannerScreenState extends State<ScannerScreen> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 14),
-                if (plants.isNotEmpty) ...[
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      'Choose your plant',
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.w900,
-                          ),
+                const SizedBox(height: 16),
+                if (plants.isEmpty)
+                  Container(
+                    padding: const EdgeInsets.all(14),
+                    decoration: BoxDecoration(
+                      color: PlantCareColors.warm,
+                      borderRadius: BorderRadius.circular(14),
                     ),
+                    child: Row(
+                      children: [
+                        const Icon(
+                          Icons.info_outline,
+                          color: PlantCareColors.warning,
+                        ),
+                        const SizedBox(width: 10),
+                        const Expanded(
+                          child: Text(
+                            'Add a plant first so the diagnosis can be saved to your garden.',
+                            style: TextStyle(fontWeight: FontWeight.w600),
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: () => Navigator.pushNamed(
+                            context,
+                            AppRouter.addPlant,
+                          ),
+                          child: const Text('Add'),
+                        ),
+                      ],
+                    ),
+                  )
+                else ...[
+                  const Text(
+                    'Choose plant',
+                    style: TextStyle(fontWeight: FontWeight.w900),
                   ),
-                  const SizedBox(height: PlantCareSpacing.sm),
+                  const SizedBox(height: 8),
                   DropdownButtonFormField<String>(
                     initialValue: selected?.id,
-                    decoration: InputDecoration(
-                      hintText: 'Select a plant from your garden',
-                      prefixIcon: const Icon(Icons.eco_outlined),
-                      filled: true,
-                      fillColor: PlantCareColors.card,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(18),
-                        borderSide: const BorderSide(color: PlantCareColors.border),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(18),
-                        borderSide: const BorderSide(color: PlantCareColors.border),
-                      ),
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.eco_outlined),
+                      hintText: 'Select from your garden',
                     ),
                     items: [
                       for (final plant in plants)
@@ -226,155 +231,123 @@ class _ScannerScreenState extends State<ScannerScreen> {
                     ],
                     onChanged: _isAnalyzing
                         ? null
-                        : (value) {
-                            setState(() {
+                        : (value) => setState(() {
                               _selectedPlantId = value;
                               _error = null;
-                            });
-                          },
+                            }),
                   ),
-                  const SizedBox(height: PlantCareSpacing.md),
-                ] else
-                  Card(
-                    color: PlantCareColors.card,
-                    child: Padding(
-                      padding: const EdgeInsets.all(PlantCareSpacing.md),
-                      child: Row(
-                        children: [
-                          const Icon(
-                            Icons.info_outline,
-                            color: PlantCareColors.primary,
-                          ),
-                          const SizedBox(width: PlantCareSpacing.sm),
-                          const Expanded(
-                            child: Text(
-                              'Add a plant to your garden before scanning so the diagnosis can be saved to the correct plant.',
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                ],
+                const SizedBox(height: 12),
+                Container(
+                  height: 330,
+                  decoration: BoxDecoration(
+                    color: PlantCareColors.softGreen,
+                    borderRadius: BorderRadius.circular(18),
+                    border: Border.all(color: PlantCareColors.border),
                   ),
-                Expanded(
-                  child: Container(
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFE8EEE9),
-                      borderRadius: BorderRadius.circular(
-                        PlantCareRadius.featured,
-                      ),
-                      border: Border.all(color: PlantCareColors.border),
-                    ),
-                    child: _isAnalyzing
-                        ? const _AnalyzingState()
-                        : _selectedImagePath != null
-                            ? _ImagePreview(
-                                path: _selectedImagePath!,
-                                onClear: () => setState(() {
-                                  _selectedImagePath = null;
-                                  _error = null;
-                                }),
-                              )
-                            : const Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Icon(
-                                    Icons.add,
-                                    size: 42,
-                                    color: PlantCareColors.primary,
+                  child: _isAnalyzing
+                      ? const _AnalyzingState()
+                      : _selectedImagePath != null
+                          ? _ImagePreview(
+                              path: _selectedImagePath!,
+                              onClear: () => setState(() {
+                                _selectedImagePath = null;
+                                _error = null;
+                              }),
+                            )
+                          : const Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.document_scanner_outlined,
+                                  size: 52,
+                                  color: PlantCareColors.primary,
+                                ),
+                                SizedBox(height: 12),
+                                Text(
+                                  'Capture a clear leaf photo',
+                                  style: TextStyle(
+                                    fontSize: 17,
+                                    fontWeight: FontWeight.w900,
                                   ),
-                                  SizedBox(height: 16),
-                                  Text(
-                                    'Capture your plant\'s leaf',
+                                ),
+                                SizedBox(height: 5),
+                                Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 32),
+                                  child: Text(
+                                    'Use daylight, keep the leaf in focus and fill most of the frame.',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                      fontSize: 17,
-                                      fontWeight: FontWeight.w700,
+                                      color: PlantCareColors.muted,
+                                      fontSize: 12,
                                     ),
                                   ),
-                                  SizedBox(height: 8),
-                                  Padding(
-                                    padding:
-                                        EdgeInsets.symmetric(horizontal: 32),
-                                    child: Text(
-                                      'Use daylight and keep the leaf in focus for the clearest AI diagnosis.',
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        color: PlantCareColors.muted,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                  ),
+                                ),
+                              ],
+                            ),
                 ),
                 if (_error != null) ...[
-                  const SizedBox(height: PlantCareSpacing.sm),
+                  const SizedBox(height: 8),
                   Text(
                     _error!,
                     textAlign: TextAlign.center,
                     style: const TextStyle(color: PlantCareColors.danger),
                   ),
                 ],
-                const SizedBox(height: PlantCareSpacing.md),
+                const SizedBox(height: 12),
                 Row(
                   children: [
                     Expanded(
                       child: OutlinedButton.icon(
                         onPressed: _isAnalyzing
                             ? null
-                            : () => _pickAndAnalyze(ImageSource.gallery),
+                            : () => _pick(ImageSource.gallery),
                         icon: const Icon(Icons.photo_library_outlined),
                         label: Text(
-                          _selectedImagePath == null
-                              ? 'Upload photo'
-                              : 'Change photo',
+                          _selectedImagePath == null ? 'Upload' : 'Change',
                         ),
                       ),
                     ),
-                    const SizedBox(width: PlantCareSpacing.sm),
+                    const SizedBox(width: 8),
                     Expanded(
                       child: FilledButton.icon(
                         onPressed: _isAnalyzing
                             ? null
-                            : () => _pickAndAnalyze(ImageSource.camera),
+                            : () => _pick(ImageSource.camera),
                         icon: const Icon(Icons.camera_alt_outlined),
                         label: Text(
-                          _selectedImagePath == null
-                              ? 'Take photo'
-                              : 'Retake photo',
+                          _selectedImagePath == null ? 'Camera' : 'Retake',
                         ),
                       ),
                     ),
                   ],
                 ),
                 if (_selectedImagePath != null && !_isAnalyzing) ...[
-                  const SizedBox(height: PlantCareSpacing.sm),
+                  const SizedBox(height: 8),
                   SizedBox(
                     width: double.infinity,
                     child: FilledButton.icon(
                       onPressed: selected == null ? null : _analyze,
-                      icon: const Icon(Icons.auto_awesome),
+                      icon: const Icon(Icons.auto_awesome_rounded),
                       label: const Text('Analyze this photo'),
                     ),
                   ),
                 ],
-                const SizedBox(height: PlantCareSpacing.sm),
+                const SizedBox(height: 8),
                 Text(
                   selected == null
-                      ? 'Select a garden plant before starting a diagnosis.'
-                      : 'Scanning ${selected.name}. PlantCare will save the result to this plant when the analysis completes.',
+                      ? 'Select a garden plant before analyzing.'
+                      : 'Ready to scan ' + selected.name + '.',
                   textAlign: TextAlign.center,
                   style: const TextStyle(
                     color: PlantCareColors.muted,
-                    fontSize: 12,
-                  ),
+                    fontSize: 11,
                   ),
                 ),
               ],
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
       bottomNavigationBar: const AppBottomNav(selectedIndex: 1),
     );
@@ -412,7 +385,7 @@ class _AnalyzingStateState extends State<_AnalyzingState>
               width: 112,
               height: 112,
               decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: .72),
+                color: Colors.white.withValues(alpha: .8),
                 shape: BoxShape.circle,
                 border: Border.all(
                   color: PlantCareColors.primary.withValues(alpha: .18),
@@ -429,36 +402,33 @@ class _AnalyzingStateState extends State<_AnalyzingState>
           Positioned(
             left: 28,
             right: 28,
-            top: 72 + (_controller.value * 150),
+            top: 65 + (_controller.value * 180),
             child: Container(
               height: 3,
               decoration: BoxDecoration(
                 color: PlantCareColors.primary,
                 borderRadius: BorderRadius.circular(99),
-                boxShadow: [
-                  BoxShadow(
-                    color: PlantCareColors.primary.withValues(alpha: .35),
-                    blurRadius: 12,
-                  ),
-                ],
               ),
             ),
           ),
           const Positioned(
             left: 0,
             right: 0,
-            bottom: 34,
+            bottom: 28,
             child: Column(
               children: [
                 Text(
                   'AI is reading your plant',
-                  style: TextStyle(fontWeight: FontWeight.w900, fontSize: 18),
+                  style: TextStyle(fontWeight: FontWeight.w900, fontSize: 17),
                 ),
-                SizedBox(height: 6),
+                SizedBox(height: 5),
                 Text(
                   'Checking visual patterns and disease signals…',
                   textAlign: TextAlign.center,
-                  style: TextStyle(color: PlantCareColors.muted, fontSize: 12),
+                  style: TextStyle(
+                    color: PlantCareColors.muted,
+                    fontSize: 11,
+                  ),
                 ),
               ],
             ),
@@ -473,7 +443,10 @@ class _ImagePreview extends StatelessWidget {
   final String path;
   final VoidCallback onClear;
 
-  const _ImagePreview({required this.path, required this.onClear});
+  const _ImagePreview({
+    required this.path,
+    required this.onClear,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -481,7 +454,7 @@ class _ImagePreview extends StatelessWidget {
       fit: StackFit.expand,
       children: [
         ClipRRect(
-          borderRadius: BorderRadius.circular(PlantCareRadius.featured),
+          borderRadius: BorderRadius.circular(18),
           child: Image.file(
             File(path),
             fit: BoxFit.cover,
@@ -491,8 +464,8 @@ class _ImagePreview extends StatelessWidget {
           ),
         ),
         Positioned(
-          top: 12,
-          right: 12,
+          top: 10,
+          right: 10,
           child: IconButton.filledTonal(
             tooltip: 'Remove selected photo',
             onPressed: onClear,
