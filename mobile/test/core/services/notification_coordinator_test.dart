@@ -31,6 +31,11 @@ class _FakeCenter implements NotificationCenterService {
   Future<void> markAllRead() async {}
 
   @override
+  Future<void> clearAll() async {
+    items.clear();
+  }
+
+  @override
   Future<NotificationPreferences> getPreferences() async => preferences;
 
   @override
