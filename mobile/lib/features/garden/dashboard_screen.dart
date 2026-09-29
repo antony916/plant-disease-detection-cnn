@@ -630,7 +630,7 @@ class _Recommendations extends StatelessWidget {
                           ),
                           const SizedBox(height: 2),
                           Text(
-                            card.$3 == PlantCareColors.softGreen
+                            card.$4 == PlantCareColors.softGreen
                                 ? 'Spot common warning signs'
                                 : 'Know what to check early',
                             style: const TextStyle(
