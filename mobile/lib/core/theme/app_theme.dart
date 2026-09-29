@@ -119,7 +119,7 @@ class AppTheme {
       navigationBarTheme: NavigationBarThemeData(
         backgroundColor: Colors.white,
         elevation: 0,
-        height: 72,
+        height: 70,
         indicatorColor: PlantCareColors.softGreen,
         labelTextStyle: WidgetStatePropertyAll(
           TextStyle(
