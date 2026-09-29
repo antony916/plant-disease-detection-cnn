@@ -130,13 +130,8 @@ class _ScannerScreenState extends State<ScannerScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'AI Plant Scanner',
-          style: TextStyle(fontWeight: FontWeight.w800),
-        ),
-      ),
-      body: FutureBuilder<List<Plant>>(
+      body: SafeArea(
+        child: FutureBuilder<List<Plant>>(
         future: _plantsFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -159,25 +154,68 @@ class _ScannerScreenState extends State<ScannerScreen> {
           final selected = _selectedPlant(plants);
 
           return Padding(
-            padding: const EdgeInsets.all(PlantCareSpacing.lg),
+            padding: const EdgeInsets.fromLTRB(16, 10, 16, 8),
             child: Column(
               children: [
+                Row(
+                  children: [
+                    const Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'AI Scanner',
+                            style: TextStyle(
+                              fontSize: 28,
+                              fontWeight: FontWeight.w900,
+                              letterSpacing: -0.7,
+                            ),
+                          ),
+                          SizedBox(height: 3),
+                          Text(
+                            'See what your plant is telling you.',
+                            style: TextStyle(color: PlantCareColors.muted),
+                          ),
+                        ],
+                      ),
+                    ),
+                    IconButton.filledTonal(
+                      tooltip: 'Scan history',
+                      onPressed: () => Navigator.pushNamed(
+                        context,
+                        AppRouter.diagnosisHistory,
+                      ),
+                      icon: const Icon(Icons.history_rounded),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 14),
                 if (plants.isNotEmpty) ...[
                   Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      'Diagnose a plant',
+                      'Choose your plant',
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.w800,
+                            fontWeight: FontWeight.w900,
                           ),
                     ),
                   ),
                   const SizedBox(height: PlantCareSpacing.sm),
                   DropdownButtonFormField<String>(
                     initialValue: selected?.id,
-                    decoration: const InputDecoration(
-                      labelText: 'Garden plant',
-                      prefixIcon: Icon(Icons.eco_outlined),
+                    decoration: InputDecoration(
+                      hintText: 'Select a plant from your garden',
+                      prefixIcon: const Icon(Icons.eco_outlined),
+                      filled: true,
+                      fillColor: PlantCareColors.card,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(18),
+                        borderSide: const BorderSide(color: PlantCareColors.border),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(18),
+                        borderSide: const BorderSide(color: PlantCareColors.border),
+                      ),
                     ),
                     items: [
                       for (final plant in plants)
@@ -198,6 +236,7 @@ class _ScannerScreenState extends State<ScannerScreen> {
                   const SizedBox(height: PlantCareSpacing.md),
                 ] else
                   Card(
+                    color: PlantCareColors.card,
                     child: Padding(
                       padding: const EdgeInsets.all(PlantCareSpacing.md),
                       child: Row(
@@ -246,7 +285,7 @@ class _ScannerScreenState extends State<ScannerScreen> {
                                   ),
                                   SizedBox(height: 16),
                                   Text(
-                                    'Capture a clear photo of the affected leaf',
+                                    'Capture your plant\'s leaf',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
                                       fontSize: 17,
@@ -258,7 +297,7 @@ class _ScannerScreenState extends State<ScannerScreen> {
                                     padding:
                                         EdgeInsets.symmetric(horizontal: 32),
                                     child: Text(
-                                      'Use daylight, keep the leaf in focus, and avoid glare for a clearer diagnosis.',
+                                      'Use daylight and keep the leaf in focus for the clearest AI diagnosis.',
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
                                         color: PlantCareColors.muted,
@@ -330,6 +369,7 @@ class _ScannerScreenState extends State<ScannerScreen> {
                     color: PlantCareColors.muted,
                     fontSize: 12,
                   ),
+                  ),
                 ),
               ],
             ),
@@ -341,27 +381,90 @@ class _ScannerScreenState extends State<ScannerScreen> {
   }
 }
 
-class _AnalyzingState extends StatelessWidget {
+class _AnalyzingState extends StatefulWidget {
   const _AnalyzingState();
 
   @override
+  State<_AnalyzingState> createState() => _AnalyzingStateState();
+}
+
+class _AnalyzingStateState extends State<_AnalyzingState>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller =
+      AnimationController(vsync: this, duration: const Duration(seconds: 2))
+        ..repeat();
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return const Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        CircularProgressIndicator(),
-        SizedBox(height: 18),
-        Text(
-          'Analyzing your plant…',
-          style: TextStyle(fontWeight: FontWeight.w700),
-        ),
-        SizedBox(height: 6),
-        Text(
-          'Checking the image for known disease patterns.',
-          textAlign: TextAlign.center,
-          style: TextStyle(color: PlantCareColors.muted),
-        ),
-      ],
+    return AnimatedBuilder(
+      animation: _controller,
+      builder: (context, _) => Stack(
+        fit: StackFit.expand,
+        children: [
+          Center(
+            child: Container(
+              width: 112,
+              height: 112,
+              decoration: BoxDecoration(
+                color: Colors.white.withValues(alpha: .72),
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: PlantCareColors.primary.withValues(alpha: .18),
+                  width: 2,
+                ),
+              ),
+              child: const Icon(
+                Icons.eco_rounded,
+                size: 54,
+                color: PlantCareColors.primary,
+              ),
+            ),
+          ),
+          Positioned(
+            left: 28,
+            right: 28,
+            top: 72 + (_controller.value * 150),
+            child: Container(
+              height: 3,
+              decoration: BoxDecoration(
+                color: PlantCareColors.primary,
+                borderRadius: BorderRadius.circular(99),
+                boxShadow: [
+                  BoxShadow(
+                    color: PlantCareColors.primary.withValues(alpha: .35),
+                    blurRadius: 12,
+                  ),
+                ],
+              ),
+            ),
+          ),
+          const Positioned(
+            left: 0,
+            right: 0,
+            bottom: 34,
+            child: Column(
+              children: [
+                Text(
+                  'AI is reading your plant',
+                  style: TextStyle(fontWeight: FontWeight.w900, fontSize: 18),
+                ),
+                SizedBox(height: 6),
+                Text(
+                  'Checking visual patterns and disease signals…',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: PlantCareColors.muted, fontSize: 12),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
