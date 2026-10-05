@@ -1,6 +1,6 @@
 # PlantCare AI — Master Build Checkpoint / New-Chat Handoff
 
-Last updated: 2026-09-25
+Last updated: 2026-10-05
 Owner: Renio
 Repository: https://github.com/antony916/plant-disease-detection-cnn
 Waste project repository (paused): https://github.com/antony916/ai-waste-classification
@@ -440,6 +440,13 @@ Before changing code/files:
 - Tell Renio exactly what will change.
 - Explain why the change is needed.
 - Then make the change.
+
+Pre-commit routine (run from `mobile/`):
+```text
+dart format --set-exit-if-changed lib test
+flutter analyze
+flutter test
+```
 
 Preferences:
 - Do the building through connected tools whenever possible.
@@ -946,7 +953,7 @@ Current verified GitHub Actions state before this new commit:
 - PlantCare Inference Image run `36407859868` on `a5734d33a772166976e129903d686cd5d557405d`: success, including image startup/`/health` verification.
 
 Activation boundary:
-- Android and iOS Flutter platform folders are not currently committed under `mobile/`.
+- Android and iOS Flutter platform folders are currently committed under `mobile/`.
 - Firebase native configuration files are not present.
 - Render deployment configuration exists but has not been activated and no public inference URL is claimed.
 - The next practical activation step remains configured hosting plus native mobile setup, followed by the new endpoint smoke test with a real plant photo and then Flutter -> Supabase diagnosis E2E.
@@ -963,7 +970,8 @@ Commit:
 Current external activation boundary is unchanged:
 - Render service has not been activated from this environment.
 - No public inference URL is claimed.
-- Android/iOS native Flutter folders and Firebase native configuration are still absent from the repository.
+- Android/iOS native Flutter folders are committed in the repository.
+- Firebase native configuration is still absent from the repository.
 
 
 ## 41. ACTIVATION CHECK WORKFLOW + CURRENT HEAD — 2026-09-28
@@ -987,12 +995,11 @@ Current Actions state at the time of this checkpoint update:
 - The first activation-check workflow attempt failed because of the invalid job-level secrets condition; that workflow was fixed in commit `3ca246eb0a66c16f5879f9c2b18dbc53c3039d52`.
 
 Native platform inspection:
-- `mobile/android` is absent.
-- `mobile/ios` is absent.
+- `mobile/android` is committed.
+- `mobile/ios` is committed.
 - Firebase native configuration files are absent.
-- Flutter CLI is not installed in the current build environment, so native shells were NOT fabricated or manually approximated.
-- Network access from the current build environment cannot reach the Flutter release host, so the official Flutter generator cannot be installed here.
-- This remains an external/native activation gate, not a missing application-layer implementation.
+- The native folders are official Flutter platform shells already present in the repository; do not regenerate or overwrite them casually.
+- Firebase native configuration and real-device verification remain activation gates.
 
 NEXT PRACTICAL TASK:
 - Wait for the current HEAD Actions checks to complete and fix any failures.
@@ -1016,7 +1023,7 @@ Commit:
 - `d139e3becea030cdf92c9e56f79c7ff4ac116d66` — docs: harden native mobile activation handoff.
 
 Current verification boundary:
-- No Android/iOS native folders were fabricated because Flutter CLI is unavailable in this environment.
+- Android/iOS native folders are committed and available for device/platform configuration.
 - No public inference URL is claimed.
 - GitHub commit-run lookup for the new HEAD did not expose a workflow run yet, so no new CI result is claimed from this environment.
 
