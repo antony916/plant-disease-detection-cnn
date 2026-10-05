@@ -173,7 +173,7 @@ class _FamilySharingScreenState extends State<FamilySharingScreen> {
     return Scaffold(
       appBar: AppBar(
           title: const Text('Family sharing',
-              style: TextStyle(fontWeight: FontWeight.w800)),
+              style: TextStyle(fontWeight: FontWeight.w900)),
           actions: [
             IconButton(
                 tooltip: 'Refresh',
@@ -218,9 +218,7 @@ class _FamilySharingScreenState extends State<FamilySharingScreen> {
                     icon: const Icon(Icons.person_add_outlined),
                     label: const Text('Invite family member')),
                 const SizedBox(height: PlantCareSpacing.lg),
-                const Text('Members',
-                    style:
-                        TextStyle(fontSize: 21, fontWeight: FontWeight.w800)),
+                const Text('MEMBERS', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w900, color: PlantCareColors.primary, letterSpacing: .7)),
                 const SizedBox(height: PlantCareSpacing.sm),
                 FutureBuilder<List<FamilyMember>>(
                   future: _membersFuture,
