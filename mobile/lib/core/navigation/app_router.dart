@@ -102,13 +102,29 @@ class AppBottomNav extends StatelessWidget {
 
   static const _destinations = <_NavDestination>[
     _NavDestination(
-        Icons.eco_outlined, Icons.eco_rounded, 'Garden', AppRouter.dashboard),
-    _NavDestination(Icons.center_focus_strong_outlined,
-        Icons.center_focus_strong_rounded, 'Scan', AppRouter.scanner),
-    _NavDestination(Icons.menu_book_outlined, Icons.menu_book_rounded,
-        'Library', AppRouter.library),
-    _NavDestination(Icons.person_outline_rounded, Icons.person_rounded,
-        'Profile', AppRouter.profile),
+      Icons.eco_outlined,
+      Icons.eco_rounded,
+      'Garden',
+      AppRouter.dashboard,
+    ),
+    _NavDestination(
+      Icons.center_focus_strong_outlined,
+      Icons.center_focus_strong_rounded,
+      'Scan',
+      AppRouter.scanner,
+    ),
+    _NavDestination(
+      Icons.menu_book_outlined,
+      Icons.menu_book_rounded,
+      'Library',
+      AppRouter.library,
+    ),
+    _NavDestination(
+      Icons.person_outline_rounded,
+      Icons.person_rounded,
+      'Profile',
+      AppRouter.profile,
+    ),
   ];
 
   void go(BuildContext context, int index) {
