@@ -110,8 +110,7 @@ class _NotificationCenterScreenState extends State<NotificationCenterScreen> {
             return const EmptyState(
               icon: Icons.notifications_none_rounded,
               title: 'You are all caught up',
-              helperText:
-                  'PlantCare will show care reminders and alerts here.',
+              helperText: 'PlantCare will show care reminders and alerts here.',
             );
           return ListView.separated(
             padding: const EdgeInsets.all(PlantCareSpacing.lg),

@@ -216,8 +216,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         helperText:
                             'Add your first plant and keep its care history in one place.',
                         actionLabel: 'Add plant',
-                        onAction: () => Navigator.pushNamed(
-                            context, AppRouter.addPlant))
+                        onAction: () =>
+                            Navigator.pushNamed(context, AppRouter.addPlant))
                   else
                     ...plants.take(4).map((p) => _Plant(
                         p,
