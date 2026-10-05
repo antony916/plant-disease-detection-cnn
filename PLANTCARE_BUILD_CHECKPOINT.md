@@ -1072,3 +1072,44 @@ Verification boundary:
 NEXT PRACTICAL TASK:
 - Verify the new CI run when GitHub exposes it.
 - Then perform the external native/hosting activation steps in the documented order.
+
+## 43. GLASS UI PHASE A — 2026-10-05
+
+Completed in repository:
+- Reusable glass UI primitives exist under `mobile/lib/core/ui/`: `GlassCard`, `GlassPill`, `GlassChip`, `GlassSheet`, and `GradientButton`.
+- The glass primitives use the existing `PlantCareGlass`, `PlantCareEffects`, `PlantCareRadius` and related theme tokens, with reduced-effects handling and bounded blur/repaint behavior.
+- Widget coverage exists for rendering, reduced-effects behavior, callbacks and semantics.
+- Root navigation is now the approved four-tab structure: Garden, Scan, Library, Profile.
+- The existing Health Timeline entry was moved from Library to Garden; Profile's selected root-tab index was corrected to the fourth tab.
+- Inter is bundled locally at `mobile/assets/fonts/Inter-Variable.ttf`, with its SIL Open Font License text at `mobile/assets/fonts/OFL.txt`.
+- Runtime `google_fonts` dependency and `GoogleFonts.*` usage were removed; ThemeData continues to use the `Inter` family.
+- Theme mode now defaults to system and supports persistent System / Light / Dark selection from Profile through local preferences.
+- A reusable `EmptyState` widget exists and is used for Notifications, Health Timeline and the empty garden.
+- The visible `Demo account` fallback copy was replaced with user-facing account wording.
+- PlantCareColors compatibility aliases remain intentionally in place.
+
+Relevant Phase A commits:
+- `bedf20b38957ed0d50837894f740f019010471df` — reusable glass components.
+- `2fac1b5561e2ddcba71897c28f7a286eb16dd592` / `bca0390a61bb6b3cfef2f2f5318445b49ca84dba` — four-tab navigation.
+- `0ffc00c13aebcf455b4f5901b3650ae1da40441f` — Health Timeline placement correction.
+- `4363398c68372f51c7c36988f74724f5e686441f` — bundled Inter font assets.
+- `17528d7005714f0add6e145e58dbbeff1d054fef` — persistent theme mode selector.
+- `8eb1a91fc87c7fe7b768105ca2ed5735da1ecc25` — reusable empty states and account-copy cleanup.
+
+Verification boundary for this phase:
+- Flutter CLI was not available to this assistant, so `dart format --set-exit-if-changed lib test`, `flutter analyze`, and `flutter test` were NOT executed here and are not claimed as passed.
+- A fresh-install airplane-mode test was NOT performed and remains unverified.
+- Rendered-screen WCAG AA measurements were NOT claimed. Token-level contrast calculations that were actually measured were: dark text/background 14.77:1; dark secondary/background 12.95:1; light text/background 15.74:1; light secondary/background 6.40:1; white/primary 6.56:1; primary/light background 6.21:1.
+- GitHub Actions for the Phase A HEAD were still running at checkpoint time; no in-progress workflow was represented as passed.
+- No activation audit was intentionally run by the assistant. Any automatically triggered repository workflow was not used as evidence of local Flutter/device verification.
+
+Phase A phone test checklist:
+1. Dark theme — Garden, Scan, Library, Profile, Login.
+2. Light theme — same screens; check text, buttons, cards and navigation contrast.
+3. Large system font / accessibility text size — verify no clipping or horizontal overflow.
+4. Reduced effects — verify glass surfaces remain legible without blur and interactions remain usable.
+5. Airplane mode — fresh install/startup, navigation, bundled Inter rendering, local theme persistence, and all non-network UI paths.
+6. Verify root navigation has exactly Garden / Scan / Library / Profile and no unintended back arrow on root tabs.
+
+Phase A is complete at the source-code level. Do not begin Phase B screen redesigns until the user reviews the phone screenshots and explicitly continues.
+
