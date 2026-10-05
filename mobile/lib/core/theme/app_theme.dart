@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-
 abstract final class PlantCareColors {
   // Brand
   static const lime = Color(0xFFA8E63D);
@@ -248,7 +246,7 @@ class AppTheme {
         fontWeight: FontWeight.w600,
       ),
     );
-    final textTheme = GoogleFonts.interTextTheme(baseTextTheme).apply(
+    final textTheme = baseTextTheme.apply(
       bodyColor: foreground,
       displayColor: foreground,
     );

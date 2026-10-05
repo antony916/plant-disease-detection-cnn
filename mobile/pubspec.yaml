@@ -13,7 +13,6 @@ dependencies:
     sdk: flutter
 
   cupertino_icons: ^1.0.8
-  google_fonts: ^6.2.1
   http: ^1.5.0
   image_picker: ^1.1.2
   firebase_core: ^4.15.0
@@ -27,3 +26,11 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/fonts/Inter-Variable.ttf
+  fonts:
+    - family: Inter
+      fonts:
+        - asset: assets/fonts/Inter-Variable.ttf
+          weight: 400
+          style: normal
