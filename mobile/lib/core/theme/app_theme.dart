@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 abstract final class PlantCareColors {
   // Brand
@@ -184,7 +185,7 @@ class AppTheme {
   }) {
     final isDark = brightness == Brightness.dark;
 
-    final textTheme = TextTheme(
+    final baseTextTheme = TextTheme(
       displayLarge: const TextStyle(
         fontSize: 28,
         height: 34 / 28,
@@ -235,8 +236,8 @@ class AppTheme {
         height: 18 / 12,
         fontWeight: FontWeight.w600,
       ),
-    ).apply(
-      fontFamily: 'Inter',
+    );
+    final textTheme = GoogleFonts.interTextTheme(baseTextTheme).apply(
       bodyColor: foreground,
       displayColor: foreground,
     );
