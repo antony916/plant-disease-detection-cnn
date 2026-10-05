@@ -100,8 +100,7 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
               ),
             ),
             const SizedBox(height: PlantCareSpacing.lg),
-            const Text(
-              'Plant basics',
+            const _FormSection(title: 'Plant basics', subtitle: 'Give your plant a simple identity.');
               style: TextStyle(fontSize: 21, fontWeight: FontWeight.w800),
             ),
             const SizedBox(height: PlantCareSpacing.sm),
@@ -126,8 +125,7 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
               ),
             ),
             const SizedBox(height: PlantCareSpacing.lg),
-            const Text(
-              'Growing conditions',
+            const _FormSection(title: 'Growing conditions', subtitle: 'Tell PlantCare where and how it grows.');
               style: TextStyle(fontSize: 21, fontWeight: FontWeight.w800),
             ),
             const SizedBox(height: PlantCareSpacing.sm),
@@ -207,8 +205,7 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
               },
             ),
             const SizedBox(height: PlantCareSpacing.lg),
-            const Text(
-              'Watering',
+            const _FormSection(title: 'Watering', subtitle: 'Set a starting reminder interval.');
               style: TextStyle(fontSize: 21, fontWeight: FontWeight.w800),
             ),
             const SizedBox(height: PlantCareSpacing.sm),
@@ -234,8 +231,7 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
               ),
             ),
             const SizedBox(height: PlantCareSpacing.lg),
-            const Text(
-              'Notes',
+            const _FormSection(title: 'Notes', subtitle: 'Optional details you want to remember.');
               style: TextStyle(fontSize: 21, fontWeight: FontWeight.w800),
             ),
             const SizedBox(height: PlantCareSpacing.sm),
@@ -249,7 +245,7 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
               ),
             ),
             const SizedBox(height: PlantCareSpacing.xl),
-            FilledButton(
+            FilledButton.icon(
               onPressed: _saving ? null : _save,
               child: _saving
                   ? const SizedBox(
@@ -273,4 +269,21 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
       ),
     );
   }
+}
+
+
+class _FormSection extends StatelessWidget {
+  final String title;
+  final String subtitle;
+  const _FormSection({required this.title, required this.subtitle});
+  @override
+  Widget build(BuildContext context) => Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text(title, style: const TextStyle(fontSize: 19, fontWeight: FontWeight.w900)),
+      const SizedBox(height: 3),
+      Text(subtitle, style: const TextStyle(color: PlantCareColors.muted, fontSize: 12)),
+      const SizedBox(height: PlantCareSpacing.sm),
+    ],
+  );
 }
