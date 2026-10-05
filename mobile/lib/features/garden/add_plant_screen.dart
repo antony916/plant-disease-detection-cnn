@@ -100,7 +100,7 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
               ),
             ),
             const SizedBox(height: PlantCareSpacing.lg),
-            const _FormSection(title: 'Plant basics', subtitle: 'Give your plant a simple identity.');
+            const _FormSection(title: 'Plant basics', subtitle: 'Give your plant a simple identity.'),
             const SizedBox(height: PlantCareSpacing.sm),
             TextFormField(
               controller: _nameController,
@@ -123,7 +123,7 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
               ),
             ),
             const SizedBox(height: PlantCareSpacing.lg),
-            const _FormSection(title: 'Growing conditions', subtitle: 'Tell PlantCare where and how it grows.');
+            const _FormSection(title: 'Growing conditions', subtitle: 'Tell PlantCare where and how it grows.'),
             const SizedBox(height: PlantCareSpacing.sm),
             DropdownButtonFormField<String>(
               initialValue: _sunlight,
@@ -201,7 +201,7 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
               },
             ),
             const SizedBox(height: PlantCareSpacing.lg),
-            const _FormSection(title: 'Watering', subtitle: 'Set a starting reminder interval.');
+            const _FormSection(title: 'Watering', subtitle: 'Set a starting reminder interval.'),
             const SizedBox(height: PlantCareSpacing.sm),
             Text(
               'Every ${_wateringInterval.round()} days',
@@ -225,7 +225,7 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
               ),
             ),
             const SizedBox(height: PlantCareSpacing.lg),
-            const _FormSection(title: 'Notes', subtitle: 'Optional details you want to remember.');
+            const _FormSection(title: 'Notes', subtitle: 'Optional details you want to remember.'),
             const SizedBox(height: PlantCareSpacing.sm),
             TextField(
               controller: _notesController,
