@@ -167,6 +167,7 @@ class _GradientButtonState extends State<GradientButton> {
     return Semantics(
       button: true,
       enabled: enabled,
+      explicitChildNodes: true,
       label: widget.semanticLabel,
       child: GestureDetector(
         onTap: widget.onPressed,
@@ -276,6 +277,7 @@ class _GlassSurface extends StatelessWidget {
 
     return Semantics(
       container: true,
+      explicitChildNodes: true,
       button: onTap != null,
       label: semanticLabel,
       child: onTap == null
