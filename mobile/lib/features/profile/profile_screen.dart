@@ -3,6 +3,7 @@ import '../../core/app_services.dart';
 import '../../core/navigation/app_router.dart';
 import '../../core/services/auth_service.dart';
 import '../../core/theme/app_theme.dart';
+import '../../core/theme/theme_mode_controller.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -106,6 +107,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     () =>
                         Navigator.pushNamed(context, AppRouter.familyInvites)),
                 const SizedBox(height: 20),
+                const _Label('APPEARANCE'),
+                _ThemeModeSelector(controller: ThemeScope.of(context)),
+                const SizedBox(height: 20),
                 const _Label('PREFERENCES & SUPPORT'),
                 _Tile(
                     Icons.tune_rounded,
@@ -179,4 +183,38 @@ class _Tile extends StatelessWidget {
               Text(title, style: const TextStyle(fontWeight: FontWeight.w800)),
           subtitle: Text(subtitle),
           trailing: const Icon(Icons.chevron_right_rounded)));
+}
+
+
+class _ThemeModeSelector extends StatelessWidget {
+  const _ThemeModeSelector({required this.controller});
+
+  final ThemeModeController controller;
+
+  @override
+  Widget build(BuildContext context) {
+    return SegmentedButton<ThemeMode>(
+      segments: const [
+        ButtonSegment(
+          value: ThemeMode.system,
+          icon: Icon(Icons.brightness_auto_outlined),
+          label: Text('System'),
+        ),
+        ButtonSegment(
+          value: ThemeMode.light,
+          icon: Icon(Icons.light_mode_outlined),
+          label: Text('Light'),
+        ),
+        ButtonSegment(
+          value: ThemeMode.dark,
+          icon: Icon(Icons.dark_mode_outlined),
+          label: Text('Dark'),
+        ),
+      ],
+      selected: {controller.mode},
+      onSelectionChanged: (selection) {
+        controller.setMode(selection.first);
+      },
+    );
+  }
 }
