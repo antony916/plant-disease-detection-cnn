@@ -26,7 +26,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
       - name: Validate inference Python syntax
         run: python -m compileall -q api scripts/verify_inference_endpoint.py
       - name: Validate Render blueprint
@@ -53,7 +53,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
       - name: Verify deployed inference contract when configured
         env:
           PLANTCARE_INFERENCE_URL: ${{ secrets.PLANTCARE_INFERENCE_URL }}
