@@ -101,8 +101,6 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
             ),
             const SizedBox(height: PlantCareSpacing.lg),
             const _FormSection(title: 'Plant basics', subtitle: 'Give your plant a simple identity.');
-              style: TextStyle(fontSize: 21, fontWeight: FontWeight.w800),
-            ),
             const SizedBox(height: PlantCareSpacing.sm),
             TextFormField(
               controller: _nameController,
@@ -126,8 +124,6 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
             ),
             const SizedBox(height: PlantCareSpacing.lg),
             const _FormSection(title: 'Growing conditions', subtitle: 'Tell PlantCare where and how it grows.');
-              style: TextStyle(fontSize: 21, fontWeight: FontWeight.w800),
-            ),
             const SizedBox(height: PlantCareSpacing.sm),
             DropdownButtonFormField<String>(
               initialValue: _sunlight,
@@ -206,8 +202,6 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
             ),
             const SizedBox(height: PlantCareSpacing.lg),
             const _FormSection(title: 'Watering', subtitle: 'Set a starting reminder interval.');
-              style: TextStyle(fontSize: 21, fontWeight: FontWeight.w800),
-            ),
             const SizedBox(height: PlantCareSpacing.sm),
             Text(
               'Every ${_wateringInterval.round()} days',
@@ -232,8 +226,6 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
             ),
             const SizedBox(height: PlantCareSpacing.lg),
             const _FormSection(title: 'Notes', subtitle: 'Optional details you want to remember.');
-              style: TextStyle(fontSize: 21, fontWeight: FontWeight.w800),
-            ),
             const SizedBox(height: PlantCareSpacing.sm),
             TextField(
               controller: _notesController,
