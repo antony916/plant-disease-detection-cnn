@@ -4,6 +4,7 @@ import '../../core/navigation/app_router.dart';
 import '../../core/services/auth_service.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/theme/theme_mode_controller.dart';
+import '../../core/theme/theme_scope.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
