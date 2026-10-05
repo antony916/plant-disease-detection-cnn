@@ -102,33 +102,6 @@ class _LibraryScreenState extends State<LibraryScreen> {
                                             fontWeight: FontWeight.w800)))
                               ]))))),
               const SizedBox(height: 22),
-              Row(children: [
-                const Expanded(
-                    child: Text('HEALTH TIMELINE',
-                        style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w900,
-                            letterSpacing: .7,
-                            color: PlantCareColors.primary))),
-                TextButton(
-                    onPressed: () =>
-                        Navigator.pushNamed(c, AppRouter.diagnosisHistory),
-                    child: const Text('Open'))
-              ]),
-              Card(
-                  child: ListTile(
-                      leading: const CircleAvatar(
-                          backgroundColor: PlantCareColors.softGreen,
-                          child: Icon(Icons.history_rounded,
-                              color: PlantCareColors.primary)),
-                      title: const Text('Previous AI diagnoses',
-                          style: TextStyle(fontWeight: FontWeight.w800)),
-                      subtitle: const Text(
-                          'Review results and confidence over time.'),
-                      trailing: const Icon(Icons.chevron_right_rounded),
-                      onTap: () =>
-                          Navigator.pushNamed(c, AppRouter.diagnosisHistory))),
-              const SizedBox(height: 22),
               const Text('POPULAR GUIDES',
                   style: TextStyle(
                       fontSize: 12,

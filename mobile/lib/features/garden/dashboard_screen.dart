@@ -170,6 +170,25 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             });
                       }),
                   const SizedBox(height: 22),
+                  _Section(
+                      'HEALTH TIMELINE',
+                      'View all',
+                      () => Navigator.pushNamed(
+                          context, AppRouter.diagnosisHistory)),
+                  Card(
+                      child: ListTile(
+                          leading: const CircleAvatar(
+                              backgroundColor: PlantCareColors.softGreen,
+                              child: Icon(Icons.history_rounded,
+                                  color: PlantCareColors.primary)),
+                          title: const Text('Previous AI diagnoses',
+                              style: TextStyle(fontWeight: FontWeight.w800)),
+                          subtitle: const Text(
+                              'Review results and confidence over time.'),
+                          trailing: const Icon(Icons.chevron_right_rounded),
+                          onTap: () => Navigator.pushNamed(
+                              context, AppRouter.diagnosisHistory))),
+                  const SizedBox(height: 22),
                   _Section('RECOMMENDED FOR YOU', 'See all',
                       () => Navigator.pushNamed(context, AppRouter.library)),
                   Row(children: [
