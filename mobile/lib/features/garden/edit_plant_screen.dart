@@ -93,7 +93,10 @@ class _EditPlantScreenState extends State<EditPlantScreen> {
         child: ListView(
           padding: const EdgeInsets.all(PlantCareSpacing.lg),
           children: [
-            const _FormSection(title: 'Plant basics', subtitle: 'Update the details PlantCare uses for care reminders.'),
+            const _FormSection(
+                title: 'Plant basics',
+                subtitle:
+                    'Update the details PlantCare uses for care reminders.'),
             const SizedBox(height: PlantCareSpacing.sm),
             TextFormField(
               controller: _name,
@@ -111,7 +114,9 @@ class _EditPlantScreenState extends State<EditPlantScreen> {
                   const InputDecoration(labelText: 'Species (optional)'),
             ),
             const SizedBox(height: PlantCareSpacing.lg),
-            const _FormSection(title: 'Growing conditions', subtitle: 'Keep light, location and soil information current.'),
+            const _FormSection(
+                title: 'Growing conditions',
+                subtitle: 'Keep light, location and soil information current.'),
             const SizedBox(height: PlantCareSpacing.sm),
             DropdownButtonFormField<String>(
               initialValue: _sunlight,
@@ -165,7 +170,9 @@ class _EditPlantScreenState extends State<EditPlantScreen> {
               },
             ),
             const SizedBox(height: PlantCareSpacing.lg),
-            const _FormSection(title: 'Watering', subtitle: 'Adjust the starting reminder interval.'),
+            const _FormSection(
+                title: 'Watering',
+                subtitle: 'Adjust the starting reminder interval.'),
             const SizedBox(height: PlantCareSpacing.sm),
             Text('Every ${_watering.round()} days',
                 style: const TextStyle(fontWeight: FontWeight.w700)),
@@ -178,7 +185,8 @@ class _EditPlantScreenState extends State<EditPlantScreen> {
               onChanged: (value) => setState(() => _watering = value),
             ),
             const SizedBox(height: PlantCareSpacing.lg),
-            const _FormSection(title: 'Notes', subtitle: 'Optional details about this plant.'),
+            const _FormSection(
+                title: 'Notes', subtitle: 'Optional details about this plant.'),
             const SizedBox(height: PlantCareSpacing.sm),
             TextField(
               controller: _notes,
@@ -205,19 +213,22 @@ class _EditPlantScreenState extends State<EditPlantScreen> {
   }
 }
 
-
 class _FormSection extends StatelessWidget {
   final String title;
   final String subtitle;
   const _FormSection({required this.title, required this.subtitle});
   @override
   Widget build(BuildContext context) => Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Text(title, style: const TextStyle(fontSize: 19, fontWeight: FontWeight.w900)),
-      const SizedBox(height: 3),
-      Text(subtitle, style: const TextStyle(color: PlantCareColors.muted, fontSize: 12)),
-      const SizedBox(height: PlantCareSpacing.sm),
-    ],
-  );
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(title,
+              style:
+                  const TextStyle(fontSize: 19, fontWeight: FontWeight.w900)),
+          const SizedBox(height: 3),
+          Text(subtitle,
+              style:
+                  const TextStyle(color: PlantCareColors.muted, fontSize: 12)),
+          const SizedBox(height: PlantCareSpacing.sm),
+        ],
+      );
 }

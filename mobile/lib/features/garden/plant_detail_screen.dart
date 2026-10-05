@@ -45,7 +45,8 @@ class _PlantDetailScreenState extends State<PlantDetailScreen> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Delete plant?', style: TextStyle(fontWeight: FontWeight.w900)),
+        title: const Text('Delete plant?',
+            style: TextStyle(fontWeight: FontWeight.w900)),
         content: Text(
           'Remove ${plant.name} from your garden? This cannot be undone.',
         ),
@@ -55,7 +56,8 @@ class _PlantDetailScreenState extends State<PlantDetailScreen> {
             child: const Text('Cancel'),
           ),
           FilledButton(
-            style: FilledButton.styleFrom(backgroundColor: PlantCareColors.danger),
+            style:
+                FilledButton.styleFrom(backgroundColor: PlantCareColors.danger),
             onPressed: () => Navigator.pop(context, true),
             child: const Text('Delete'),
           ),
@@ -162,18 +164,21 @@ class _PlantDetailScreenState extends State<PlantDetailScreen> {
                   borderRadius: BorderRadius.circular(PlantCareRadius.featured),
                 ),
                 child: Center(
-                  child: Icon(Icons.eco_rounded, size: 68, color: PlantCareColors.primary),
+                  child: Icon(Icons.eco_rounded,
+                      size: 68, color: PlantCareColors.primary),
                 ),
               ),
               const SizedBox(height: PlantCareSpacing.md),
               Text(
                 plant.name,
-                style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w900),
+                style:
+                    const TextStyle(fontSize: 24, fontWeight: FontWeight.w900),
               ),
               const SizedBox(height: 3),
               Text(
                 plant.species,
-                style: const TextStyle(color: PlantCareColors.muted, fontSize: 13),
+                style:
+                    const TextStyle(color: PlantCareColors.muted, fontSize: 13),
               ),
               const SizedBox(height: PlantCareSpacing.md),
               Row(

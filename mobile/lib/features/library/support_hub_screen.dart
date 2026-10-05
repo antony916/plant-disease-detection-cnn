@@ -14,9 +14,15 @@ class SupportHubScreen extends StatelessWidget {
       body: ListView(
         padding: const EdgeInsets.all(PlantCareSpacing.lg),
         children: [
-          const Text('MORE WAYS TO CARE', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w900, color: PlantCareColors.primary, letterSpacing: .7)),
+          const Text('MORE WAYS TO CARE',
+              style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w900,
+                  color: PlantCareColors.primary,
+                  letterSpacing: .7)),
           const SizedBox(height: 4),
-          const Text('Find trusted help, experts and useful resources.', style: TextStyle(fontSize: 22, fontWeight: FontWeight.w900)),
+          const Text('Find trusted help, experts and useful resources.',
+              style: TextStyle(fontSize: 22, fontWeight: FontWeight.w900)),
           const SizedBox(height: 6),
           const Text('Community, experts, local support and trusted resources.',
               style: TextStyle(color: PlantCareColors.muted)),

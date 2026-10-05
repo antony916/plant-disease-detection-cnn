@@ -41,13 +41,21 @@ class _NotificationSettingsScreenState
     if (_loading)
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     return Scaffold(
-      appBar: AppBar(title: const Text('Notification settings', style: TextStyle(fontWeight: FontWeight.w900))),
+      appBar: AppBar(
+          title: const Text('Notification settings',
+              style: TextStyle(fontWeight: FontWeight.w900))),
       body: ListView(
         padding: const EdgeInsets.all(PlantCareSpacing.lg),
         children: [
-          const Text('CARE REMINDERS', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w900, color: PlantCareColors.primary, letterSpacing: .7)),
+          const Text('CARE REMINDERS',
+              style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w900,
+                  color: PlantCareColors.primary,
+                  letterSpacing: .7)),
           const SizedBox(height: 4),
-          const Text('Choose what PlantCare can notify you about.', style: TextStyle(color: PlantCareColors.muted)), 
+          const Text('Choose what PlantCare can notify you about.',
+              style: TextStyle(color: PlantCareColors.muted)),
           const SizedBox(height: PlantCareSpacing.sm),
           Card(
               child: Column(children: [
@@ -71,9 +79,15 @@ class _NotificationSettingsScreenState
                     _save(_preferences.copyWith(diagnosisAlerts: value))),
           ])),
           const SizedBox(height: PlantCareSpacing.lg),
-          const Text('QUIET HOURS', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w900, color: PlantCareColors.primary, letterSpacing: .7)),
+          const Text('QUIET HOURS',
+              style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w900,
+                  color: PlantCareColors.primary,
+                  letterSpacing: .7)),
           const SizedBox(height: 4),
-          const Text('Pause non-critical garden alerts during your rest time.', style: TextStyle(color: PlantCareColors.muted)), 
+          const Text('Pause non-critical garden alerts during your rest time.',
+              style: TextStyle(color: PlantCareColors.muted)),
           const SizedBox(height: PlantCareSpacing.sm),
           Card(
               child: SwitchListTile(

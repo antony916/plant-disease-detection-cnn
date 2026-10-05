@@ -1,7 +1,133 @@
 import 'package:flutter/material.dart';
-import '../services/diagnosis_service.dart';import '../models/plant.dart';
-import '../../features/auth/login_screen.dart';import '../../features/assistant/assistant_screen.dart';import '../../features/diagnosis/diagnosis_screen.dart';import '../../features/diagnosis/diagnosis_history_screen.dart';import '../../features/garden/add_plant_screen.dart';import '../../features/garden/edit_plant_screen.dart';import '../../features/garden/dashboard_screen.dart';import '../../features/garden/plant_detail_screen.dart';import '../../features/library/library_screen.dart';import '../../features/profile/profile_screen.dart';import '../../features/notifications/notification_center_screen.dart';import '../../features/notifications/notification_settings_screen.dart';import '../../features/family/family_sharing_screen.dart';import '../../features/family/family_invites_screen.dart';import '../../features/scanner/scanner_screen.dart';import '../../features/library/support_hub_screen.dart';
-abstract final class AppRouter{static const login='/',dashboard='/dashboard',scanner='/scanner',diagnosis='/diagnosis',diagnosisHistory='/diagnosis-history',plant='/plant',assistant='/assistant',library='/library',addPlant='/add-plant',editPlant='/edit-plant',notifications='/notifications',notificationSettings='/notification-settings',familySharing='/family-sharing',familyInvites='/family-invites',profile='/profile',support='/support';
-static Route<dynamic> onGenerateRoute(RouteSettings s){switch(s.name){case login:return MaterialPageRoute(builder:(_)=>const LoginScreen());case dashboard:return MaterialPageRoute(builder:(_)=>const DashboardScreen());case scanner:return MaterialPageRoute(builder:(_)=>const ScannerScreen());case diagnosisHistory:return MaterialPageRoute(builder:(_)=>const DiagnosisHistoryScreen());case diagnosis:final r=s.arguments;return MaterialPageRoute(builder:(_)=>r is DiagnosisResult?DiagnosisScreen(result:r):const ScannerScreen());case plant:return MaterialPageRoute(builder:(_)=>PlantDetailScreen(plantName:s.arguments is String?s.arguments as String:'Tomato'));case assistant:return MaterialPageRoute(builder:(_)=>const AssistantScreen());case library:return MaterialPageRoute(builder:(_)=>const LibraryScreen());case addPlant:return MaterialPageRoute(builder:(_)=>const AddPlantScreen());case editPlant:final p=s.arguments;return MaterialPageRoute(builder:(_)=>p is Plant?EditPlantScreen(plant:p):const DashboardScreen());case notifications:return MaterialPageRoute(builder:(_)=>const NotificationCenterScreen());case notificationSettings:return MaterialPageRoute(builder:(_)=>const NotificationSettingsScreen());case familySharing:return MaterialPageRoute(builder:(_)=>const FamilySharingScreen());case familyInvites:return MaterialPageRoute(builder:(_)=>const FamilyInvitesScreen());case profile:return MaterialPageRoute(builder:(_)=>const ProfileScreen());case support:return MaterialPageRoute(builder:(_)=>const SupportHubScreen());default:return MaterialPageRoute(builder:(_)=>const LoginScreen());}}
+import '../services/diagnosis_service.dart';
+import '../models/plant.dart';
+import '../../features/auth/login_screen.dart';
+import '../../features/assistant/assistant_screen.dart';
+import '../../features/diagnosis/diagnosis_screen.dart';
+import '../../features/diagnosis/diagnosis_history_screen.dart';
+import '../../features/garden/add_plant_screen.dart';
+import '../../features/garden/edit_plant_screen.dart';
+import '../../features/garden/dashboard_screen.dart';
+import '../../features/garden/plant_detail_screen.dart';
+import '../../features/library/library_screen.dart';
+import '../../features/profile/profile_screen.dart';
+import '../../features/notifications/notification_center_screen.dart';
+import '../../features/notifications/notification_settings_screen.dart';
+import '../../features/family/family_sharing_screen.dart';
+import '../../features/family/family_invites_screen.dart';
+import '../../features/scanner/scanner_screen.dart';
+import '../../features/library/support_hub_screen.dart';
+
+abstract final class AppRouter {
+  static const login = '/',
+      dashboard = '/dashboard',
+      scanner = '/scanner',
+      diagnosis = '/diagnosis',
+      diagnosisHistory = '/diagnosis-history',
+      plant = '/plant',
+      assistant = '/assistant',
+      library = '/library',
+      addPlant = '/add-plant',
+      editPlant = '/edit-plant',
+      notifications = '/notifications',
+      notificationSettings = '/notification-settings',
+      familySharing = '/family-sharing',
+      familyInvites = '/family-invites',
+      profile = '/profile',
+      support = '/support';
+  static Route<dynamic> onGenerateRoute(RouteSettings s) {
+    switch (s.name) {
+      case login:
+        return MaterialPageRoute(builder: (_) => const LoginScreen());
+      case dashboard:
+        return MaterialPageRoute(builder: (_) => const DashboardScreen());
+      case scanner:
+        return MaterialPageRoute(builder: (_) => const ScannerScreen());
+      case diagnosisHistory:
+        return MaterialPageRoute(
+            builder: (_) => const DiagnosisHistoryScreen());
+      case diagnosis:
+        final r = s.arguments;
+        return MaterialPageRoute(
+            builder: (_) => r is DiagnosisResult
+                ? DiagnosisScreen(result: r)
+                : const ScannerScreen());
+      case plant:
+        return MaterialPageRoute(
+            builder: (_) => PlantDetailScreen(
+                plantName:
+                    s.arguments is String ? s.arguments as String : 'Tomato'));
+      case assistant:
+        return MaterialPageRoute(builder: (_) => const AssistantScreen());
+      case library:
+        return MaterialPageRoute(builder: (_) => const LibraryScreen());
+      case addPlant:
+        return MaterialPageRoute(builder: (_) => const AddPlantScreen());
+      case editPlant:
+        final p = s.arguments;
+        return MaterialPageRoute(
+            builder: (_) => p is Plant
+                ? EditPlantScreen(plant: p)
+                : const DashboardScreen());
+      case notifications:
+        return MaterialPageRoute(
+            builder: (_) => const NotificationCenterScreen());
+      case notificationSettings:
+        return MaterialPageRoute(
+            builder: (_) => const NotificationSettingsScreen());
+      case familySharing:
+        return MaterialPageRoute(builder: (_) => const FamilySharingScreen());
+      case familyInvites:
+        return MaterialPageRoute(builder: (_) => const FamilyInvitesScreen());
+      case profile:
+        return MaterialPageRoute(builder: (_) => const ProfileScreen());
+      case support:
+        return MaterialPageRoute(builder: (_) => const SupportHubScreen());
+      default:
+        return MaterialPageRoute(builder: (_) => const LoginScreen());
+    }
+  }
 }
-class AppBottomNav extends StatelessWidget{final int selectedIndex;const AppBottomNav({super.key,required this.selectedIndex});void go(BuildContext c,int i){if(i==selectedIndex)return;const r=[AppRouter.dashboard,AppRouter.library,AppRouter.scanner,AppRouter.diagnosisHistory,AppRouter.profile];Navigator.pushReplacementNamed(c,r[i]);}@override Widget build(BuildContext c)=>NavigationBar(selectedIndex:selectedIndex,onDestinationSelected:(i)=>go(c,i),destinations:const[NavigationDestination(icon:Icon(Icons.home_outlined),selectedIcon:Icon(Icons.home_rounded),label:'Home'),NavigationDestination(icon:Icon(Icons.grid_view_outlined),selectedIcon:Icon(Icons.grid_view_rounded),label:'Explore'),NavigationDestination(icon:Icon(Icons.center_focus_strong_outlined),selectedIcon:Icon(Icons.center_focus_strong_rounded),label:'Scan'),NavigationDestination(icon:Icon(Icons.health_and_safety_outlined),selectedIcon:Icon(Icons.health_and_safety_rounded),label:'Health'),NavigationDestination(icon:Icon(Icons.person_outline_rounded),selectedIcon:Icon(Icons.person_rounded),label:'Profile')]);}
+
+class AppBottomNav extends StatelessWidget {
+  final int selectedIndex;
+  const AppBottomNav({super.key, required this.selectedIndex});
+  void go(BuildContext c, int i) {
+    if (i == selectedIndex) return;
+    const r = [
+      AppRouter.dashboard,
+      AppRouter.library,
+      AppRouter.scanner,
+      AppRouter.diagnosisHistory,
+      AppRouter.profile
+    ];
+    Navigator.pushReplacementNamed(c, r[i]);
+  }
+
+  @override
+  Widget build(BuildContext c) => NavigationBar(
+          selectedIndex: selectedIndex,
+          onDestinationSelected: (i) => go(c, i),
+          destinations: const [
+            NavigationDestination(
+                icon: Icon(Icons.home_outlined),
+                selectedIcon: Icon(Icons.home_rounded),
+                label: 'Home'),
+            NavigationDestination(
+                icon: Icon(Icons.grid_view_outlined),
+                selectedIcon: Icon(Icons.grid_view_rounded),
+                label: 'Explore'),
+            NavigationDestination(
+                icon: Icon(Icons.center_focus_strong_outlined),
+                selectedIcon: Icon(Icons.center_focus_strong_rounded),
+                label: 'Scan'),
+            NavigationDestination(
+                icon: Icon(Icons.health_and_safety_outlined),
+                selectedIcon: Icon(Icons.health_and_safety_rounded),
+                label: 'Health'),
+            NavigationDestination(
+                icon: Icon(Icons.person_outline_rounded),
+                selectedIcon: Icon(Icons.person_rounded),
+                label: 'Profile')
+          ]);
+}
