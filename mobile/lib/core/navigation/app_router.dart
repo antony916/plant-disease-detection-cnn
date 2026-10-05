@@ -101,8 +101,8 @@ class AppBottomNav extends StatelessWidget {
   final int selectedIndex;
 
   static const _destinations = <_NavDestination>[
-    _NavDestination(Icons.eco_outlined, Icons.eco_rounded, 'Garden',
-        AppRouter.dashboard),
+    _NavDestination(
+        Icons.eco_outlined, Icons.eco_rounded, 'Garden', AppRouter.dashboard),
     _NavDestination(Icons.center_focus_strong_outlined,
         Icons.center_focus_strong_rounded, 'Scan', AppRouter.scanner),
     _NavDestination(Icons.menu_book_outlined, Icons.menu_book_rounded,
@@ -177,8 +177,7 @@ class _NavItem extends StatelessWidget {
           decoration: selected
               ? BoxDecoration(
                   gradient: PlantCareGradients.lime,
-                  borderRadius:
-                      BorderRadius.circular(PlantCareRadius.pill),
+                  borderRadius: BorderRadius.circular(PlantCareRadius.pill),
                 )
               : null,
           child: Row(
