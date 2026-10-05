@@ -8,3 +8,15 @@ artifacts/*.pt
 artifacts/*.onnx
 .streamlit/
 .DS_Store
+
+# Flutter generated files
+.dart_tool/
+.flutter-plugins-dependencies
+build/
+
+# IDE files
+.idea/
+*.iml
+
+# Local backups
+local-sync-backup-*/
