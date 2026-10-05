@@ -46,7 +46,7 @@ class _FamilyInvitesScreenState extends State<FamilyInvitesScreen> {
       appBar: AppBar(
         title: const Text(
           'Garden invitations',
-          style: TextStyle(fontWeight: FontWeight.w800),
+          style: TextStyle(fontWeight: FontWeight.w900),
         ),
       ),
       body: FutureBuilder<List<FamilyMember>>(
