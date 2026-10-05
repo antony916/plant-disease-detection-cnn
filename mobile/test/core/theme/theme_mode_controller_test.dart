@@ -34,8 +34,7 @@ void main() {
     expect(reloaded.mode, ThemeMode.light);
   });
 
-  test('ThemeModeController reads a saved value on a new controller',
-      () async {
+  test('ThemeModeController reads a saved value on a new controller', () async {
     final controller = ThemeModeController();
     await controller.setMode(ThemeMode.dark);
 
