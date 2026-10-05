@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
 import '../../core/navigation/app_router.dart';
@@ -20,7 +22,7 @@ class DiagnosisScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Plant diagnosis',
+          'Diagnosis result',
           style: TextStyle(fontWeight: FontWeight.w900),
         ),
         actions: [
@@ -35,7 +37,7 @@ class DiagnosisScreen extends StatelessWidget {
         ],
       ),
       body: ListView(
-        padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
+        padding: const EdgeInsets.fromLTRB(16, 4, 16, 28),
         children: [
           Container(
             padding: const EdgeInsets.all(18),
@@ -43,7 +45,7 @@ class DiagnosisScreen extends StatelessWidget {
               color: lowConfidence
                   ? PlantCareColors.warm
                   : PlantCareColors.softGreen,
-              borderRadius: BorderRadius.circular(18),
+              borderRadius: BorderRadius.circular(16),
             ),
             child: Row(
               children: [
