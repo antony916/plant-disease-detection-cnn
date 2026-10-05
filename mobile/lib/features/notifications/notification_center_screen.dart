@@ -82,13 +82,14 @@ class _NotificationCenterScreenState extends State<NotificationCenterScreen> {
       appBar: AppBar(
         title: const Text('Notifications', style: TextStyle(fontWeight: FontWeight.w900)), 
         actions: [
-          TextButton(
-            onPressed: () async {
-              await AppServices.notificationCenter.markAllRead();
-              _reload();
-            },
-            label: const Text('Mark all read'),
-          ),
+          IconButton(
+  tooltip: 'Mark all as read',
+  onPressed: () async {
+    await AppServices.notificationCenter.markAllRead();
+    _reload();
+  },
+  icon: const Icon(Icons.done_all_rounded),
+),
           IconButton(
             tooltip: 'Clear notifications',
             onPressed: _confirmClearAll,
