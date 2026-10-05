@@ -51,7 +51,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
                 children: [
               Row(children: [
                 const Expanded(
-                    child: Text('Explore',
+                    child: Text('Library',
                         style: TextStyle(
                             fontSize: 25, fontWeight: FontWeight.w900))),
                 IconButton(
@@ -164,6 +164,6 @@ class _LibraryScreenState extends State<LibraryScreen> {
                           color: Colors.white),
                       onTap: () => Navigator.pushNamed(c, AppRouter.support)))
             ])),
-        bottomNavigationBar: const AppBottomNav(selectedIndex: 1));
+        bottomNavigationBar: const AppBottomNav(selectedIndex: 2));
   }
 }

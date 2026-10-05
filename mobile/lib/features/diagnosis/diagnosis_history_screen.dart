@@ -155,7 +155,8 @@ class _DiagnosisHistoryScreenState extends State<DiagnosisHistoryScreen> {
                       record.result.plantName +
                           ' • ' +
                           confidence +
-                          '% confidence\n' +
+                          '% confidence
+' +
                           date,
                     ),
                     isThreeLine: true,
@@ -172,7 +173,6 @@ class _DiagnosisHistoryScreenState extends State<DiagnosisHistoryScreen> {
           );
         },
       ),
-      bottomNavigationBar: const AppBottomNav(selectedIndex: 3),
     );
   }
 
