@@ -29,6 +29,17 @@ abstract final class PlantCareColors {
   static const info = Color(0xFF8DD6FF);
   static const white = Colors.white;
   static const black = Colors.black;
+
+  // Legacy aliases kept temporarily while feature screens migrate to the
+  // theme's ColorScheme and glass tokens.
+  static const card = Color(0x1AFFFFFF);
+  static const border = Color(0x2EFFFFFF);
+  static const text = lightText;
+  static const muted = lightSecondary;
+  static const surface = lightTop;
+  static const warm = Color(0x33FFC857);
+  static const softGreen = Color(0x2638B24A);
+  static const accent = lime;
 }
 
 abstract final class PlantCareGradients {
