@@ -137,7 +137,7 @@ class GradientButton extends StatefulWidget {
     this.onPressed,
     this.semanticLabel,
     this.padding = const EdgeInsets.symmetric(horizontal: 20),
-    this.minimumSize = const Size(double.infinity, 44),
+    this.minimumSize = const Size(0, 44),
   });
 
   final Widget child;
