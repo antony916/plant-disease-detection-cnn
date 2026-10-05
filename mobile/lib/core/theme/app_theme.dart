@@ -387,12 +387,10 @@ class AppTheme {
         surfaceTintColor: Colors.transparent,
       ),
       bottomSheetTheme: BottomSheetThemeData(
-        backgroundColor: isDark
-            ? const Color(0xEE10351F)
-            : const Color(0xF2F4FBF5),
-        modalBackgroundColor: isDark
-            ? const Color(0xEE10351F)
-            : const Color(0xF2F4FBF5),
+        backgroundColor:
+            isDark ? const Color(0xEE10351F) : const Color(0xF2F4FBF5),
+        modalBackgroundColor:
+            isDark ? const Color(0xEE10351F) : const Color(0xF2F4FBF5),
         elevation: 0,
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(
@@ -401,9 +399,8 @@ class AppTheme {
         ),
       ),
       dialogTheme: DialogThemeData(
-        backgroundColor: isDark
-            ? const Color(0xF2184228)
-            : const Color(0xF2F4FBF5),
+        backgroundColor:
+            isDark ? const Color(0xF2184228) : const Color(0xF2F4FBF5),
         surfaceTintColor: Colors.transparent,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(PlantCareRadius.featured),
