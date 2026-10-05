@@ -172,6 +172,7 @@ class _DiagnosisHistoryScreenState extends State<DiagnosisHistoryScreen> {
           );
         },
       ),
+      bottomNavigationBar: const AppBottomNav(selectedIndex: 3),
     );
   }
 
