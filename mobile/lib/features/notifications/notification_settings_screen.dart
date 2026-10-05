@@ -41,12 +41,13 @@ class _NotificationSettingsScreenState
     if (_loading)
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     return Scaffold(
-      appBar: AppBar(title: const Text('Notification settings')),
+      appBar: AppBar(title: const Text('Notification settings', style: TextStyle(fontWeight: FontWeight.w900))),
       body: ListView(
         padding: const EdgeInsets.all(PlantCareSpacing.lg),
         children: [
-          const Text('Care reminders',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800)),
+          const Text('CARE REMINDERS', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w900, color: PlantCareColors.primary, letterSpacing: .7)),
+          const SizedBox(height: 4),
+          const Text('Choose what PlantCare can notify you about.', style: TextStyle(color: PlantCareColors.muted)), 
           const SizedBox(height: PlantCareSpacing.sm),
           Card(
               child: Column(children: [
@@ -70,8 +71,9 @@ class _NotificationSettingsScreenState
                     _save(_preferences.copyWith(diagnosisAlerts: value))),
           ])),
           const SizedBox(height: PlantCareSpacing.lg),
-          const Text('Quiet hours',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800)),
+          const Text('QUIET HOURS', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w900, color: PlantCareColors.primary, letterSpacing: .7)),
+          const SizedBox(height: 4),
+          const Text('Pause non-critical garden alerts during your rest time.', style: TextStyle(color: PlantCareColors.muted)), 
           const SizedBox(height: PlantCareSpacing.sm),
           Card(
               child: SwitchListTile(
@@ -87,7 +89,7 @@ class _NotificationSettingsScreenState
           )),
           const SizedBox(height: PlantCareSpacing.md),
           const Text(
-              'Quiet hours currently use 10 PM–7 AM. Custom timing can be added when account preferences are connected to cloud storage.',
+              'Current quiet hours: 10 PM–7 AM. Custom timing will be enabled when account preferences support saved schedules.',
               style: TextStyle(color: PlantCareColors.muted, fontSize: 12)),
         ],
       ),
