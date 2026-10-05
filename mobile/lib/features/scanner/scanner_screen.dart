@@ -33,7 +33,7 @@ class _ScannerScreenState extends State<ScannerScreen> {
     if(_imagePath==null){setState(()=>_error='Choose a photo first.');return;}
     final plants=await _plants; final plant=_selectedPlant(plants);
     if(plant==null){setState(()=>_error='Add a plant before scanning.');return;}
-    setState(()=>{_analyzing=true,_error=null});
+    setState(() {_analyzing=true; _error=null;});
     try {
       final user=await AppServices.auth.currentUser();
       if(user==null)throw StateError('Sign in required.');
