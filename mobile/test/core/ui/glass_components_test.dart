@@ -3,10 +3,6 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'package:plantcare_ai/core/ui/glass_components.dart';
 
-Finder _semanticsLabel(String label) => find.byWidgetPredicate(
-      (widget) => widget is Semantics && widget.label == label,
-    );
-
 Widget _host(Widget child, {bool reduced = false}) {
   return MaterialApp(
     home: MediaQuery(
@@ -36,7 +32,9 @@ void main() {
     );
 
     expect(find.text('Card'), findsOneWidget);
-    expect(_semanticsLabel('card label'), findsOneWidget);
+    final semantics = SemanticsTester(tester);
+    addTearDown(semantics.dispose);
+    expect(semantics, includesNodeWith(label: 'card label'));
     await tester.tap(find.text('Card'));
     expect(taps, 1);
   });
@@ -67,7 +65,9 @@ void main() {
       ),
     );
 
-    expect(_semanticsLabel('pill label'), findsOneWidget);
+    final semantics = SemanticsTester(tester);
+    addTearDown(semantics.dispose);
+    expect(semantics, includesNodeWith(label: 'pill label'));
     await tester.tap(find.text('Pill'));
     expect(taps, 1);
   });
@@ -97,7 +97,9 @@ void main() {
       ),
     );
 
-    expect(_semanticsLabel('chip label'), findsOneWidget);
+    final semantics = SemanticsTester(tester);
+    addTearDown(semantics.dispose);
+    expect(semantics, includesNodeWith(label: 'chip label'));
     await tester.tap(find.text('Chip'));
     expect(taps, 1);
   });
@@ -127,7 +129,9 @@ void main() {
       ),
     );
 
-    expect(_semanticsLabel('sheet label'), findsOneWidget);
+    final semantics = SemanticsTester(tester);
+    addTearDown(semantics.dispose);
+    expect(semantics, includesNodeWith(label: 'sheet label'));
     await tester.tap(find.text('Sheet'));
     expect(taps, 1);
   });
@@ -157,7 +161,9 @@ void main() {
       ),
     );
 
-    expect(_semanticsLabel('save label'), findsOneWidget);
+    final semantics = SemanticsTester(tester);
+    addTearDown(semantics.dispose);
+    expect(semantics, includesNodeWith(label: 'save label'));
     expect(
       tester.getSize(find.byType(GradientButton)).height,
       greaterThanOrEqualTo(44),
