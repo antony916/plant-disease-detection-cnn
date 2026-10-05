@@ -155,8 +155,7 @@ class _DiagnosisHistoryScreenState extends State<DiagnosisHistoryScreen> {
                       record.result.plantName +
                           ' • ' +
                           confidence +
-                          '% confidence
-' +
+                          '% confidence\n' +
                           date,
                     ),
                     isThreeLine: true,
