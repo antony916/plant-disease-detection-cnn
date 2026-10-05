@@ -31,7 +31,8 @@ class _NotificationCenterScreenState extends State<NotificationCenterScreen> {
         content: const Text(
             'This removes all notifications from your notification history.'),
         actions: [
-          TextButton(
+          TextButton.icon(
+            icon: const Icon(Icons.done_all_rounded, size: 18),
             onPressed: () => Navigator.pop(context, false),
             child: const Text('Cancel'),
           ),
@@ -79,14 +80,14 @@ class _NotificationCenterScreenState extends State<NotificationCenterScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Notifications'),
+        title: const Text('Notifications', style: TextStyle(fontWeight: FontWeight.w900)), 
         actions: [
           TextButton(
             onPressed: () async {
               await AppServices.notificationCenter.markAllRead();
               _reload();
             },
-            child: const Text('Mark all read'),
+            label: const Text('Mark all read'),
           ),
           IconButton(
             tooltip: 'Clear notifications',
@@ -101,24 +102,19 @@ class _NotificationCenterScreenState extends State<NotificationCenterScreen> {
           if (snapshot.connectionState == ConnectionState.waiting)
             return const Center(child: CircularProgressIndicator());
           if (snapshot.hasError)
-            return const Center(
-                child: Text('We could not load your notifications.'));
+            return Center(child: _NotificationState(
+              icon: Icons.cloud_off_outlined,
+              title: 'Couldn’t load notifications',
+              message: 'Check your connection and try again.',
+              action: TextButton.icon(onPressed: _reload, icon: const Icon(Icons.refresh), label: const Text('Retry')),
+            ));
           final items = snapshot.data ?? const <NotificationCenterItem>[];
           if (items.isEmpty)
-            return const Center(
-                child: Padding(
-                    padding: EdgeInsets.all(PlantCareSpacing.xl),
-                    child: Column(mainAxisSize: MainAxisSize.min, children: [
-                      Icon(Icons.notifications_none, size: 48),
-                      SizedBox(height: 12),
-                      Text('You are all caught up.',
-                          style: TextStyle(fontWeight: FontWeight.w800)),
-                      SizedBox(height: 4),
-                      Text(
-                          'PlantCare will show care reminders and alerts here.',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(color: PlantCareColors.muted))
-                    ])));
+            return const Center(child: _NotificationState(
+              icon: Icons.notifications_none_rounded,
+              title: 'You are all caught up',
+              message: 'PlantCare will show care reminders and alerts here.',
+            ));
           return ListView.separated(
             padding: const EdgeInsets.all(PlantCareSpacing.lg),
             itemCount: items.length,
@@ -151,4 +147,23 @@ class _NotificationCenterScreenState extends State<NotificationCenterScreen> {
       ),
     );
   }
+}
+
+class _NotificationState extends StatelessWidget {
+  final IconData icon;
+  final String title;
+  final String message;
+  final Widget? action;
+  const _NotificationState({required this.icon, required this.title, required this.message, this.action});
+  @override Widget build(BuildContext context) => Padding(
+    padding: const EdgeInsets.all(PlantCareSpacing.xl),
+    child: Column(mainAxisSize: MainAxisSize.min, children: [
+      Icon(icon, size: 52, color: PlantCareColors.muted),
+      const SizedBox(height: PlantCareSpacing.md),
+      Text(title, textAlign: TextAlign.center, style: const TextStyle(fontSize: 19, fontWeight: FontWeight.w900)),
+      const SizedBox(height: PlantCareSpacing.sm),
+      Text(message, textAlign: TextAlign.center, style: const TextStyle(color: PlantCareColors.muted)),
+      if (action != null) ...[const SizedBox(height: PlantCareSpacing.md), action!],
+    ]),
+  );
 }
