@@ -3,6 +3,10 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'package:plantcare_ai/core/ui/glass_components.dart';
 
+Finder _semanticsLabel(String label) => find.byWidgetPredicate(
+      (widget) => widget is Semantics && widget.label == label,
+    );
+
 Widget _host(Widget child, {bool reduced = false}) {
   return MaterialApp(
     home: MediaQuery(
@@ -32,7 +36,7 @@ void main() {
     );
 
     expect(find.text('Card'), findsOneWidget);
-    expect(find.bySemanticsLabel('card label'), findsOneWidget);
+    expect(_semanticsLabel('card label'), findsOneWidget);
     await tester.tap(find.text('Card'));
     expect(taps, 1);
   });
@@ -63,7 +67,7 @@ void main() {
       ),
     );
 
-    expect(find.bySemanticsLabel('pill label'), findsOneWidget);
+    expect(_semanticsLabel('pill label'), findsOneWidget);
     await tester.tap(find.text('Pill'));
     expect(taps, 1);
   });
@@ -93,7 +97,7 @@ void main() {
       ),
     );
 
-    expect(find.bySemanticsLabel('chip label'), findsOneWidget);
+    expect(_semanticsLabel('chip label'), findsOneWidget);
     await tester.tap(find.text('Chip'));
     expect(taps, 1);
   });
@@ -123,7 +127,7 @@ void main() {
       ),
     );
 
-    expect(find.bySemanticsLabel('sheet label'), findsOneWidget);
+    expect(_semanticsLabel('sheet label'), findsOneWidget);
     await tester.tap(find.text('Sheet'));
     expect(taps, 1);
   });
@@ -153,7 +157,7 @@ void main() {
       ),
     );
 
-    expect(find.bySemanticsLabel('save label'), findsOneWidget);
+    expect(_semanticsLabel('save label'), findsOneWidget);
     expect(
       tester.getSize(find.byType(GradientButton)).height,
       greaterThanOrEqualTo(44),
