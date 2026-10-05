@@ -32,9 +32,7 @@ void main() {
     );
 
     expect(find.text('Card'), findsOneWidget);
-    final semantics = SemanticsTester(tester);
-    addTearDown(semantics.dispose);
-    expect(semantics, includesNodeWith(label: 'card label'));
+    expect(find.bySemanticsLabel('card label'), findsOneWidget);
     await tester.tap(find.text('Card'));
     expect(taps, 1);
   });
@@ -65,9 +63,7 @@ void main() {
       ),
     );
 
-    final semantics = SemanticsTester(tester);
-    addTearDown(semantics.dispose);
-    expect(semantics, includesNodeWith(label: 'pill label'));
+    expect(find.bySemanticsLabel('pill label'), findsOneWidget);
     await tester.tap(find.text('Pill'));
     expect(taps, 1);
   });
@@ -97,9 +93,7 @@ void main() {
       ),
     );
 
-    final semantics = SemanticsTester(tester);
-    addTearDown(semantics.dispose);
-    expect(semantics, includesNodeWith(label: 'chip label'));
+    expect(find.bySemanticsLabel('chip label'), findsOneWidget);
     await tester.tap(find.text('Chip'));
     expect(taps, 1);
   });
@@ -129,9 +123,7 @@ void main() {
       ),
     );
 
-    final semantics = SemanticsTester(tester);
-    addTearDown(semantics.dispose);
-    expect(semantics, includesNodeWith(label: 'sheet label'));
+    expect(find.bySemanticsLabel('sheet label'), findsOneWidget);
     await tester.tap(find.text('Sheet'));
     expect(taps, 1);
   });
@@ -161,9 +153,7 @@ void main() {
       ),
     );
 
-    final semantics = SemanticsTester(tester);
-    addTearDown(semantics.dispose);
-    expect(semantics, includesNodeWith(label: 'save label'));
+    expect(find.bySemanticsLabel('save label'), findsOneWidget);
     expect(
       tester.getSize(find.byType(GradientButton)).height,
       greaterThanOrEqualTo(44),
