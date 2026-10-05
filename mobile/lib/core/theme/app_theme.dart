@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 abstract final class PlantCareColors {
   // Brand
   static const lime = Color(0xFFA8E63D);
