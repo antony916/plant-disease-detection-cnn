@@ -3,6 +3,7 @@ import '../../core/app_services.dart';
 import '../../core/models/notification_center_item.dart';
 import '../../core/navigation/app_router.dart';
 import '../../core/theme/app_theme.dart';
+import '../../core/ui/empty_state.dart';
 
 class NotificationCenterScreen extends StatefulWidget {
   const NotificationCenterScreen({super.key});
@@ -106,12 +107,12 @@ class _NotificationCenterScreenState extends State<NotificationCenterScreen> {
                         label: const Text('Retry'))));
           final items = snapshot.data ?? const <NotificationCenterItem>[];
           if (items.isEmpty)
-            return const Center(
-                child: _State(
-                    icon: Icons.notifications_none_rounded,
-                    title: 'You are all caught up',
-                    message:
-                        'PlantCare will show care reminders and alerts here.'));
+            return const EmptyState(
+              icon: Icons.notifications_none_rounded,
+              title: 'You are all caught up',
+              helperText:
+                  'PlantCare will show care reminders and alerts here.',
+            );
           return ListView.separated(
             padding: const EdgeInsets.all(PlantCareSpacing.lg),
             itemCount: items.length,

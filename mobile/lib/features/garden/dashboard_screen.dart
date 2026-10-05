@@ -5,6 +5,7 @@ import '../../core/models/garden_task.dart';
 import '../../core/models/plant.dart';
 import '../../core/navigation/app_router.dart';
 import '../../core/theme/app_theme.dart';
+import '../../core/ui/empty_state.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -209,11 +210,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       plants.isEmpty ? 'Add plant' : 'See all',
                       () => Navigator.pushNamed(context, AppRouter.addPlant)),
                   if (plants.isEmpty)
-                    const _Info(
+                    EmptyState(
                         icon: Icons.add_circle_outline,
                         title: 'Start your garden',
-                        sub:
-                            'Add your first plant and keep its care history in one place.')
+                        helperText:
+                            'Add your first plant and keep its care history in one place.',
+                        actionLabel: 'Add plant',
+                        onAction: () => Navigator.pushNamed(
+                            context, AppRouter.addPlant))
                   else
                     ...plants.take(4).map((p) => _Plant(
                         p,

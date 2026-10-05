@@ -70,7 +70,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         fontSize: 18,
                                         fontWeight: FontWeight.w900)),
                                 const SizedBox(height: 3),
-                                Text(u?.email ?? 'Demo account',
+                                Text(u?.email ?? 'Account details unavailable',
                                     style: const TextStyle(
                                         color: PlantCareColors.muted,
                                         fontSize: 12))

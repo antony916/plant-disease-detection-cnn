@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../core/app_services.dart';
 import '../../core/models/diagnosis_record.dart';
 import '../../core/theme/app_theme.dart';
+import '../../core/ui/empty_state.dart';
 import '../../core/navigation/app_router.dart';
 
 class DiagnosisHistoryScreen extends StatefulWidget {
@@ -107,17 +108,14 @@ class _DiagnosisHistoryScreenState extends State<DiagnosisHistoryScreen> {
 
           final records = snapshot.data ?? const <DiagnosisRecord>[];
           if (records.isEmpty) {
-            return _StateMessage(
+            return EmptyState(
               icon: Icons.health_and_safety_outlined,
               title: 'No diagnoses yet',
-              message:
+              helperText:
                   'Your plant scans will appear here as a health timeline.',
-              action: FilledButton.icon(
-                onPressed: () =>
-                    Navigator.pushReplacementNamed(context, AppRouter.scanner),
-                icon: const Icon(Icons.camera_alt_outlined),
-                label: const Text('Scan a plant'),
-              ),
+              actionLabel: 'Scan a plant',
+              onAction: () =>
+                  Navigator.pushReplacementNamed(context, AppRouter.scanner),
             );
           }
 
