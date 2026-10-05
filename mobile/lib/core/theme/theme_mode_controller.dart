@@ -22,10 +22,12 @@ class ThemeModeController extends ChangeNotifier {
   Future<void> setMode(ThemeMode mode) async {
     _mode = mode;
     notifyListeners();
-    await _preferences.setString(_key, switch (mode) {
-      ThemeMode.light => 'light',
-      ThemeMode.dark => 'dark',
-      ThemeMode.system => 'system',
-    });
+    await _preferences.setString(
+        _key,
+        switch (mode) {
+          ThemeMode.light => 'light',
+          ThemeMode.dark => 'dark',
+          ThemeMode.system => 'system',
+        });
   }
 }

@@ -17,38 +17,37 @@ class PlantCareApp extends StatelessWidget {
     return ThemeScope(
       controller: themeController,
       child: MaterialApp(
-      title: 'PlantCare AI',
-      debugShowCheckedModeBanner: false,
-      theme: AppTheme.light(),
-      darkTheme: AppTheme.dark(),
-      // PlantCare launches in its premium dark botanical mode. The light
-      // variant remains available to the product theme switch added later.
-      themeMode: themeController.mode,
-      builder: (context, child) {
-        final brightness = Theme.of(context).brightness;
-        return DecoratedBox(
-          decoration: BoxDecoration(
-            gradient: brightness == Brightness.dark
-                ? PlantCareGradients.darkBackground
-                : PlantCareGradients.lightBackground,
-          ),
-          child: child ?? const SizedBox.shrink(),
-        );
-      },
-      localizationsDelegates: const [
-        AppLocalizations.delegate,
-        DefaultMaterialLocalizations.delegate,
-        DefaultCupertinoLocalizations.delegate,
-        DefaultWidgetsLocalizations.delegate,
-      ],
-      supportedLocales: AppLocalizations.supportedLocales,
-      onGenerateRoute: AppRouter.onGenerateRoute,
-      home: const AuthGate(),
+        title: 'PlantCare AI',
+        debugShowCheckedModeBanner: false,
+        theme: AppTheme.light(),
+        darkTheme: AppTheme.dark(),
+        // PlantCare launches in its premium dark botanical mode. The light
+        // variant remains available to the product theme switch added later.
+        themeMode: themeController.mode,
+        builder: (context, child) {
+          final brightness = Theme.of(context).brightness;
+          return DecoratedBox(
+            decoration: BoxDecoration(
+              gradient: brightness == Brightness.dark
+                  ? PlantCareGradients.darkBackground
+                  : PlantCareGradients.lightBackground,
+            ),
+            child: child ?? const SizedBox.shrink(),
+          );
+        },
+        localizationsDelegates: const [
+          AppLocalizations.delegate,
+          DefaultMaterialLocalizations.delegate,
+          DefaultCupertinoLocalizations.delegate,
+          DefaultWidgetsLocalizations.delegate,
+        ],
+        supportedLocales: AppLocalizations.supportedLocales,
+        onGenerateRoute: AppRouter.onGenerateRoute,
+        home: const AuthGate(),
       ),
     );
   }
 }
-
 
 class ThemeScope extends InheritedNotifier<ThemeModeController> {
   const ThemeScope({
@@ -58,8 +57,7 @@ class ThemeScope extends InheritedNotifier<ThemeModeController> {
   }) : super(notifier: controller);
 
   static ThemeModeController of(BuildContext context) {
-    final scope =
-        context.dependOnInheritedWidgetOfExactType<ThemeScope>();
+    final scope = context.dependOnInheritedWidgetOfExactType<ThemeScope>();
     assert(scope != null, 'ThemeScope is required above this context.');
     return scope!.notifier!;
   }

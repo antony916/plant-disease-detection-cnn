@@ -185,7 +185,6 @@ class _Tile extends StatelessWidget {
           trailing: const Icon(Icons.chevron_right_rounded)));
 }
 
-
 class _ThemeModeSelector extends StatelessWidget {
   const _ThemeModeSelector({required this.controller});
 
