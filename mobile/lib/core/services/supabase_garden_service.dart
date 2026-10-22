@@ -1,11 +1,13 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../models/garden.dart';
+import 'in_flight_request.dart';
 
 class SupabaseGardenService {
   final SupabaseClient client;
+  final InFlightRequest<Garden> _gardenRequests = InFlightRequest<Garden>();
 
-  const SupabaseGardenService(this.client);
+  SupabaseGardenService(this.client);
 
   Future<Garden> getOrCreateDefaultGarden() async {
     final user = client.auth.currentUser;
@@ -13,21 +15,22 @@ class SupabaseGardenService {
       throw const AuthException('Sign in required.');
     }
 
-    final owned = await client
-        .from('gardens')
-        .select()
-        .eq('owner_id', user.id)
-        .order('created_at')
-        .limit(1);
+    return _gardenRequests.run(
+      user.id,
+      () => _loadOrCreateDefaultGarden(user.id),
+    );
+  }
 
-    if (owned.isNotEmpty) {
-      return _fromRow(owned.first);
+  Future<Garden> _loadOrCreateDefaultGarden(String userId) async {
+    final owned = await _loadOwnedDefaultGarden(userId);
+    if (owned != null) {
+      return owned;
     }
 
     final memberships = await client
         .from('family_members')
         .select('garden_id')
-        .eq('user_id', user.id)
+        .eq('user_id', userId)
         .eq('status', 'active')
         .order('created_at')
         .limit(1);
@@ -41,16 +44,38 @@ class SupabaseGardenService {
       return _fromRow(garden);
     }
 
-    final created = await client
-        .from('gardens')
-        .insert({
-          'owner_id': user.id,
-          'name': 'My Garden',
-        })
-        .select()
-        .single();
+    try {
+      final created = await client
+          .from('gardens')
+          .insert({
+            'owner_id': userId,
+            'is_default': true,
+            'name': 'My Garden',
+          })
+          .select()
+          .single();
 
-    return _fromRow(created);
+      return _fromRow(created);
+    } on PostgrestException catch (error) {
+      if (error.code != '23505') rethrow;
+
+      // A different device may have inserted the default garden after our
+      // first query. The partial unique index makes that insert the winner.
+      final raced = await _loadOwnedDefaultGarden(userId);
+      if (raced != null) return raced;
+      rethrow;
+    }
+  }
+
+  Future<Garden?> _loadOwnedDefaultGarden(String userId) async {
+    final rows = await client
+        .from('gardens')
+        .select()
+        .eq('owner_id', userId)
+        .eq('is_default', true)
+        .limit(1);
+
+    return rows.isEmpty ? null : _fromRow(rows.first);
   }
 
   Garden _fromRow(Map<String, dynamic> row) {

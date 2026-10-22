@@ -7,6 +7,7 @@ create extension if not exists pgcrypto;
 create table if not exists public.gardens (
   id uuid primary key default gen_random_uuid(),
   owner_id uuid not null references auth.users(id) on delete cascade,
+  is_default boolean not null default true,
   name text not null default 'My Garden',
   location_enabled boolean not null default false,
   latitude double precision,
