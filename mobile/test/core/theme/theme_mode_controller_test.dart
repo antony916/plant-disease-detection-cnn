@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:plantcare_ai/core/theme/theme_mode_controller.dart';
+import 'package:plantcare_ai/app.dart';
 import 'package:plantcare_ai/core/theme/theme_scope.dart';
+import 'package:plantcare_ai/core/theme/theme_mode_controller.dart';
 import 'package:plantcare_ai/features/profile/profile_screen.dart';
 import 'package:shared_preferences_platform_interface/in_memory_shared_preferences_async.dart';
 import 'package:shared_preferences_platform_interface/shared_preferences_async_platform_interface.dart';
@@ -14,79 +15,77 @@ void main() {
 
   test('ThemeModeController defaults to system', () {
     final controller = ThemeModeController();
-
     expect(controller.mode, ThemeMode.system);
   });
 
-  test('ThemeModeController changes mode, notifies, and persists', () async {
+  test('ThemeModeController changes mode and notifies listeners', () async {
     final controller = ThemeModeController();
     var notifications = 0;
     controller.addListener(() => notifications++);
 
     await controller.setMode(ThemeMode.light);
-
     expect(controller.mode, ThemeMode.light);
-    expect(notifications, 1);
-
-    final reloaded = ThemeModeController();
-    await reloaded.load();
-
-    expect(reloaded.mode, ThemeMode.light);
-  });
-
-  test('ThemeModeController reads a saved value on a new controller', () async {
-    final controller = ThemeModeController();
     await controller.setMode(ThemeMode.dark);
-
-    final reloaded = ThemeModeController();
-    await reloaded.load();
-
-    expect(reloaded.mode, ThemeMode.dark);
+    expect(controller.mode, ThemeMode.dark);
+    await controller.setMode(ThemeMode.system);
+    expect(controller.mode, ThemeMode.system);
+    expect(notifications, 3);
   });
 
-  testWidgets('Profile theme selector changes MaterialApp themeMode',
-      (tester) async {
+  for (final mode in [ThemeMode.light, ThemeMode.dark]) {
+    test('ThemeModeController persists ${mode.name} across instances',
+        () async {
+      await ThemeModeController().setMode(mode);
+
+      final restoredController = ThemeModeController();
+      await restoredController.load();
+
+      expect(restoredController.mode, mode);
+    });
+  }
+
+  testWidgets('ThemeScope exposes and updates its controller', (tester) async {
     final controller = ThemeModeController();
 
     await tester.pumpWidget(
       ThemeScope(
         controller: controller,
-        child: _TestApp(controller: controller),
+        child: MaterialApp(
+          home: Builder(
+            builder: (context) => Text(ThemeScope.of(context).mode.name),
+          ),
+        ),
       ),
     );
 
-    expect(
-      tester.widget<MaterialApp>(find.byType(MaterialApp)).themeMode,
-      ThemeMode.system,
-    );
+    expect(find.text('system'), findsOneWidget);
 
-    await tester.tap(find.text('Light'));
+    await controller.setMode(ThemeMode.dark);
     await tester.pump();
 
-    expect(
-      tester.widget<MaterialApp>(find.byType(MaterialApp)).themeMode,
-      ThemeMode.light,
-    );
+    expect(find.text('dark'), findsOneWidget);
   });
-}
 
-class _TestApp extends StatelessWidget {
-  const _TestApp({required this.controller});
+  testWidgets('Profile theme selection updates MaterialApp themeMode',
+      (tester) async {
+    final controller = ThemeModeController();
 
-  final ThemeModeController controller;
-
-  @override
-  Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: controller,
-      builder: (context, child) {
-        return MaterialApp(
-          theme: ThemeData.light(),
-          darkTheme: ThemeData.dark(),
-          themeMode: controller.mode,
-          home: const ProfileScreen(),
-        );
-      },
+    await tester.pumpWidget(
+      PlantCareApp(
+        themeController: controller,
+        home: const ProfileScreen(),
+      ),
     );
-  }
+    await tester.pumpAndSettle();
+
+    await tester.scrollUntilVisible(
+      find.byType(SegmentedButton<ThemeMode>),
+      300,
+    );
+    await tester.tap(find.text('Dark'));
+    await tester.pumpAndSettle();
+
+    final app = tester.widget<MaterialApp>(find.byType(MaterialApp));
+    expect(app.themeMode, ThemeMode.dark);
+  });
 }
